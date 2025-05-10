@@ -5,6 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faCalendarAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Chart from 'react-apexcharts';
 import TenureFilter from '../components/filters/TenureFilter';
+import BarChart from '../components/charts/BarChart';
+import SwtSalariesChart from '../components/charts/SwtSalariesChart';
+import EmployeeLineChart from '../components/charts/EmployeeLineChart';
+import MonthlySalesTaxSummaryChart from '../components/charts/MonthlySalesTaxSummaryChart';
 
 const taxTypes = ['GST', 'CIT', 'SWT'];
 
@@ -300,13 +304,13 @@ const swtSalariesChartOptions = {
   chart: {
     type: 'area',
     height: 320,
-    toolbar: { show: false },
-    background: '#fff'
+    toolbar: { show: false }
+    // background: '#fff' // Remove this line to eliminate white background
   },
   dataLabels: { enabled: false },
   stroke: {
     curve: 'smooth',
-    width: [2, 2, 2] // Thinner lines for a denser look
+    width: [2, 2, 2]
   },
   fill: {
     type: 'gradient',
@@ -322,7 +326,11 @@ const swtSalariesChartOptions = {
     title: { text: 'Month' },
     labels: {
       style: { colors: '#888', fontWeight: 500, fontSize: '14px' }
-    }
+    },
+    axisBorder: { show: true, color: '#e0e7ef' }, // Ensure border is visible and matches other chart
+    axisTicks: { show: true, color: '#e0e7ef' },  // Ensure ticks are visible and matches other chart
+    offsetY: 0, // Align with EmployeeLineChart
+    position: 'bottom'
   },
   yaxis: {
     labels: {
@@ -475,112 +483,15 @@ const Compliance = () => {
           maxWidth: 1200
         }}
       >
-        <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 16, color: '#222' }}>
-          Monthly Sales & Tax Summary ({chartData.year})
-        </div>
-        <Chart
+        <MonthlySalesTaxSummaryChart
+          year={chartData.year}
           options={chartOptions}
           series={chartSeries}
-          type="line"
-          height={320}
         />
       </div>
       {/* End Chart Card Section */}
 
-      {/* Custom Area Chart Card Section */}
-      {/* <div
-        style={{
-          marginTop: 32,
-          border: '1px solid #ede9fe',
-          borderRadius: 18,
-          background: 'linear-gradient(135deg, #ede9fe 0%, #fff 100%)',
-          boxShadow: '0 2px 16px 0 #ede9fe55',
-          padding: '32px 32px 16px 32px',
-          minWidth: 900,
-          maxWidth: 1200
-        }}
-      >
-        <div style={{
-          fontWeight: 700,
-          fontSize: 20,
-          marginBottom: 18,
-          color: '#7c3aed',
-          letterSpacing: 1
-        }}>
-          Sales Income Trend ({chartData.year})
-        </div>
-        <Chart
-          options={customAreaChartOptions}
-          series={customAreaChartSeries}
-          type="area"
-          height={320}
-        />
-      </div> */}
-      {/* End Custom Area Chart Card Section */}
-
-      {/* --- Radar Chart Card Section --- */}
-      <div
-        style={{
-          marginTop: 32,
-          border: '1px solid #e0e7ef',
-          borderRadius: 18,
-          background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-          boxShadow: '0 2px 16px 0 #e0e7ef55',
-          padding: '32px 32px 16px 32px',
-          minWidth: 900,
-          maxWidth: 1200
-        }}
-      >
-        <div style={{
-          fontWeight: 700,
-          fontSize: 20,
-          marginBottom: 18,
-          color: '#6366f1',
-          letterSpacing: 1
-        }}>
-          Employees on Payroll vs Paid SWT (Radar) (2024)
-        </div>
-        <Chart
-          options={employeeRadarOptions}
-          series={employeeRadarSeries}
-          type="radar"
-          height={350}
-        />
-      </div>
-      {/* --- End Radar Chart Card Section --- */}
-
-      {/* --- Multi-series Line Chart Card Section --- */}
-      <div
-        style={{
-          marginTop: 32,
-          border: '1px solid #e0e7ef',
-          borderRadius: 18,
-          background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-          boxShadow: '0 2px 16px 0 #e0e7ef55',
-          padding: '32px 32px 16px 32px',
-          minWidth: 900,
-          maxWidth: 1200
-        }}
-      >
-        <div style={{
-          fontWeight: 700,
-          fontSize: 20,
-          marginBottom: 18,
-          color: '#6366f1',
-          letterSpacing: 1
-        }}>
-          Employees on Payroll vs Paid SWT (Line) (2024)
-        </div>
-        <Chart
-          options={employeeLineOptions}
-          series={employeeLineSeries}
-          type="line"
-          height={320}
-        />
-      </div>
-      {/* --- End Multi-series Line Chart Card Section --- */}
-
-      {/* --- Radar & Line Chart Row --- */}
+      {/* --- Bar Chart Row --- */}
       <div
         style={{
           display: 'flex',
@@ -590,35 +501,6 @@ const Compliance = () => {
           justifyContent: 'center'
         }}
       >
-        {/* Radar Chart Card */}
-        <div
-          style={{
-            flex: 1,
-            maxWidth: '50%',
-            border: '1px solid #e0e7ef',
-            borderRadius: 18,
-            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #e0e7ef55',
-            padding: '32px 32px 16px 32px',
-            minWidth: 0 // allow shrinking
-          }}
-        >
-          <div style={{
-            fontWeight: 700,
-            fontSize: 20,
-            marginBottom: 18,
-            color: '#6366f1',
-            letterSpacing: 1
-          }}>
-            Employees on Payroll vs Paid SWT (Radar) (2024)
-          </div>
-          <Chart
-            options={employeeRadarOptions}
-            series={employeeRadarSeries}
-            type="radar"
-            height={350}
-          />
-        </div>
         {/* Line Chart Card */}
         <div
           style={{
@@ -629,58 +511,165 @@ const Compliance = () => {
             background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
             boxShadow: '0 2px 16px 0 #e0e7ef55',
             padding: '32px 32px 16px 32px',
-            minWidth: 0 // allow shrinking
+            minWidth: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start'
           }}
         >
-          <div style={{
-            fontWeight: 700,
-            fontSize: 20,
-            marginBottom: 18,
-            color: '#6366f1',
-            letterSpacing: 1
-          }}>
-            Employees on Payroll vs Paid SWT (Line) (2024)
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
+              display: 'flex',
+              alignItems: 'flex-start'
+            }}
+          >
+            In Progress
           </div>
-          <Chart
+          <EmployeeLineChart
             options={employeeLineOptions}
             series={employeeLineSeries}
-            type="line"
-            height={320}
           />
         </div>
+        {/* SWT Chart Card */}
+        <div
+          style={{
+            flex: 1,
+            maxWidth: '50%',
+            border: '1px solid #e0e7ef',
+            borderRadius: 18,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '32px 32px 16px 32px',
+            minWidth: 0, // allow shrinking
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start'
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
+              display: 'flex',
+              alignItems: 'flex-start'
+            }}
+          >
+            Total TaxPayers vs Risk Flagged ({chartData.year})
+          </div>
+          <BarChart />
+        </div>
       </div>
-      {/* --- End Radar & Line Chart Row --- */}
-
-      {/* --- SWT Salaries Comparison Chart Card Section --- */}
-      <div
+      {/* <div
         style={{
           marginTop: 32,
-          border: '1px solid #ede9fe',
-          borderRadius: 18,
-          background: 'linear-gradient(135deg, #ede9fe 0%, #fff 100%)',
-          boxShadow: '0 2px 16px 0 #ede9fe55',
-          padding: '32px 32px 16px 32px',
+          border: '1px solid #f1f5f9',
+          borderRadius: 16,
+          background: '#fff',
+          boxShadow: '0 0 0 0 #0000',
+          padding: '24px 24px 8px 24px',
           minWidth: 900,
           maxWidth: 1200
         }}
       >
-        <div style={{
-          fontWeight: 700,
-          fontSize: 20,
-          marginBottom: 18,
-          color: '#0e7490',
-          letterSpacing: 1
-        }}>
-          SWT Salaries Comparison ({swtSalariesData.year})
+        <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 16, color: '#222' }}>
+          Total TaxPayers vs Risk Flagged ({chartData.year})
         </div>
-        <Chart
-          options={swtSalariesChartOptions}
-          series={swtSalariesChartSeries}
-          type="area"
-          height={320}
-        />
+        <BarChart />
+      </div> */}
+      {/* --- End Bar Chart Row --- */}
+
+      {/* --- Line & SWT Chart Row --- */}
+      <div
+        style={{
+          display: 'flex',
+          gap: 32,
+          marginTop: 32,
+          width: '100%',
+          justifyContent: 'center'
+        }}
+      >
+        {/* Line Chart Card */}
+        <div
+          style={{
+            flex: 1,
+            maxWidth: '50%',
+            border: '1px solid #e0e7ef',
+            borderRadius: 18,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '32px 32px 16px 32px',
+            minWidth: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start'
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
+              display: 'flex',
+              alignItems: 'flex-start'
+            }}
+          >
+            Employees on Payroll vs Paid SWT (Line) (2024)
+          </div>
+          <EmployeeLineChart
+            options={employeeLineOptions}
+            series={employeeLineSeries}
+          />
+        </div>
+        {/* SWT Chart Card */}
+        <div
+          style={{
+            flex: 1,
+            maxWidth: '50%',
+            border: '1px solid #e0e7ef',
+            borderRadius: 18,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '32px 32px 16px 32px',
+            minWidth: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start'
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
+              display: 'flex',
+              alignItems: 'flex-start'
+            }}
+          >
+            SWT Salaries Comparison (2024)
+          </div>
+          <SwtSalariesChart
+            options={swtSalariesChartOptions}
+            series={swtSalariesChartSeries}
+          />
+        </div>
       </div>
-      {/* --- END SWT Salaries Comparison Chart Card Section --- */}
+      {/* --- End Line & SWT Chart Row --- */}
     </Layout>
   );
 };
