@@ -4,6 +4,7 @@ import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faCalendarAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Chart from 'react-apexcharts';
+import TenureFilter from '../components/filters/TenureFilter';
 
 const taxTypes = ['GST', 'CIT', 'SWT'];
 
@@ -59,32 +60,6 @@ const chartOptions = {
   stroke: {
     width: [3, 3, 2, 2],
     curve: 'smooth'
-  },
-  xaxis: {
-    categories: months,
-    title: { text: 'Month' }
-  },
-  yaxis: {
-    labels: { formatter: val => val >= 1000 ? `${(val / 1000000).toFixed(1)}M` : val }
-  },
-  legend: {
-    position: 'top'
-  },
-  colors: ['#2563eb', '#22c55e', '#f59e42', '#a0aec0']
-};
-
-const barChartOptions = {
-  chart: {
-    type: 'bar',
-    height: 320,
-    toolbar: { show: false }
-  },
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      borderRadius: 6,
-      columnWidth: '50%'
-    }
   },
   xaxis: {
     categories: months,
@@ -188,77 +163,181 @@ const customAreaChartSeries = [
   }
 ];
 
-// Combo (Bar + Line) Chart Options and Series
-const comboChartOptions = {
+
+// Radar chart options and series for employee data
+
+const employeeData = {
+  year: 2024,
+  monthly_data: [
+    { month: "01", employees_on_payroll: 1200, employees_paid_swt: 950 },
+    { month: "02", employees_on_payroll: 1250, employees_paid_swt: 980 },
+    { month: "03", employees_on_payroll: 1300, employees_paid_swt: 1000 },
+    { month: "04", employees_on_payroll: 1280, employees_paid_swt: 1020 },
+    { month: "05", employees_on_payroll: 1350, employees_paid_swt: 1100 },
+    { month: "06", employees_on_payroll: 1400, employees_paid_swt: 1150 },
+    { month: "07", employees_on_payroll: 1425, employees_paid_swt: 1200 },
+    { month: "08", employees_on_payroll: 1450, employees_paid_swt: 1250 },
+    { month: "09", employees_on_payroll: 1500, employees_paid_swt: 1300 },
+    { month: "10", employees_on_payroll: 1520, employees_paid_swt: 1350 },
+    { month: "11", employees_on_payroll: 1550, employees_paid_swt: 1400 },
+    { month: "12", employees_on_payroll: 1600, employees_paid_swt: 1450 }
+  ]
+};
+
+const employeeMonths = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+];
+
+const employeeRadarOptions = {
   chart: {
+    type: 'radar',
     height: 350,
-    type: 'line',
-    toolbar: { show: false },
-    background: '#fff'
-  },
-  stroke: {
-    width: [0, 4],
-    curve: 'smooth'
-  },
-  plotOptions: {
-    bar: {
-      columnWidth: '40%',
-      borderRadius: 6
-    }
-  },
-  dataLabels: {
-    enabled: true,
-    enabledOnSeries: [0],
-    style: {
-      colors: ['#3b0764']
-    },
-    background: {
-      enabled: true,
-      foreColor: '#fff',
-      borderRadius: 4,
-      padding: 4,
-      opacity: 0.8,
-      borderWidth: 1,
-      borderColor: '#7c3aed'
-    },
-    formatter: function (val, opts) {
-      // Only show labels for bar series
-      if (opts.seriesIndex === 0) {
-        return Math.round(val).toLocaleString();
-      }
-      return '';
-    }
+    toolbar: { show: false }
   },
   xaxis: {
-    categories: months,
-    title: { text: 'Month' },
+    categories: employeeMonths,
     labels: {
-      style: { fontWeight: 600, color: '#3b0764', fontSize: '14px' }
+      style: { fontWeight: 500, color: '#334155', fontSize: '14px' }
     }
   },
-  yaxis: [
-    {
-      title: { text: 'Sales Income', style: { color: '#1e293b' } },
-      labels: {
-        style: { color: '#1e293b', fontWeight: 500 },
-        formatter: val => val >= 1000 ? `${(val / 1000000).toFixed(1)}M` : val
-      }
-    },
-    {
-      opposite: true,
-      title: { text: 'Taxable Sales', style: { color: '#6366f1' } },
-      labels: {
-        style: { color: '#6366f1', fontWeight: 500 },
-        formatter: val => val >= 1000 ? `${(val / 1000000).toFixed(1)}M` : val
-      },
-      min: 0
+  yaxis: {
+    labels: {
+      style: { fontWeight: 500, color: '#334155' }
     }
-  ],
-  colors: ['#7c3aed', '#6366f1'],
+  },
   legend: {
     position: 'top',
     fontWeight: 600
   },
+  colors: ['#6366f1', '#a5b4fc'],
+  stroke: {
+    width: 2
+  },
+  fill: {
+    opacity: 0.2
+  },
+  markers: {
+    size: 4
+  },
+  tooltip: {
+    enabled: true,
+    shared: true,
+    intersect: false,
+    style: { fontSize: '15px' },
+    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+      const month = w.globals.categoryLabels[dataPointIndex];
+      const payroll = series[0][dataPointIndex];
+      const paidSwt = series[1][dataPointIndex];
+      return `
+        <div style="padding:8px 12px;">
+          <div style="font-weight:600; color:#6366f1; margin-bottom:4px;">${month}</div>
+          <div><span style="color:#6366f1;">●</span> Employees on Payroll: <b>${payroll}</b></div>
+          <div><span style="color:#a5b4fc;">●</span> Employees Paid SWT: <b>${paidSwt}</b></div>
+        </div>
+      `;
+    }
+  }
+};
+
+const employeeRadarSeries = [
+  {
+    name: 'Employees on Payroll',
+    data: employeeData.monthly_data.map(m => m.employees_on_payroll)
+  },
+  {
+    name: 'Employees Paid SWT',
+    data: employeeData.monthly_data.map(m => m.employees_paid_swt)
+  }
+];
+
+
+// SWT Salaries Comparison Data
+const swtSalariesData = {
+  year: 2024,
+  monthly_data: [
+    { month: 1, total_salary_wages_paid: 1000000, sw_paid_for_swt_deduction: 800000, total_swt_tax_deducted: 1060000 },
+    { month: 2, total_salary_wages_paid: 1050000, sw_paid_for_swt_deduction: 850000, total_swt_tax_deducted: 68000 },
+    { month: 3, total_salary_wages_paid: 1100000, sw_paid_for_swt_deduction: 60000, total_swt_tax_deducted: 1100000 },
+    { month: 4, total_salary_wages_paid: 280000, sw_paid_for_swt_deduction: 870000, total_swt_tax_deducted: 71000 },
+    { month: 5, total_salary_wages_paid: 1150000, sw_paid_for_swt_deduction: 920000, total_swt_tax_deducted: 75000 },
+    { month: 6, total_salary_wages_paid: 2200000, sw_paid_for_swt_deduction: 950000, total_swt_tax_deducted: 1900000 },
+    { month: 7, total_salary_wages_paid: 2230000, sw_paid_for_swt_deduction: 90000, total_swt_tax_deducted: 80000 },
+    { month: 8, total_salary_wages_paid: 50000, sw_paid_for_swt_deduction: 1000000, total_swt_tax_deducted: 82000 },
+    { month: 9, total_salary_wages_paid: 1270000, sw_paid_for_swt_deduction: 1020000, total_swt_tax_deducted: 83000 },
+    { month: 10, total_salary_wages_paid: 1300000, sw_paid_for_swt_deduction: 1040000, total_swt_tax_deducted: 85000 },
+    { month: 11, total_salary_wages_paid: 20000, sw_paid_for_swt_deduction: 1060000, total_swt_tax_deducted: 86000 },
+    { month: 12, total_salary_wages_paid: 1350000, sw_paid_for_swt_deduction: 1080000, total_swt_tax_deducted: 88000 }
+  ],
+  totals: {
+    total_salary_wages_paid: 14630000,
+    total_sw_paid_for_swt_deduction: 11510000,
+    total_swt_tax_deducted: 960000
+  }
+};
+
+const swtSalariesMonths = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+];
+
+const swtSalariesChartSeries = [
+  {
+    name: 'Total Salary Wages Paid',
+    data: swtSalariesData.monthly_data.map(m => m.total_salary_wages_paid)
+  },
+  {
+    name: 'SW Paid for SWT Deduction',
+    data: swtSalariesData.monthly_data.map(m => m.sw_paid_for_swt_deduction)
+  },
+  {
+    name: 'Total SWT Tax Deducted',
+    data: swtSalariesData.monthly_data.map(m => m.total_swt_tax_deducted)
+  }
+];
+
+const swtSalariesChartOptions = {
+  chart: {
+    type: 'area',
+    height: 320,
+    toolbar: { show: false },
+    background: '#fff'
+  },
+  dataLabels: { enabled: false },
+  stroke: {
+    curve: 'smooth',
+    width: [2, 2, 2] // Thinner lines for a denser look
+  },
+  fill: {
+    type: 'gradient',
+    gradient: {
+      shadeIntensity: 1,
+      opacityFrom: 0.50,
+      opacityTo: 0.45,
+      stops: [0, 90, 100]
+    }
+  },
+  xaxis: {
+    categories: swtSalariesMonths,
+    title: { text: 'Month' },
+    labels: {
+      style: { colors: '#888', fontWeight: 500, fontSize: '14px' }
+    }
+  },
+  yaxis: {
+    labels: {
+      style: { colors: '#888', fontWeight: 500, fontSize: '14px' },
+      formatter: val => val >= 1000 ? `${(val / 1000000).toFixed(1)}M` : val
+    }
+  },
+  legend: {
+    position: 'top',
+    fontWeight: 700,
+    labels: {
+      colors: ['#4338ca', '#22c55e', '#f59e42']
+    }
+  },
+  colors: ['#4338ca', '#22c55e', '#f59e42'],
   tooltip: {
     shared: true,
     intersect: false,
@@ -270,27 +349,80 @@ const comboChartOptions = {
   }
 };
 
-const comboChartSeries = [
+// Multi-series line chart for Employees on Payroll vs Paid SWT (2024)
+const employeeLineSeries = [
   {
-    name: 'Sales Income',
-    type: 'column',
-    data: chartData.monthly_summary.map(m => m.sales_income)
+    name: 'Employees on Payroll',
+    data: employeeData.monthly_data.map(m => m.employees_on_payroll)
   },
   {
-    name: 'Taxable Sales',
-    type: 'line',
-    data: chartData.monthly_summary.map(m => m['taxable sales'])
+    name: 'Employees Paid SWT',
+    data: employeeData.monthly_data.map(m => m.employees_paid_swt)
   }
 ];
 
+const employeeLineOptions = {
+  chart: {
+    type: 'line',
+    height: 320,
+    toolbar: { show: false }
+  },
+  stroke: {
+    width: 3,
+    curve: 'smooth'
+  },
+  xaxis: {
+    categories: employeeMonths,
+    title: { text: 'Month' },
+    labels: {
+      style: { fontWeight: 500, color: '#334155', fontSize: '14px' }
+    }
+  },
+  yaxis: {
+    title: { text: 'Employees' },
+    labels: {
+      style: { fontWeight: 500, color: '#334155' }
+    }
+  },
+  legend: {
+    position: 'top',
+    fontWeight: 600
+  },
+  colors: ['#2563eb', '#22c55e'],
+  markers: {
+    size: 5
+  },
+  tooltip: {
+    shared: true,
+    intersect: false,
+    style: { fontSize: '15px' }
+  },
+  grid: {
+    borderColor: '#e0e7ef',
+    strokeDashArray: 4
+  }
+};
+
+
 const Compliance = () => {
   const [selectedTax, setSelectedTax] = useState('GST');
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+  const [dateRange, setDateRange] = useState({
+    start_date: '',
+    end_date: ''
+  });
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 6 }, (_, i) => {
+    const year = currentYear - i;
+    return { label: year.toString(), value: year.toString() };
+  });
+
+  const handleFilterChange = (range) => {
+    setDateRange(range);
+  };
 
   const handleSearch = () => {
     // Implement search logic here
-    // You can use selectedTax, fromDate, toDate
+    // You can use selectedTax, dateRange.start_date, dateRange.end_date
   };
 
   return (
@@ -310,39 +442,8 @@ const Compliance = () => {
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ position: 'relative' }}>
-              <FontAwesomeIcon icon={faCalendarAlt} style={{ position: 'absolute', left: 10, top: 10, color: '#222' }} />
-              <input
-                type="date"
-                value={fromDate}
-                onChange={e => setFromDate(e.target.value)}
-                placeholder="From"
-                style={{
-                  padding: '8px 8px 8px 32px',
-                  borderRadius: 8,
-                  border: 'none',
-                  background: '#f3f4f6',
-                  width: 120
-                }}
-              />
-            </span>
-            <span style={{ position: 'relative' }}>
-              <FontAwesomeIcon icon={faCalendarAlt} style={{ position: 'absolute', left: 10, top: 10, color: '#222' }} />
-              <input
-                type="date"
-                value={toDate}
-                onChange={e => setToDate(e.target.value)}
-                placeholder="To"
-                style={{
-                  padding: '8px 8px 8px 32px',
-                  borderRadius: 8,
-                  border: 'none',
-                  background: '#f3f4f6',
-                  width: 120
-                }}
-              />
-            </span>
+          <div style={{ flex: '0 1 auto', minWidth: 0, height: 48, display: 'flex', alignItems: 'center' }}>
+            <TenureFilter onFilterChange={handleFilterChange} tenureOptions={yearOptions} />
           </div>
           <button
             onClick={handleSearch}
@@ -360,186 +461,146 @@ const Compliance = () => {
           </button>
         </div>
       </div>
-      {/* Stats Card Section */}
+
+      {/* Chart Card Section */}
       <div
         style={{
-          display: 'flex',
-          gap: 0,
-          marginTop: 8,
+          marginTop: 32,
           border: '1px solid #f1f5f9',
           borderRadius: 16,
           background: '#fff',
           boxShadow: '0 0 0 0 #0000',
-          padding: '32px 24px',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          padding: '24px 24px 8px 24px',
           minWidth: 900,
+          maxWidth: 1200
         }}
       >
-        {/* Total Tax Paid */}
-        <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: '#222' }}>89,935</div>
-          <div style={{ color: '#6b7280', fontWeight: 500, fontSize: 16, marginBottom: 8 }}>Total Tax paid</div>
-          <div style={{ color: '#22c55e', fontWeight: 500, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-            <span style={{ fontSize: 18 }}>↑</span> 10.2% <span style={{ color: '#a0aec0', fontWeight: 400, marginLeft: 4 }}>Than last year</span>
-          </div>
+        <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 16, color: '#222' }}>
+          Monthly Sales & Tax Summary ({chartData.year})
         </div>
-        <div style={{ width: 1, background: '#f1f5f9', height: 60, margin: '0 24px' }} />
-        {/* Total Income */}
-        <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: '#222' }}>225748757</div>
-          <div style={{ color: '#6b7280', fontWeight: 500, fontSize: 16, marginBottom: 8 }}>Total Income</div>
-          <div style={{ color: '#22c55e', fontWeight: 500, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-            <span style={{ fontSize: 18 }}>↑</span> 3.1% <span style={{ color: '#a0aec0', fontWeight: 400, marginLeft: 4 }}>Than last year</span>
-          </div>
-        </div>
-        <div style={{ width: 1, background: '#f1f5f9', height: 60, margin: '0 24px' }} />
-        {/* Risk Score */}
-        <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: '#ef4444' }}>500</div>
-          <div style={{ color: '#6b7280', fontWeight: 500, fontSize: 16, marginBottom: 8 }}>Risk Score</div>
-          <div style={{ color: '#ef4444', fontWeight: 500, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-            <span style={{ fontSize: 18 }}>↓</span> 2.56% <span style={{ color: '#a0aec0', fontWeight: 400, marginLeft: 4 }}>Than last year</span>
-          </div>
-        </div>
-        <div style={{ width: 1, background: '#f1f5f9', height: 60, margin: '0 24px' }} />
-        {/* Total Refundable Income */}
-        <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: '#222' }}>22029</div>
-          <div style={{ color: '#6b7280', fontWeight: 500, fontSize: 16, marginBottom: 8 }}>Total Refundable Income</div>
-          <div style={{ color: '#22c55e', fontWeight: 500, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-            <span style={{ fontSize: 18 }}>↑</span> 7.2 <span style={{ color: '#a0aec0', fontWeight: 400, marginLeft: 4 }}>Than last year</span>
-          </div>
-        </div>
-        <div style={{ width: 1, background: '#f1f5f9', height: 60, margin: '0 24px' }} />
-        {/* % Growth */}
-        <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: '#222' }}>80</div>
-          <div style={{ color: '#6b7280', fontWeight: 500, fontSize: 16, marginBottom: 8 }}>% Growth</div>
-          <div style={{ color: '#22c55e', fontWeight: 500, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-            <span style={{ fontSize: 18 }}>↑</span> 7.2% <span style={{ color: '#a0aec0', fontWeight: 400, marginLeft: 4 }}>Than last year</span>
-          </div>
-        </div>
+        <Chart
+          options={chartOptions}
+          series={chartSeries}
+          type="line"
+          height={320}
+        />
       </div>
-      {/* End Stats Card Section */}
+      {/* End Chart Card Section */}
 
-      {/* Chart Card Section */}
-        <div
-          style={{
-            marginTop: 32,
-            border: '1px solid #f1f5f9',
-            borderRadius: 16,
-            background: '#fff',
-            boxShadow: '0 0 0 0 #0000',
-            padding: '24px 24px 8px 24px',
-            minWidth: 900,
-            maxWidth: 1200
-          }}
-        >
-          <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 16, color: '#222' }}>
-            Monthly Sales & Tax Summary ({chartData.year})
-          </div>
-          <Chart
-            options={chartOptions}
-            series={chartSeries}
-            type="line"
-            height={320}
-          />
+      {/* Custom Area Chart Card Section */}
+      {/* <div
+        style={{
+          marginTop: 32,
+          border: '1px solid #ede9fe',
+          borderRadius: 18,
+          background: 'linear-gradient(135deg, #ede9fe 0%, #fff 100%)',
+          boxShadow: '0 2px 16px 0 #ede9fe55',
+          padding: '32px 32px 16px 32px',
+          minWidth: 900,
+          maxWidth: 1200
+        }}
+      >
+        <div style={{
+          fontWeight: 700,
+          fontSize: 20,
+          marginBottom: 18,
+          color: '#7c3aed',
+          letterSpacing: 1
+        }}>
+          Sales Income Trend ({chartData.year})
         </div>
-        {/* End Chart Card Section */}
+        <Chart
+          options={customAreaChartOptions}
+          series={customAreaChartSeries}
+          type="area"
+          height={320}
+        />
+      </div> */}
+      {/* End Custom Area Chart Card Section */}
 
-        {/* Bar Chart Card Section */}
-        <div
-          style={{
-            marginTop: 32,
-            border: '1px solid #f1f5f9',
-            borderRadius: 16,
-            background: '#fff',
-            boxShadow: '0 0 0 0 #0000',
-            padding: '24px 24px 8px 24px',
-            minWidth: 900,
-            maxWidth: 1200
-          }}
-        >
-          <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 16, color: '#222' }}>
-            Monthly Sales & Tax Bar Chart ({chartData.year})
-          </div>
-          <Chart
-            options={barChartOptions}
-            series={chartSeries}
-            type="bar"
-            height={320}
-          />
+      {/* --- Radar Chart Card Section --- */}
+      <div
+        style={{
+          marginTop: 32,
+          border: '1px solid #e0e7ef',
+          borderRadius: 18,
+          background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+          boxShadow: '0 2px 16px 0 #e0e7ef55',
+          padding: '32px 32px 16px 32px',
+          minWidth: 900,
+          maxWidth: 1200
+        }}
+      >
+        <div style={{
+          fontWeight: 700,
+          fontSize: 20,
+          marginBottom: 18,
+          color: '#6366f1',
+          letterSpacing: 1
+        }}>
+          Employees on Payroll vs Paid SWT (Radar) (2024)
         </div>
-        {/* End Bar Chart Card Section */}
+        <Chart
+          options={employeeRadarOptions}
+          series={employeeRadarSeries}
+          type="radar"
+          height={350}
+        />
+      </div>
+      {/* --- End Radar Chart Card Section --- */}
 
-        {/* Area Chart Card Section */}
-        <div
-          style={{
-            marginTop: 32,
-            border: '1px solid #f1f5f9',
-            borderRadius: 16,
-            background: '#fff',
-            boxShadow: '0 0 0 0 #0000',
-            padding: '24px 24px 8px 24px',
-            minWidth: 900,
-            maxWidth: 1200
-          }}
-        >
-          <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 16, color: '#222' }}>
-            Monthly Sales & Tax Area Chart ({chartData.year})
-          </div>
-          <Chart
-            options={areaChartOptions}
-            series={chartSeries}
-            type="area"
-            height={320}
-          />
+      {/* --- Multi-series Line Chart Card Section --- */}
+      <div
+        style={{
+          marginTop: 32,
+          border: '1px solid #e0e7ef',
+          borderRadius: 18,
+          background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+          boxShadow: '0 2px 16px 0 #e0e7ef55',
+          padding: '32px 32px 16px 32px',
+          minWidth: 900,
+          maxWidth: 1200
+        }}
+      >
+        <div style={{
+          fontWeight: 700,
+          fontSize: 20,
+          marginBottom: 18,
+          color: '#6366f1',
+          letterSpacing: 1
+        }}>
+          Employees on Payroll vs Paid SWT (Line) (2024)
         </div>
-        {/* End Area Chart Card Section */}
+        <Chart
+          options={employeeLineOptions}
+          series={employeeLineSeries}
+          type="line"
+          height={320}
+        />
+      </div>
+      {/* --- End Multi-series Line Chart Card Section --- */}
 
-        {/* Custom Area Chart Card Section */}
+      {/* --- Radar & Line Chart Row --- */}
+      <div
+        style={{
+          display: 'flex',
+          gap: 32,
+          marginTop: 32,
+          width: '100%',
+          justifyContent: 'center'
+        }}
+      >
+        {/* Radar Chart Card */}
         <div
           style={{
-            marginTop: 32,
-            border: '1px solid #ede9fe',
+            flex: 1,
+            maxWidth: '50%',
+            border: '1px solid #e0e7ef',
             borderRadius: 18,
-            background: 'linear-gradient(135deg, #ede9fe 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #ede9fe55',
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
             padding: '32px 32px 16px 32px',
-            minWidth: 900,
-            maxWidth: 1200
-          }}
-        >
-          <div style={{
-            fontWeight: 700,
-            fontSize: 20,
-            marginBottom: 18,
-            color: '#7c3aed',
-            letterSpacing: 1
-          }}>
-            Sales Income Trend ({chartData.year})
-          </div>
-          <Chart
-            options={customAreaChartOptions}
-            series={customAreaChartSeries}
-            type="area"
-            height={320}
-          />
-        </div>
-        {/* End Custom Area Chart Card Section */}
-
-        {/* Combo Bar + Line Chart Card Section */}
-        <div
-          style={{
-            marginTop: 32,
-            border: '1px solid #ede9fe',
-            borderRadius: 18,
-            background: '#fff',
-            boxShadow: '0 2px 16px 0 #ede9fe55',
-            padding: '32px 32px 16px 32px',
-            minWidth: 900,
-            maxWidth: 1200
+            minWidth: 0 // allow shrinking
           }}
         >
           <div style={{
@@ -549,16 +610,77 @@ const Compliance = () => {
             color: '#6366f1',
             letterSpacing: 1
           }}>
-            Sales Income & Taxable Sales Comparison ({chartData.year})
+            Employees on Payroll vs Paid SWT (Radar) (2024)
           </div>
           <Chart
-            options={comboChartOptions}
-            series={comboChartSeries}
-            type="line"
+            options={employeeRadarOptions}
+            series={employeeRadarSeries}
+            type="radar"
             height={350}
           />
         </div>
-        {/* End Combo Bar + Line Chart Card Section */}
+        {/* Line Chart Card */}
+        <div
+          style={{
+            flex: 1,
+            maxWidth: '50%',
+            border: '1px solid #e0e7ef',
+            borderRadius: 18,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '32px 32px 16px 32px',
+            minWidth: 0 // allow shrinking
+          }}
+        >
+          <div style={{
+            fontWeight: 700,
+            fontSize: 20,
+            marginBottom: 18,
+            color: '#6366f1',
+            letterSpacing: 1
+          }}>
+            Employees on Payroll vs Paid SWT (Line) (2024)
+          </div>
+          <Chart
+            options={employeeLineOptions}
+            series={employeeLineSeries}
+            type="line"
+            height={320}
+          />
+        </div>
+      </div>
+      {/* --- End Radar & Line Chart Row --- */}
+
+      {/* --- SWT Salaries Comparison Chart Card Section --- */}
+      <div
+        style={{
+          marginTop: 32,
+          border: '1px solid #ede9fe',
+          borderRadius: 18,
+          background: 'linear-gradient(135deg, #ede9fe 0%, #fff 100%)',
+          boxShadow: '0 2px 16px 0 #ede9fe55',
+          padding: '32px 32px 16px 32px',
+          minWidth: 900,
+          maxWidth: 1200
+        }}
+      >
+        <div style={{
+          fontWeight: 700,
+          fontSize: 20,
+          marginBottom: 18,
+          color: '#0e7490',
+          letterSpacing: 1
+        }}>
+          SWT Salaries Comparison ({swtSalariesData.year})
+        </div>
+        <Chart
+          options={swtSalariesChartOptions}
+          series={swtSalariesChartSeries}
+          type="area"
+          height={320}
+        />
+      </div>
+      {/* --- END SWT Salaries Comparison Chart Card Section --- */}
     </Layout>
   );
 };
