@@ -1,0 +1,15 @@
+import React from 'react';
+import Layout from '../components/Layout';
+
+const Compliance = () => {
+  return (
+    <Layout>
+      <div className="page-container">
+        <h2 className="page-title">Compliance</h2>
+        <div className="content">{/* Content will be added later */}</div>
+      </div>
+    </Layout>
+  );
+};
+
+export default Compliance;
