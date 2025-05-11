@@ -1,19 +1,16 @@
-import React, { useState } from 'react';
-import Layout from '../components/Layout';
-import { Dropdown } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faFilter,
-  faCalendarAlt,
-  faChevronDown,
-} from '@fortawesome/free-solid-svg-icons';
-import Chart from 'react-apexcharts';
-import TenureFilter from '../components/filters/TenureFilter';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ClipLoader } from 'react-spinners';
+import { ToastContainer, toast } from 'react-toastify';
+import { FixedSizeList as List } from 'react-window';
 import BarChart from '../components/charts/BarChart';
-import SwtSalariesChart from '../components/charts/SwtSalariesChart';
 import EmployeeLineChart from '../components/charts/EmployeeLineChart';
 import MonthlySalesTaxSummaryChart from '../components/charts/MonthlySalesTaxSummaryChart';
 import RiskBreakdownChart from '../components/charts/RiskBreakDownChart';
+import SwtSalariesChart from '../components/charts/SwtSalariesChart';
+import TenureFilter from '../components/filters/TenureFilter';
+import Layout from '../components/Layout';
+import { fetchDatasets } from '../slice/datasetsSlice';
 
 const taxTypes = ['GST', 'CIT', 'SWT'];
 
@@ -585,16 +582,17 @@ const employeeLineOptions = {
 };
 
 const Compliance = () => {
-  const [selectedTax, setSelectedTax] = useState('GST');
-  const [dateRange, setDateRange] = useState({
-    start_date: '',
-    end_date: '',
-  });
-  const currentYear = new Date().getFullYear();
-  const yearOptions = Array.from({ length: 6 }, (_, i) => {
-    const year = currentYear - i;
-    return { label: year.toString(), value: year.toString() };
-  });
+  const dispatch = useDispatch();
+  const [selectedTIN, setSelectedTIN] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const [dateRange, setDateRange] = useState('');
+  const { data, loading, error } = useSelector((state) => state.datasets);
+  const tins = data?.tins || [];
+  const yearOptions = data?.years?.map(year => ({
+    label: String(year),
+    value: String(year)
+  })) || [];
 
   const handleFilterChange = (range) => {
     setDateRange(range);
@@ -605,165 +603,240 @@ const Compliance = () => {
     // You can use selectedTax, dateRange.start_date, dateRange.end_date
   };
 
+  useEffect(() => {
+    console.log(data);
+    if (!data) {
+      dispatch(fetchDatasets());
+    }
+  }, [data, dispatch]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error, { position: "top-right" });
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (data?.tins && data.tins.length > 0) {
+      setSelectedTIN(data.tins[0]);
+    }
+  }, [data?.tins]);
+
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '60vh'
+      }}>
+        <ClipLoader size={60} color="#2563eb" />
+        <ToastContainer />
+      </div>
+    );
+  }
+
   return (
-    <Layout>
-      <div className="page-container">
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            marginBottom: '24px',
-          }}
-        >
-          <FontAwesomeIcon
-            icon={faFilter}
-            style={{ color: '#2563eb', fontSize: 22 }}
-          />
-          <Dropdown onSelect={setSelectedTax}>
-            <Dropdown.Toggle
-              variant="link"
-              style={{
-                color: '#222',
-                textDecoration: 'none',
-                fontWeight: 500,
-                fontSize: 18,
-                padding: 0,
-              }}
-            >
-              {selectedTax}{' '}
-              <FontAwesomeIcon
-                icon={faChevronDown}
-                style={{ fontSize: 14, marginLeft: 4 }}
-              />
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              {taxTypes.map((type) => (
-                <Dropdown.Item key={type} eventKey={type}>
-                  {type}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
+    <>
+      <ToastContainer />
+      <Layout>
+        <div className="page-container">
           <div
             style={{
-              flex: '0 1 auto',
-              minWidth: 0,
-              height: 48,
               display: 'flex',
               alignItems: 'center',
+              gap: '12px',
+              marginBottom: '24px',
             }}
           >
-            <TenureFilter
-              onFilterChange={handleFilterChange}
-              tenureOptions={yearOptions}
-            />
+            <label style={{ fontWeight: 'bold', marginRight: 8 }}>TIN</label>
+            <div ref={dropdownRef} style={{ position: 'relative', width: 260 }}>
+              <div
+                style={{
+                  border: '1px solid #ccc',
+                  borderRadius: 4,
+                  padding: 8,
+                  background: '#fff',
+                  cursor: 'pointer',
+                  minHeight: 38,
+                  userSelect: 'none',
+                }}
+                onClick={() => setIsDropdownOpen((open) => !open)}
+              >
+                {selectedTIN || 'Select TIN'}
+              </div>
+              {isDropdownOpen && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '110%',
+                    left: 0,
+                    width: '100%',
+                    zIndex: 10,
+                    border: '1px solid #eee',
+                    borderRadius: 4,
+                    background: '#fff',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    maxHeight: 200,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <List
+                    height={200}
+                    itemCount={tins.length}
+                    itemSize={35}
+                    width={240}
+                  >
+                    {({ index, style }) => (
+                      <div
+                        style={{
+                          ...style,
+                          padding: '8px 12px',
+                          background: tins[index] === selectedTIN ? '#e0e7ef' : '#fff',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                          setSelectedTIN(tins[index]);
+                          setIsDropdownOpen(false);
+                        }}
+                        key={tins[index]}
+                      >
+                        {tins[index]}
+                      </div>
+                    )}
+                  </List>
+                </div>
+              )}
+            </div>
+            <div
+              style={{
+                flex: '0 1 auto',
+                minWidth: 0,
+                height: 48,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <TenureFilter
+                onFilterChange={handleFilterChange}
+                tenureOptions={yearOptions}
+              />
+            </div>
+            <button
+              onClick={handleSearch}
+              style={{
+                background: '#2563eb',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 20,
+                padding: '8px 24px',
+                fontWeight: 500,
+                marginLeft: 8,
+              }}
+            >
+              Search
+            </button>
           </div>
-          <button
-            onClick={handleSearch}
-            style={{
-              background: '#2563eb',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 20,
-              padding: '8px 24px',
-              fontWeight: 500,
-              marginLeft: 8,
-            }}
-          >
-            Search
-          </button>
         </div>
-      </div>
 
-      {/* Chart Card Section */}
-      <div
-        style={{
-          marginTop: 32,
-          border: '1px solid #f1f5f9',
-          borderRadius: 16,
-          background: '#fff',
-          boxShadow: '0 0 0 0 #0000',
-          padding: '24px 24px 8px 24px',
-          minWidth: 900,
-          maxWidth: 1200,
-        }}
-      >
-        <MonthlySalesTaxSummaryChart
-          year={chartData.year}
-          options={chartOptions}
-          series={chartSeries}
-        />
-      </div>
-      {/* End Chart Card Section */}
-
-      {/* --- Bar Chart Row --- */}
-      <div
-        style={{
-          display: 'flex',
-          gap: 32,
-          marginTop: 32,
-          width: '100%',
-          justifyContent: 'center',
-        }}
-      >
-        {/* Line Chart Card */}
+        {/* Chart Card Section */}
         <div
           style={{
-            flex: 1,
-            maxWidth: '50%',
-            border: '1px solid #e0e7ef',
-            borderRadius: 18,
-            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #e0e7ef55',
-            padding: '32px 32px 16px 32px',
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
+            marginTop: 32,
+            border: '1px solid #f1f5f9',
+            borderRadius: 16,
+            background: '#fff',
+            boxShadow: '0 0 0 0 #0000',
+            padding: '24px 24px 8px 24px',
+            minWidth: 900,
+            maxWidth: 1200,
           }}
         >
-          {/* <EmployeeLineChart
+          <MonthlySalesTaxSummaryChart
+            year={chartData.year}
+            options={chartOptions}
+            series={chartSeries}
+          />
+        </div>
+        {/* End Chart Card Section */}
+
+        {/* --- Bar Chart Row --- */}
+        <div
+          style={{
+            display: 'flex',
+            gap: 32,
+            marginTop: 32,
+            width: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          {/* Line Chart Card */}
+          <div
+            style={{
+              flex: 1,
+              maxWidth: '50%',
+              border: '1px solid #e0e7ef',
+              borderRadius: 18,
+              background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+              boxShadow: '0 2px 16px 0 #e0e7ef55',
+              padding: '32px 32px 16px 32px',
+              minWidth: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+            }}
+          >
+            {/* <EmployeeLineChart
             options={employeeLineOptions}
             series={employeeLineSeries}
           /> */}
-          <RiskBreakdownChart />
-        </div>
+            <RiskBreakdownChart />
+          </div>
 
-        {/* SWT Chart Card */}
-        <div
-          style={{
-            flex: 1,
-            maxWidth: '50%',
-            border: '1px solid #e0e7ef',
-            borderRadius: 18,
-            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #e0e7ef55',
-            padding: '32px 32px 16px 32px',
-            minWidth: 0, // allow shrinking
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-          }}
-        >
+          {/* SWT Chart Card */}
           <div
             style={{
-              fontWeight: 700,
-              fontSize: 20,
-              color: '#6366f1',
-              letterSpacing: 1,
-              minHeight: 28,
-              marginBottom: 18,
+              flex: 1,
+              maxWidth: '50%',
+              border: '1px solid #e0e7ef',
+              borderRadius: 18,
+              background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+              boxShadow: '0 2px 16px 0 #e0e7ef55',
+              padding: '32px 32px 16px 32px',
+              minWidth: 0, // allow shrinking
               display: 'flex',
-              alignItems: 'flex-start',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
             }}
           >
-            Total TaxPayers vs Risk Flagged ({chartData.year})
+            <div
+              style={{
+                fontWeight: 700,
+                fontSize: 20,
+                color: '#6366f1',
+                letterSpacing: 1,
+                minHeight: 28,
+                marginBottom: 18,
+                display: 'flex',
+                alignItems: 'flex-start',
+              }}
+            >
+              Total TaxPayers vs Risk Flagged ({chartData.year})
+            </div>
+            <BarChart />
           </div>
-          <BarChart />
         </div>
-      </div>
-      {/* <div
+        {/* <div
         style={{
           marginTop: 32,
           border: '1px solid #f1f5f9',
@@ -780,91 +853,92 @@ const Compliance = () => {
         </div>
         <BarChart />
       </div> */}
-      {/* --- End Bar Chart Row --- */}
+        {/* --- End Bar Chart Row --- */}
 
-      {/* --- Line & SWT Chart Row --- */}
-      <div
-        style={{
-          display: 'flex',
-          gap: 32,
-          marginTop: 32,
-          width: '100%',
-          justifyContent: 'center',
-        }}
-      >
-        {/* Line Chart Card */}
+        {/* --- Line & SWT Chart Row --- */}
         <div
           style={{
-            flex: 1,
-            maxWidth: '50%',
-            border: '1px solid #e0e7ef',
-            borderRadius: 18,
-            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #e0e7ef55',
-            padding: '32px 32px 16px 32px',
-            minWidth: 0,
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
+            gap: 32,
+            marginTop: 32,
+            width: '100%',
+            justifyContent: 'center',
           }}
         >
+          {/* Line Chart Card */}
           <div
             style={{
-              fontWeight: 700,
-              fontSize: 20,
-              color: '#6366f1',
-              letterSpacing: 1,
-              minHeight: 28,
-              marginBottom: 18,
+              flex: 1,
+              maxWidth: '50%',
+              border: '1px solid #e0e7ef',
+              borderRadius: 18,
+              background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+              boxShadow: '0 2px 16px 0 #e0e7ef55',
+              padding: '32px 32px 16px 32px',
+              minWidth: 0,
               display: 'flex',
-              alignItems: 'flex-start',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
             }}
           >
-            Employees on Payroll vs Paid SWT (Line) (2024)
+            <div
+              style={{
+                fontWeight: 700,
+                fontSize: 20,
+                color: '#6366f1',
+                letterSpacing: 1,
+                minHeight: 28,
+                marginBottom: 18,
+                display: 'flex',
+                alignItems: 'flex-start',
+              }}
+            >
+              Employees on Payroll vs Paid SWT (Line) (2024)
+            </div>
+            <EmployeeLineChart
+              options={employeeLineOptions}
+              series={employeeLineSeries}
+            />
           </div>
-          <EmployeeLineChart
-            options={employeeLineOptions}
-            series={employeeLineSeries}
-          />
-        </div>
-        {/* SWT Chart Card */}
-        <div
-          style={{
-            flex: 1,
-            maxWidth: '50%',
-            border: '1px solid #e0e7ef',
-            borderRadius: 18,
-            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #e0e7ef55',
-            padding: '32px 32px 16px 32px',
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-          }}
-        >
+          {/* SWT Chart Card */}
           <div
             style={{
-              fontWeight: 700,
-              fontSize: 20,
-              color: '#6366f1',
-              letterSpacing: 1,
-              minHeight: 28,
-              marginBottom: 18,
+              flex: 1,
+              maxWidth: '50%',
+              border: '1px solid #e0e7ef',
+              borderRadius: 18,
+              background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+              boxShadow: '0 2px 16px 0 #e0e7ef55',
+              padding: '32px 32px 16px 32px',
+              minWidth: 0,
               display: 'flex',
-              alignItems: 'flex-start',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
             }}
           >
-            SWT Salaries Comparison (2024)
+            <div
+              style={{
+                fontWeight: 700,
+                fontSize: 20,
+                color: '#6366f1',
+                letterSpacing: 1,
+                minHeight: 28,
+                marginBottom: 18,
+                display: 'flex',
+                alignItems: 'flex-start',
+              }}
+            >
+              SWT Salaries Comparison (2024)
+            </div>
+            <SwtSalariesChart
+              options={swtSalariesChartOptions}
+              series={swtSalariesChartSeries}
+            />
           </div>
-          <SwtSalariesChart
-            options={swtSalariesChartOptions}
-            series={swtSalariesChartSeries}
-          />
         </div>
-      </div>
-      {/* --- End Line & SWT Chart Row --- */}
-    </Layout>
+        {/* --- End Line & SWT Chart Row --- */}
+      </Layout>
+    </>
   );
 };
 
