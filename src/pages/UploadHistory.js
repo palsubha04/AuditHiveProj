@@ -2,16 +2,7 @@ import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { Eye, Download, ArrowUpDown, ArrowDownUp } from 'lucide-react';
 import * as XLSX from 'xlsx';
-//import './UploadHistory.css';
-import {
-  Table,
-  Button,
-  Card,
-  Pagination,
-  Container,
-  Row,
-  Col,
-} from 'react-bootstrap';
+import { Table, Button, Card, Container, Row, Col } from 'react-bootstrap';
 
 const tableData = [
   {
@@ -117,8 +108,7 @@ const UploadHistory = () => {
     key: null,
     direction: 'ascending',
   });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Number of items per page, changed to 10
+  const [visibleCount, setVisibleCount] = useState(10); // Number of items initially visible
 
   const sortData = (key) => {
     let direction = 'ascending';
@@ -160,19 +150,19 @@ const UploadHistory = () => {
     XLSX.writeFile(workbook, 'table_data.xlsx');
   };
 
-  // Get current items
   const sortedData = getSortedData();
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedData.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = sortedData.slice(0, visibleCount);
 
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(sortedData.length / itemsPerPage); i++) {
-    pageNumbers.push(i);
-  }
+  // Infinite scroll handler
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
+      // Load more items if available
+      setVisibleCount((prev) =>
+        prev + 10 > sortedData.length ? sortedData.length : prev + 10
+      );
+    }
+  };
 
   return (
     <Layout>
@@ -187,7 +177,11 @@ const UploadHistory = () => {
               <Card>
                 <Card.Body>
                   <Card.Title className="mb-4">Upload Validation</Card.Title>
-                  <div className="table-responsive">
+                  <div
+                    className="table-responsive"
+                    style={{ maxHeight: '400px', overflowY: 'auto' }}
+                    onScroll={handleScroll}
+                  >
                     <Table striped bordered hover>
                       <thead>
                         <tr>
@@ -224,7 +218,7 @@ const UploadHistory = () => {
                             <td>{item.Date}</td>
                             <td>{item.Time}</td>
                             <td>
-                              <div className="d-flex align-items-center gap-2">
+                              <div className="d-flex justify-content-center">
                                 <Button
                                   variant="outline-primary"
                                   size="sm"
@@ -233,38 +227,16 @@ const UploadHistory = () => {
                                 >
                                   <Download className="h-4 w-4" />
                                 </Button>
-                                <Button variant="outline-secondary" size="sm">
-                                  <Eye className="h-4 w-4" />
-                                </Button>
                               </div>
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </Table>
+                    {visibleCount < sortedData.length && (
+                      <div className="text-center py-2">Loading more...</div>
+                    )}
                   </div>
-                  {/* Pagination */}
-                  <Pagination className="justify-content-center mt-4">
-                    <Pagination.Prev
-                      onClick={() => paginate(Math.max(1, currentPage - 1))}
-                      disabled={currentPage === 1}
-                    />
-                    {pageNumbers.map((number) => (
-                      <Pagination.Item
-                        key={number}
-                        active={currentPage === number}
-                        onClick={() => paginate(number)}
-                      >
-                        {number}
-                      </Pagination.Item>
-                    ))}
-                    <Pagination.Next
-                      onClick={() =>
-                        paginate(Math.min(currentPage + 1, pageNumbers.length))
-                      }
-                      disabled={currentPage === pageNumbers.length}
-                    />
-                  </Pagination>
                 </Card.Body>
               </Card>
             </Col>
