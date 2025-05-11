@@ -2,7 +2,6 @@ import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 const BarChart = () => {
-  // ...existing code...
   const risk_flagged_summary = [
     {
       tax_type: 'gst',
@@ -24,7 +23,7 @@ const BarChart = () => {
     },
   ];
 
-  // ...existing code...
+  // Prepare data for the chart
   const categories = risk_flagged_summary.map((item) =>
     item.tax_type.toUpperCase()
   );
@@ -51,7 +50,7 @@ const BarChart = () => {
       type: 'bar',
       height: 320,
       toolbar: { show: false },
-      background: 'transparent'
+      background: 'transparent',
     },
     plotOptions: {
       bar: {
@@ -79,7 +78,7 @@ const BarChart = () => {
       },
       axisBorder: { show: true, color: '#e0e7ef' },
       axisTicks: { show: true, color: '#e0e7ef' },
-      position: 'bottom'
+      position: 'bottom',
     },
     yaxis: {
       labels: {
@@ -137,12 +136,7 @@ const BarChart = () => {
   };
 
   return (
-    <ReactApexChart
-      options={options}
-      series={series}
-      type="bar"
-      height={320}
-    />
+    <ReactApexChart options={options} series={series} type="bar" height={320} />
   );
 };
 
