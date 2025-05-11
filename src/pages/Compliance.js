@@ -707,7 +707,7 @@ const Compliance = () => {
           justifyContent: 'center',
         }}
       >
-        {/* Line Chart Card */}
+        {/* Stacked Bar Chart Card */}
         <div
           style={{
             flex: 1,
@@ -723,10 +723,6 @@ const Compliance = () => {
             justifyContent: 'flex-start',
           }}
         >
-          {/* <EmployeeLineChart
-            options={employeeLineOptions}
-            series={employeeLineSeries}
-          /> */}
           <RiskBreakdownChart />
         </div>
 
