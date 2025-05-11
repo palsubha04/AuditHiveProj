@@ -24,7 +24,9 @@ function GST() {
       <Container fluid>
         <h1 className="mb-4">GST Analytics</h1>
         
-        <TenureFilter onFilterChange={handleFilterChange} />
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
+          <TenureFilter onFilterChange={handleFilterChange} />
+        </div>
         
         <GSTSummaryCards startDate={dateRange.start_date} endDate={dateRange.end_date} />
         

@@ -9,7 +9,7 @@ import {
   faChevronDown,
   faChevronUp 
 } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Header.css';
 
@@ -17,6 +17,7 @@ function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { logout, user } = useAuth();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -44,13 +45,20 @@ function Header() {
     return user.email;
   };
 
+  let headerTitle = `Welcome Back, ${getFirstName()}`;
+  let headerSubtitle = 'Here is the information about all your orders';
+  if (location.pathname === '/compliance') {
+    headerTitle = 'Consolidated Profile';
+    headerSubtitle = '';
+  }
+
   return (
     <Navbar className="header">
       <Container fluid>
         <div className="header-left">
           <div className="header-titles">
-            <h1>Welcome Back, {getFirstName()}</h1>
-            <p>Here is the information about all your orders</p>
+            <h1>{headerTitle}</h1>
+            {headerSubtitle && <p>{headerSubtitle}</p>}
           </div>
         </div>
         <div className="header-right">
