@@ -10,8 +10,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/auth.service';
 import './Login.css';
+import { fetchDatasets } from '../slice/datasetsSlice';
+import { useDispatch } from 'react-redux';
 
 function Login() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -54,6 +57,8 @@ function Login() {
         
         // Update auth context with user data
         login(response.user);
+
+        dispatch(fetchDatasets());
         
         navigate('/gst', { replace: true });
       } else {

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Row, Col } from 'react-bootstrap';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from 'react-datepicker';
@@ -16,8 +16,12 @@ const DEFAULT_TENURE_OPTIONS = [
 ];
 
 function TenureFilter({ onFilterChange, tenureOptions }) {
-  const options = tenureOptions || DEFAULT_TENURE_OPTIONS;
-  const [selectedTenure, setSelectedTenure] = useState(options[0].value);
+  // Memoize options to avoid unnecessary re-renders
+  const options = useMemo(
+    () => tenureOptions || DEFAULT_TENURE_OPTIONS,
+    [tenureOptions]
+  );
+  const [selectedTenure, setSelectedTenure] = useState(options[0]?.value);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [showDatePickers, setShowDatePickers] = useState(false);
@@ -29,14 +33,23 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
     return `${day}-${month}-${year}`;
   };
 
-  // Effect for predefined ranges
+  // Effect for predefined ranges and year-based options
   useEffect(() => {
+    // Prevent effect from running if options array is empty
+    if (!options || options.length === 0) return;
+
+    // Only run if not custom
+    if (selectedTenure === 'custom') {
+      setShowDatePickers(true);
+      return;
+    } else {
+      setShowDatePickers(false);
+    }
+
+    let today = new Date();
+    let start = new Date();
+
     if (options === DEFAULT_TENURE_OPTIONS) {
-      if (selectedTenure === 'custom') return;
-
-      let today = new Date();
-      let start = new Date();
-
       switch (selectedTenure) {
         case '1m':
           start.setMonth(today.getMonth() - 1);
@@ -59,46 +72,56 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
         default:
           start.setMonth(today.getMonth() - 1);
       }
-
-      setStartDate(start);
-      setEndDate(today);
-
-      onFilterChange({
-        start_date: formatDate(start),
-        end_date: formatDate(today)
-      });
     } else {
       // Year-based options
-      if (selectedTenure) {
-        const year = parseInt(selectedTenure, 10);
-        if (!isNaN(year)) {
-          const start = new Date(year, 0, 1);
-          const end = new Date(year, 11, 31);
-          setStartDate(start);
-          setEndDate(end);
-          onFilterChange({
-            start_date: formatDate(start),
-            end_date: formatDate(end)
-          });
-        }
+      const year = parseInt(selectedTenure, 10);
+      if (!isNaN(year)) {
+        start = new Date(year, 0, 1);
+        today = new Date(year, 11, 31);
       }
     }
-  }, [selectedTenure, options]);
+
+    // Only update state if changed
+    if (
+      !startDate ||
+      !endDate ||
+      start.getTime() !== startDate.getTime() ||
+      today.getTime() !== endDate.getTime()
+    ) {
+      setStartDate(start);
+      setEndDate(today);
+      if (onFilterChange) {
+        onFilterChange({
+          start_date: formatDate(start),
+          end_date: formatDate(today)
+        });
+      }
+    }
+    // eslint-disable-next-line
+  }, [selectedTenure, options]); // intentionally not including startDate/endDate to avoid infinite loop
 
   // Effect for custom date range
   useEffect(() => {
     if (selectedTenure === 'custom' && startDate && endDate) {
-      onFilterChange({
-        start_date: formatDate(startDate),
-        end_date: formatDate(endDate)
-      });
+      if (onFilterChange) {
+        onFilterChange({
+          start_date: formatDate(startDate),
+          end_date: formatDate(endDate)
+        });
+      }
     }
-  }, [startDate, endDate]);
+    // eslint-disable-next-line
+  }, [startDate, endDate, selectedTenure]);
 
   const handleTenureChange = (e) => {
     const value = e.target.value;
     setSelectedTenure(value);
     setShowDatePickers(value === 'custom');
+    // Reset custom dates when switching away from custom
+    if (value !== 'custom') {
+      setStartDate(null);
+      setEndDate(null);
+    }
   };
 
   return (
@@ -151,4 +174,4 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
   );
 }
 
-export default TenureFilter; 
+export default TenureFilter;
