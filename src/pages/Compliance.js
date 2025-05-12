@@ -544,9 +544,31 @@ const Compliance = () => {
   const { data, loading, error } = useSelector((state) => state.datasets);
   const { monthlySalesData, monthlySalesLoading, monthlySalesError } =
     useSelector((state) => state?.salesComparison);
+  const [salesData, setSalesData] = useState({});
+
+  console.log('current data', dateRange);
+
+  useEffect(() => {
+    if (!monthlySalesData) {
+      dispatch(
+        fetchSalesComparison({
+          start_date: '01-01-2021',
+          end_date: '31-12-2021',
+          tin: '500000009',
+        })
+      );
+    }
+  }, [monthlySalesData, dispatch]);
+
+  useEffect(() => {
+    if (monthlySalesData) {
+      setSalesData(monthlySalesData);
+    }
+  }, [monthlySalesData]);
+
+  console.log('Sales Data: ', salesData);
 
   const tins = data?.tins || [];
-  const salesData = monthlySalesData?.monthlySalesData || [];
   const yearOptions =
     data?.years?.map((year) => ({
       label: String(year),
@@ -557,16 +579,30 @@ const Compliance = () => {
     setDateRange(range);
   };
 
+  const formatDate = (date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
   const handleSearch = () => {
     // Implement search logic here
     // You can use selectedTax, dateRange.start_date, dateRange.end_date
     dispatch(
       fetchSalesComparison({
-        start_date: '01-01-2021',
-        end_date: '31-12-2022',
-        tin: '500000009',
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
       })
     );
+    // dispatch(
+    //   fetchSalesComparison({
+    //     start_date: '01-01-2022',
+    //     end_date: '31-12-2022',
+    //     tin: '500000009',
+    //   })
+    // );
   };
 
   useEffect(() => {
@@ -574,20 +610,6 @@ const Compliance = () => {
       dispatch(fetchDatasets());
     }
   }, [data, dispatch]);
-
-  useEffect(() => {
-    if (!monthlySalesData) {
-      dispatch(
-        fetchSalesComparison({
-          start_date: '01-01-2021',
-          end_date: '31-12-2022',
-          tin: '500000009',
-        })
-      );
-    }
-  }, [monthlySalesData, dispatch]);
-
-  console.log('monthlySalesData ', salesData);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -744,7 +766,7 @@ const Compliance = () => {
             maxWidth: 1200,
           }}
         >
-          <MonthlySalesTaxSummaryChart />
+          <MonthlySalesTaxSummaryChart salesData={salesData} />
         </div>
         {/* End Chart Card Section */}
 
