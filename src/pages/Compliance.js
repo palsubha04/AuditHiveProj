@@ -12,6 +12,7 @@ import TenureFilter from '../components/filters/TenureFilter';
 import Layout from '../components/Layout';
 import { fetchDatasets } from '../slice/datasetsSlice';
 import { fetchSalesComparison } from '../slice/salesComparisonSlice';
+import { ChevronDown } from 'lucide-react';
 
 // Chart data
 const chartData = {
@@ -579,12 +580,12 @@ const Compliance = () => {
     setDateRange(range);
   };
 
-  const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
+  // const formatDate = (date) => {
+  //   const day = String(date.getDate()).padStart(2, '0');
+  //   const month = String(date.getMonth() + 1).padStart(2, '0');
+  //   const year = date.getFullYear();
+  //   return `${day}-${month}-${year}`;
+  // };
 
   const handleSearch = () => {
     // Implement search logic here
@@ -663,20 +664,23 @@ const Compliance = () => {
             }}
           >
             <label style={{ fontWeight: 'bold', marginRight: 8 }}>TIN</label>
-            <div ref={dropdownRef} style={{ position: 'relative', width: 260 }}>
+            <div ref={dropdownRef} style={{ position: 'relative', width: 200 }}>
               <div
                 style={{
                   border: '1px solid #ccc',
                   borderRadius: 4,
-                  padding: 8,
+                  padding: 3,
                   background: '#fff',
                   cursor: 'pointer',
-                  minHeight: 38,
+                  minHeight: 6,
                   userSelect: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
                 }}
                 onClick={() => setIsDropdownOpen((open) => !open)}
               >
-                {selectedTIN || 'Select TIN'}
+                {selectedTIN || 'Select TIN'} <ChevronDown />
               </div>
               {isDropdownOpen && (
                 <div
