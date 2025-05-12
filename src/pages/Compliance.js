@@ -11,8 +11,7 @@ import SwtSalariesChart from '../components/charts/SwtSalariesChart';
 import TenureFilter from '../components/filters/TenureFilter';
 import Layout from '../components/Layout';
 import { fetchDatasets } from '../slice/datasetsSlice';
-
-const taxTypes = ['GST', 'CIT', 'SWT'];
+import { fetchSalesComparison } from '../slice/salesComparisonSlice';
 
 // Chart data
 const chartData = {
@@ -119,51 +118,6 @@ const months = [
   'Nov',
   'Dec',
 ];
-
-const chartSeries = [
-  {
-    name: 'Sales Income',
-    data: chartData.monthly_summary.map((m) => m.sales_income),
-  },
-  {
-    name: 'Taxable Sales',
-    data: chartData.monthly_summary.map((m) => m['taxable sales']),
-  },
-  {
-    name: 'Zero Rated Sales',
-    data: chartData.monthly_summary.map((m) => m.zero_rated_sales),
-  },
-  {
-    name: 'Exempt Sales',
-    data: chartData.monthly_summary.map((m) => m.exempt_sales),
-  },
-];
-
-const chartOptions = {
-  chart: {
-    type: 'line',
-    height: 320,
-    toolbar: { show: false },
-  },
-  stroke: {
-    width: [3, 3, 2, 2],
-    curve: 'smooth',
-  },
-  xaxis: {
-    categories: months,
-    title: { text: 'Month' },
-  },
-  yaxis: {
-    labels: {
-      formatter: (val) =>
-        val >= 1000 ? `${(val / 1000000).toFixed(1)}M` : val,
-    },
-  },
-  legend: {
-    position: 'top',
-  },
-  colors: ['#2563eb', '#22c55e', '#f59e42', '#a0aec0'],
-};
 
 // Add area chart options
 const areaChartOptions = {
@@ -588,11 +542,16 @@ const Compliance = () => {
   const dropdownRef = useRef(null);
   const [dateRange, setDateRange] = useState('');
   const { data, loading, error } = useSelector((state) => state.datasets);
+  const { monthlySalesData, monthlySalesLoading, monthlySalesError } =
+    useSelector((state) => state?.salesComparison);
+
   const tins = data?.tins || [];
-  const yearOptions = data?.years?.map(year => ({
-    label: String(year),
-    value: String(year)
-  })) || [];
+  const salesData = monthlySalesData?.monthlySalesData || [];
+  const yearOptions =
+    data?.years?.map((year) => ({
+      label: String(year),
+      value: String(year),
+    })) || [];
 
   const handleFilterChange = (range) => {
     setDateRange(range);
@@ -601,14 +560,34 @@ const Compliance = () => {
   const handleSearch = () => {
     // Implement search logic here
     // You can use selectedTax, dateRange.start_date, dateRange.end_date
+    dispatch(
+      fetchSalesComparison({
+        start_date: '01-01-2021',
+        end_date: '31-12-2022',
+        tin: '500000009',
+      })
+    );
   };
 
   useEffect(() => {
-    console.log(data);
     if (!data) {
       dispatch(fetchDatasets());
     }
   }, [data, dispatch]);
+
+  useEffect(() => {
+    if (!monthlySalesData) {
+      dispatch(
+        fetchSalesComparison({
+          start_date: '01-01-2021',
+          end_date: '31-12-2022',
+          tin: '500000009',
+        })
+      );
+    }
+  }, [monthlySalesData, dispatch]);
+
+  console.log('monthlySalesData ', salesData);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -621,10 +600,10 @@ const Compliance = () => {
   }, []);
 
   useEffect(() => {
-    if (error) {
-      toast.error(error, { position: "top-right" });
+    if (error || monthlySalesError) {
+      toast.error(error, { position: 'top-right' });
     }
-  }, [error]);
+  }, [error, monthlySalesError]);
 
   useEffect(() => {
     if (data?.tins && data.tins.length > 0) {
@@ -632,14 +611,16 @@ const Compliance = () => {
     }
   }, [data?.tins]);
 
-  if (loading) {
+  if (loading || monthlySalesLoading) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '60vh'
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '60vh',
+        }}
+      >
         <ClipLoader size={60} color="#2563eb" />
         <ToastContainer />
       </div>
@@ -702,7 +683,8 @@ const Compliance = () => {
                         style={{
                           ...style,
                           padding: '8px 12px',
-                          background: tins[index] === selectedTIN ? '#e0e7ef' : '#fff',
+                          background:
+                            tins[index] === selectedTIN ? '#e0e7ef' : '#fff',
                           cursor: 'pointer',
                         }}
                         onClick={() => {
@@ -762,11 +744,7 @@ const Compliance = () => {
             maxWidth: 1200,
           }}
         >
-          <MonthlySalesTaxSummaryChart
-            year={chartData.year}
-            options={chartOptions}
-            series={chartSeries}
-          />
+          <MonthlySalesTaxSummaryChart />
         </div>
         {/* End Chart Card Section */}
 
@@ -796,10 +774,6 @@ const Compliance = () => {
               justifyContent: 'flex-start',
             }}
           >
-            {/* <EmployeeLineChart
-            options={employeeLineOptions}
-            series={employeeLineSeries}
-          /> */}
             <RiskBreakdownChart />
           </div>
 
