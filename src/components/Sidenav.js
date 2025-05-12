@@ -16,6 +16,8 @@ function Sidenav() {
       '/consolidated-profile',
       '/pending-returns',
       '/fraud-detections',
+      '/risk-assessment',
+      '/risk-profiling',
       '/compliance',
     ].includes(location.pathname);
   };
@@ -129,6 +131,22 @@ function Sidenav() {
               className="nav-item submenu-item"
             >
               <span>Fraud Detections</span>
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/risk-assessment"
+              active={location.pathname === '/risk-assessment'}
+              className="nav-item submenu-item"
+            >
+              <span>Risk Assessment</span>
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/risk-profiling"
+              active={location.pathname === '/risk-profiling'}
+              className="nav-item submenu-item"
+            >
+              <span>Risk Profilling</span>
             </Nav.Link>
             <Nav.Link
               as={Link}

@@ -19,6 +19,8 @@ import ContactUs from './pages/ContactUs';
 import NotFound from './pages/NotFound';
 import ResetPassword from './pages/ResetPassword';
 import ForcePasswordReset from './pages/ForcePasswordReset';
+import RiskAssessment from './pages/RiskAssessment';
+import RiskProfiling from './pages/RiskProfiling';
 import GST from './pages/GST';
 import CIT from './pages/CIT';
 import SWT from './pages/SWT';
@@ -94,6 +96,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <FraudDetections />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/risk-assessment"
+            element={
+              <ProtectedRoute>
+                <RiskAssessment />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/risk-profiling"
+            element={
+              <ProtectedRoute>
+                <RiskProfiling />
               </ProtectedRoute>
             }
           />
