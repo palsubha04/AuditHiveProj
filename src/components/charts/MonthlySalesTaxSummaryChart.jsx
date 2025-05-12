@@ -67,6 +67,18 @@ const MonthlySalesTaxSummaryChart = ({ salesData }) => {
       position: 'top',
     },
     colors: ['#2563eb', '#22c55e', '#f59e42', '#a0aec0'],
+    noData: {
+      text: 'No Data Found',
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: '#6c757d',
+        fontSize: '16px',
+        fontFamily: 'inherit',
+      },
+    },
   };
   return (
     <div>
