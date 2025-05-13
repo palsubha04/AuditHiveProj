@@ -542,7 +542,7 @@ const Compliance = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [dateRange, setDateRange] = useState('');
-  const { data, loading, error } = useSelector((state) => state.datasets);
+  const { data, loading, error } = useSelector((state) => state?.datasets);
   const { monthlySalesData, monthlySalesLoading, monthlySalesError } =
     useSelector((state) => state?.salesComparison);
   const [salesData, setSalesData] = useState({});
@@ -575,6 +575,8 @@ const Compliance = () => {
       label: String(year),
       value: String(year),
     })) || [];
+
+  console.log('year options: ', yearOptions);
 
   const handleFilterChange = (range) => {
     setDateRange(range);
@@ -634,21 +636,21 @@ const Compliance = () => {
     }
   }, [data?.tins]);
 
-  if (loading || monthlySalesLoading) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '60vh',
-        }}
-      >
-        <ClipLoader size={60} color="#2563eb" />
-        <ToastContainer />
-      </div>
-    );
-  }
+  // if (loading || monthlySalesLoading) {
+  //   return (
+  //     <div
+  //       style={{
+  //         display: 'flex',
+  //         justifyContent: 'center',
+  //         alignItems: 'center',
+  //         minHeight: '60vh',
+  //       }}
+  //     >
+  //       <ClipLoader size={60} color="#2563eb" />
+  //       <ToastContainer />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>

@@ -90,7 +90,7 @@ const MonthlySalesTaxSummaryChart = ({ salesData }) => {
           color: '#222',
         }}
       >
-        Monthly Sales & Tax Summary ({chartData?.year})
+        Monthly Sales & Tax Summary
       </div>
       <Chart
         options={chartOptions}
