@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Table,
-  Badge,
-  Form,
-  InputGroup,
-  Dropdown,
-  DropdownButton,
-} from 'react-bootstrap';
+import { Table, Badge, Dropdown, DropdownButton } from 'react-bootstrap';
 
 const taxpayersData = [
   {
@@ -95,7 +88,7 @@ function TaxPayersGrid() {
     <>
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <div className="d-flex align-items-center">
-          <h4 className="mb-0 me-3 fw-bold" style={{ color: '#23236A' }}>
+          <h4 className="mb-0 me-3 fw-bold" style={{ color: '#6366F1' }}>
             Tax Payers Name
           </h4>
           <DropdownButton
@@ -105,17 +98,10 @@ function TaxPayersGrid() {
             size="sm"
           >
             <Dropdown.Item>GST</Dropdown.Item>
-            <Dropdown.Item>VAT</Dropdown.Item>
+            <Dropdown.Item>CIT</Dropdown.Item>
+            <Dropdown.Item>SWT</Dropdown.Item>
           </DropdownButton>
         </div>
-        <InputGroup style={{ maxWidth: 250 }}>
-          <InputGroup.Text>
-            <span role="img" aria-label="search">
-              🔍
-            </span>
-          </InputGroup.Text>
-          <Form.Control placeholder="Search By Tin" />
-        </InputGroup>
       </div>
       <Table hover responsive className="align-middle">
         <thead>
