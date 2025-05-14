@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-const BarChart = () => {
+const TaxpayersRiskChart = () => {
   const risk_flagged_summary = [
     {
       tax_type: 'gst',
@@ -140,4 +140,4 @@ const BarChart = () => {
   );
 };
 
-export default BarChart;
+export default TaxpayersRiskChart;

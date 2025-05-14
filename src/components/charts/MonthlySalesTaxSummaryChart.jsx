@@ -82,16 +82,6 @@ const MonthlySalesTaxSummaryChart = ({ salesData }) => {
   };
   return (
     <div>
-      <div
-        style={{
-          fontWeight: 600,
-          fontSize: 18,
-          marginBottom: 16,
-          color: '#222',
-        }}
-      >
-        Monthly Sales & Tax Summary
-      </div>
       <Chart
         options={chartOptions}
         series={chartSeries}
