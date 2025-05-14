@@ -51,6 +51,10 @@ function Header() {
     headerTitle = 'Consolidated Profile';
     headerSubtitle = '';
   }
+  else if (location.pathname === '/risk-assessment') {
+    headerTitle = 'Risk Assessment';
+    headerSubtitle = '';
+  }
 
   return (
     <Navbar className="header">
