@@ -154,6 +154,18 @@ const RiskBreakdownByCategoryChart = ({riskBreakdownByCategoryData}) => {
       opacity: 1,
     },
     colors: riskLevels.map(level => level.color),
+    noData: {
+      text: 'No Data Found',
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: '#6c757d',
+        fontSize: '16px',
+        fontFamily: 'inherit',
+      },
+    },
   };
 
   const changeCategoryData = (category) => {
@@ -191,9 +203,9 @@ const RiskBreakdownByCategoryChart = ({riskBreakdownByCategoryData}) => {
       </div>
 
       {/* Only render chart if series data exists */}
-      {series.length > 0 && (
+      {riskBreakdownByCategoryData ? (series.length > 0 && (
         <Chart options={options} series={series} type="bar" height={350} />
-      )}
+      )) :  <div>No data available</div>}
     </div>
   );
 };

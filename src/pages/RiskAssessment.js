@@ -11,6 +11,8 @@ import TenureFilter from '../components/filters/TenureFilter';
 import { fetchTotalVsFlaggedTaxpayers } from '../slice/totalVsFlaggedTaxpayersSlice';
 import { fetchRiskBreakdownByCategory } from '../slice/riskBreakdownByCategorySlice';
 import { fetchRiskAnalysis } from '../slice/riskAnalysisByIndustrySlice';
+import { ClipLoader } from 'react-spinners';
+import { ToastContainer } from 'react-toastify';
 
 // Added by Soham - Total Tax Payer vs Risk Flagged
 
@@ -23,14 +25,13 @@ function RiskAssessment() {
   const [dateRange, setDateRange] = useState('');
   const dispatch = useDispatch();
 
-  const { data, loading, error } = useSelector((state) => state.datasets);
+  const { data, loading, error } = useSelector((state) => state?.datasets);
 
   const { totalVsFlaggedTaxpayersData, totalVsFlaggedTaxpayersLoading, totalVsFlaggedTaxpayersError } = useSelector((state) => state?.totalVsFlaggedTaxpayers);
   const { riskBreakdownByCategoryData, riskBreakdownByCategoryLoading, riskBreakdownByCategoryError } = useSelector((state) => state?.riskBreakdownByCategory);
   const { riskAnalysisByIndustryData, riskAnalysisByIndustryLoading, riskAnalysisByIndustryError } = useSelector((state) => state?.riskAnalysisByIndustry);
 
-  console.log("totalVsFlaggedTaxpayersData", totalVsFlaggedTaxpayersData);
- 
+   
   useEffect(() => {
     if (!totalVsFlaggedTaxpayersData) {
       dispatch(
@@ -44,7 +45,7 @@ function RiskAssessment() {
       dispatch(
         fetchRiskBreakdownByCategory({
           start_date: '01-01-2022',
-          end_date: '31-12-2022'
+          end_date: '31-12-2022',
         })
       );
     }
@@ -56,7 +57,11 @@ function RiskAssessment() {
         })
       );
     }
-  }, [totalVsFlaggedTaxpayersData,riskBreakdownByCategoryData,riskAnalysisByIndustryData, dispatch]);
+  }, [totalVsFlaggedTaxpayersData,riskBreakdownByCategoryData, riskAnalysisByIndustryData, dispatch]);
+
+  console.log("riskBreakdownByCategoryData", riskBreakdownByCategoryData);
+
+  
   const handleFilterChange = (range) => {
     setDateRange(range);
   }
@@ -65,6 +70,22 @@ function RiskAssessment() {
     label: String(year),
     value: String(year),
   })) || [];
+
+  if (loading || riskBreakdownByCategoryLoading || totalVsFlaggedTaxpayersLoading || riskAnalysisByIndustryLoading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '60vh',
+        }}
+      >
+        <ClipLoader size={60} color="#2563eb" />
+        <ToastContainer />
+      </div>
+    );
+  }
   return (
     <Layout>
       <div className="page-container">
@@ -103,7 +124,7 @@ function RiskAssessment() {
             
           }}
         >
-          <TotalVsFlaggedLineChart totalTaxPayerVsRiskFlagged={totalVsFlaggedTaxpayersData}/>
+           <TotalVsFlaggedLineChart totalTaxPayerVsRiskFlagged={totalVsFlaggedTaxpayersData}/> 
         </div>
         {/* </div> */}
         <div
@@ -118,7 +139,7 @@ function RiskAssessment() {
             maxWidth: 1200,
           }}
         >
-          <RiskAnalysisByIndustryChart riskData={riskAnalysisByIndustryData}/>
+           <RiskAnalysisByIndustryChart riskData={riskAnalysisByIndustryData}/> 
         </div>
         {/* Done by Ankita */}</div>
       </div>

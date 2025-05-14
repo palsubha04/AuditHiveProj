@@ -6,7 +6,7 @@ export const fetchRiskAnalysis = createAsyncThunk(
   'riskAnalysisByIndustry/fetch',
   async ({ start_date, end_date }) => {
     const response = await api.get(
-      `/api/v1/analytics/risk-assessment/risk-breakdown-by-industry?start_date=${start_date}&end_date=${end_date}`
+      `/analytics/risk-assessment/risk-breakdown-by-industry?start_date=${start_date}&end_date=${end_date}`
     );
     return response.data;
   }
