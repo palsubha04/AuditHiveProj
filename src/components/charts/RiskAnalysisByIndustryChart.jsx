@@ -2,16 +2,17 @@ import { Tally1 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import Chart from "react-apexcharts";
 
-const riskLevels = [
-  "Critical Risk",
-  "High Risk",
-  "Moderate Risk",
-  "Elevated Risk",
-  "Low Risk",
-  "Very Low Risk",
-];
+  const riskLevels = [
+    "Critical Risk",
+    "High Risk",
+    "Moderate Risk",
+    "Elevated Risk",
+    "Low Risk",
+    "Very Low Risk",
+  ];
 
 const RiskAnalysisByIndustryChart = ({ riskData }) => {
+  console.log("riskData",riskData);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedIndustry, setSelectedIndustry] = useState("");
   const [filteredData, setFilteredData] = useState({});
@@ -45,6 +46,7 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
   }, [riskData]);
 
   function generateRiskRanges(data) {
+    console.log("in generate risk",data);
     if(data && data.length > 0) {
       let max = -Infinity;
     let min = Infinity;
@@ -84,13 +86,13 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
   }
 
 
-  const series = Object.entries(filteredData).map(([size, risks]) => ({
+  const series =filteredData && typeof filteredData === 'object' ? Object.entries(filteredData).map(([size, risks]) => ({
     name: size.charAt(0).toUpperCase() + size.slice(1),
     data: riskLevels.map((level) => ({
       x: level,
       y: risks[level] || 0,
     })),
-  }));
+  })) : [];
   
   const options = {
     chart: {

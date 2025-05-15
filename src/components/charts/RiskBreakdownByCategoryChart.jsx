@@ -1,9 +1,17 @@
 import { Tally1 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 
 const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
+  //console.log("data received in RiskBreakdownByCategoryChart", riskBreakdownByCategoryData);
   const [filterData, setFilterData] = useState(riskBreakdownByCategoryData ? riskBreakdownByCategoryData["gst"] ?? {} : {});
+
+  const defaultCategory = "gst";
+  useEffect(() => {
+    if (riskBreakdownByCategoryData?.[defaultCategory]) {
+      setFilterData(riskBreakdownByCategoryData[defaultCategory]);
+    }
+  }, [riskBreakdownByCategoryData]);
 
   // Define categories for x-axis
   const categories = ["large", "medium", "small", "micro"];
@@ -68,6 +76,7 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
     const selectedData = riskBreakdownByCategoryData?.[category] ?? {};
     setFilterData(selectedData);
   };
+
 
   return (
     <div>

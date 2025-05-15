@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "../components/Layout";
 import MonthlySalesTaxSummaryChart from "../components/charts/MonthlySalesTaxSummaryChart";
 import RiskAnalysisByIndustryChart from "../components/charts/RiskAnalysisByIndustryChart";
@@ -21,6 +21,7 @@ import { fetchDatasets } from "../slice/datasetsSlice";
 const entityTypes = ["large", "medium", "small", "micro"];
 
 function RiskAssessment() {
+
   const [dateRange, setDateRange] = useState({
     start_date: null,
     end_date: null,
@@ -28,29 +29,23 @@ function RiskAssessment() {
   const dispatch = useDispatch();
 
   const { data, loading, error } = useSelector((state) => state?.datasets);
-  const [fetchedFlaggedRange, setFetchedFlaggedRange] = useState(null);
+  //const [fetchedFlaggedRange, setFetchedFlaggedRange] = useState(null);
 
   const {
     totalVsFlaggedTaxpayersData,
     totalVsFlaggedTaxpayersLoading,
     totalVsFlaggedTaxpayersError,
   } = useSelector((state) => state?.totalVsFlaggedTaxpayers);
+
   const {
     riskBreakdownByCategoryData,
     riskBreakdownByCategoryLoading,
     riskBreakdownByCategoryError,
   } = useSelector((state) => state?.riskBreakdownByCategory);
+
   const { riskAnalysisData, riskAnalysisLoading, riskAnalysisError } =
     useSelector((state) => state?.riskAnalysisByIndustry);
 
-  const [
-    totalVsFlaggedTaxpayersDataState,
-    setTotalVsFlaggedTaxpayersDataState,
-  ] = useState({});
-  const [
-    riskBreakdownByCategoryDataState,
-    setRiskBreakdownByCategoryDataState,
-  ] = useState({});
 
   useEffect(() => {
     if (!data) {
@@ -58,57 +53,79 @@ function RiskAssessment() {
     }
   }, [data, dispatch]);
 
-  useEffect(() => {
-    if (!dateRange.start_date || !dateRange.end_date) return;
-    const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
-    if (fetchedFlaggedRange === currentKey) return;
-
-    // if (!totalVsFlaggedTaxpayersData) {
-    dispatch(
-      fetchTotalVsFlaggedTaxpayers({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-      })
-    );
-    //}
-    setFetchedFlaggedRange(currentKey);
-  }, [totalVsFlaggedTaxpayersData, dateRange]);
+  const fetchedRangeRef = useRef(null);
 
   useEffect(() => {
     if (!dateRange.start_date || !dateRange.end_date) return;
+
     const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
-    if (fetchedFlaggedRange === currentKey) return;
+    if (fetchedRangeRef.current === currentKey) {
+      console.log("Skipping fetch, already fetched:", currentKey);
+      return;
+    }
 
-    // if (!riskBreakdownByCategoryData) {
-    dispatch(
-      fetchRiskBreakdownByCategory({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-      })
-    );
-    setFetchedFlaggedRange(currentKey);
-    // }
-  }, [riskBreakdownByCategoryData, dateRange]);
+    console.log("Dispatching for new range:", currentKey);
+    fetchedRangeRef.current = currentKey;
 
-  useEffect(() => {
-    if (!dateRange.start_date || !dateRange.end_date) return;
-    const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
-    if (fetchedFlaggedRange === currentKey) return;
+    dispatch(fetchTotalVsFlaggedTaxpayers(dateRange));
+    dispatch(fetchRiskBreakdownByCategory(dateRange));
+    dispatch(fetchRiskAnalysis(dateRange));
+  }, [dateRange, dispatch]);
+  
 
-    // if (!riskAnalysisData) {
-    dispatch(
-      fetchRiskAnalysis({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-      })
-    );
-    setFetchedFlaggedRange(currentKey);
-    // }
-  }, [riskAnalysisData, dateRange]);
+  
 
- // console.log("data", data);
-  console.log("dateRange", dateRange);
-  console.log("totalVsFlaggedTaxpayersData", totalVsFlaggedTaxpayersData);
+  // useEffect(() => {
+  //   if (!dateRange.start_date || !dateRange.end_date) return;
+  //   const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
+  //   if (fetchedFlaggedRange === currentKey) return;
+
+  //   // if (!totalVsFlaggedTaxpayersData) {
+  //   dispatch(
+  //     fetchTotalVsFlaggedTaxpayers({
+  //       start_date: dateRange.start_date,
+  //       end_date: dateRange.end_date,
+  //     })
+  //   );
+  //   //}
+  //   setFetchedFlaggedRange(currentKey);
+  // }, [totalVsFlaggedTaxpayersData, dateRange]);
+
+  // useEffect(() => {
+  //   if (!dateRange.start_date || !dateRange.end_date) return;
+  //   const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
+  //   if (fetchedFlaggedRange === currentKey) return;
+
+  //   // if (!riskBreakdownByCategoryData) {
+  //   dispatch(
+  //     fetchRiskBreakdownByCategory({
+  //       start_date: dateRange.start_date,
+  //       end_date: dateRange.end_date,
+  //     })
+  //   );
+  //   setFetchedFlaggedRange(currentKey);
+  //   // }
+  // }, [riskBreakdownByCategoryData, dateRange]);
+
+  // useEffect(() => {
+  //   if (!dateRange.start_date || !dateRange.end_date) return;
+  //   const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
+  //   if (fetchedFlaggedRange === currentKey) return;
+
+  //   // if (!riskAnalysisData) {
+  //   dispatch(
+  //     fetchRiskAnalysis({
+  //       start_date: dateRange.start_date,
+  //       end_date: dateRange.end_date,
+  //     })
+  //   );
+  //   setFetchedFlaggedRange(currentKey);
+  //   // }
+  // }, [riskAnalysisData, dateRange]);
+
+//  console.log("data", data);
+//   console.log("dateRange", dateRange);
+//   console.log("riskBreakdownByCategoryData", riskBreakdownByCategoryData);
 
   // console.log(
   //   "totalVsFlaggedTaxpayersDataState",
@@ -116,7 +133,12 @@ function RiskAssessment() {
   // );
 
   const handleFilterChange = (range) => {
-    setDateRange(range);
+    if (
+      range.start_date !== dateRange.start_date ||
+      range.end_date !== dateRange.end_date
+    ) {
+      setDateRange(range);
+    }
   };
   const yearOptions =
     data?.years?.map((year) => ({
@@ -124,28 +146,6 @@ function RiskAssessment() {
       value: String(year),
     })) || [];
 
-  // if (
-  //   loading ||
-  //   riskBreakdownByCategoryLoading ||
-  //   totalVsFlaggedTaxpayersLoading ||
-  //   riskAnalysisLoading
-  // ) {
-  //   return (
-  //     <Layout>
-  //     <div
-  //       style={{
-  //         display: "flex",
-  //         justifyContent: "center",
-  //         alignItems: "center",
-  //         minHeight: "60vh",
-  //       }}
-  //     >
-  //       <ClipLoader size={60} color="#2563eb" />
-  //       <ToastContainer />
-  //     </div>
-  //     </Layout>
-  //   );
-  // }
   return (
     <Layout>
       

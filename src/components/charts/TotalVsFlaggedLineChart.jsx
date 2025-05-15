@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import EmployeeLineChart from './EmployeeLineChart';
 import { Tally1 } from 'lucide-react';
+import ReactApexChart from 'react-apexcharts';
 
 const entityTypes = ['large', 'medium', 'small', 'micro'];
 
@@ -97,24 +98,41 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
 
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
-        <h4 className="mb-0 me-3 fw-bold" style={{ color: '#6366F1', fontSize: '22px' }}>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+        <h4
+          className="mb-0 me-3 fw-bold"
+          style={{ color: "#6366F1", fontSize: "22px" }}
+        >
           Total Tax Payer vs Risk Flagged
         </h4>
-        <Tally1 style={{ color: '#7c879d' }} />
-        <span style={{ color: "#7c879d", fontSize: '16px', marginRight: "10px" }}>Filter By : </span>
+        <Tally1 style={{ color: "#7c879d" }} />
+        <span
+          style={{ color: "#7c879d", fontSize: "16px", marginRight: "10px" }}
+        >
+          Filter By :{" "}
+        </span>
 
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          style={{ padding: '4px 8px', borderRadius: 4, border: '1px solid #ccc' }}
+          style={{
+            padding: "4px 8px",
+            borderRadius: 4,
+            border: "1px solid #ccc",
+          }}
         >
           <option value="gst">GST</option>
           <option value="swt">SWT</option>
           <option value="cit">CIT</option>
         </select>
       </div>
-      <EmployeeLineChart options={chartOptions} series={chartSeries} />
+      <ReactApexChart
+        options={chartOptions}
+        series={chartSeries}
+        type="line"
+        
+      />
+      {/* <EmployeeLineChart options={chartOptions} series={chartSeries} /> */}
       {/* {isDataAvailable ? (
         <EmployeeLineChart options={chartOptions} series={chartSeries} />
       ) : (
