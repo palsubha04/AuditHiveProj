@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Navbar, Container, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faSearch, 
-  faBell, 
+import {
+  faSearch,
+  faBell,
   faUser,
   faSignOutAlt,
   faChevronDown,
-  faChevronUp 
+  faChevronUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -39,7 +39,9 @@ function Header() {
   const getFullName = () => {
     if (!user) return 'Guest';
     if (user.first_name && user.last_name) {
-      return `${capitalizeWord(user.first_name)} ${capitalizeWord(user.last_name)}`;
+      return `${capitalizeWord(user.first_name)} ${capitalizeWord(
+        user.last_name
+      )}`;
     }
     if (user.username) return capitalizeWord(user.username);
     return user.email;
@@ -50,9 +52,11 @@ function Header() {
   if (location.pathname === '/compliance') {
     headerTitle = 'Consolidated Profile';
     headerSubtitle = '';
-  }
-  else if (location.pathname === '/risk-assessment') {
+  } else if (location.pathname === '/risk-assessment') {
     headerTitle = 'Risk Assessment';
+    headerSubtitle = '';
+  } else if (location.pathname === '/upload-history') {
+    headerTitle = 'Upload History';
     headerSubtitle = '';
   }
 
@@ -72,7 +76,7 @@ function Header() {
           <button className="icon-button">
             <FontAwesomeIcon icon={faBell} />
           </button>
-          <Dropdown 
+          <Dropdown
             align="end"
             show={isDropdownOpen}
             onToggle={(isOpen) => setIsDropdownOpen(isOpen)}
@@ -80,8 +84,8 @@ function Header() {
             <Dropdown.Toggle className="user-dropdown">
               <FontAwesomeIcon icon={faUser} className="avatar" />
               <span>{getFullName()}</span>
-              <FontAwesomeIcon 
-                icon={isDropdownOpen ? faChevronUp : faChevronDown} 
+              <FontAwesomeIcon
+                icon={isDropdownOpen ? faChevronUp : faChevronDown}
                 className="dropdown-arrow"
               />
             </Dropdown.Toggle>
@@ -98,4 +102,4 @@ function Header() {
   );
 }
 
-export default Header; 
+export default Header;

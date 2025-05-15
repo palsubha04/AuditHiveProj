@@ -132,7 +132,6 @@ const Compliance = () => {
 
   return (
     <>
-      <ToastContainer />
       <Layout>
         <div className="page-container">
           <div
