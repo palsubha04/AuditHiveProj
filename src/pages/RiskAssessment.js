@@ -13,16 +13,19 @@ import { fetchRiskBreakdownByCategory } from "../slice/riskBreakdownByCategorySl
 import { fetchRiskAnalysis } from "../slice/riskAnalysisByIndustrySlice";
 import { ClipLoader } from "react-spinners";
 import { ToastContainer } from "react-toastify";
+import { fetchDatasets } from "../slice/datasetsSlice";
+//import { set } from "react-datepicker/dist/date_utils";
 
 // Added by Soham - Total Tax Payer vs Risk Flagged
 
 const entityTypes = ["large", "medium", "small", "micro"];
 
 function RiskAssessment() {
-  const [dateRange, setDateRange] = useState("");
+  const [dateRange, setDateRange] = useState({ start_date: null, end_date: null });
   const dispatch = useDispatch();
 
   const { data, loading, error } = useSelector((state) => state?.datasets);
+  const [fetchedFlaggedRange, setFetchedFlaggedRange] = useState(null);
 
   const {
     totalVsFlaggedTaxpayersData,
@@ -50,52 +53,69 @@ function RiskAssessment() {
   ] = useState({});
 
   useEffect(() => {
-    if (!totalVsFlaggedTaxpayersData) {
+    if (!data) {
+      dispatch(fetchDatasets());
+    }
+  }, [data, dispatch]);
+
+  useEffect(() => {
+    if (!dateRange.start_date || !dateRange.end_date) return;
+    const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
+  if (fetchedFlaggedRange === currentKey) return;
+
+
+   // if (!totalVsFlaggedTaxpayersData) {
       dispatch(
         fetchTotalVsFlaggedTaxpayers({
-          start_date: "01-01-2022",
-          end_date: "31-12-2022",
+          start_date: dateRange.start_date,
+          end_date: dateRange.end_date,
         })
       );
-    }
+    //}
+    setFetchedFlaggedRange(currentKey);
 
-  }, [totalVsFlaggedTaxpayersData, dispatch]);
+  }, [totalVsFlaggedTaxpayersData,dateRange, dispatch]);
 
   useEffect(() => {
-    if (!riskBreakdownByCategoryData) {
+    if (!dateRange.start_date || !dateRange.end_date) return;
+    const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
+    if (fetchedFlaggedRange === currentKey) return;
+  
+  
+   // if (!riskBreakdownByCategoryData) {
       dispatch(
         fetchRiskBreakdownByCategory({
-          start_date: "01-01-2022",
-          end_date: "31-12-2022",
+          start_date: dateRange.start_date,
+          end_date: dateRange.end_date,
         })
       );
-    }
-  }, [riskBreakdownByCategoryData, dispatch]);
+      setFetchedFlaggedRange(currentKey);
+   // }
+  }, [riskBreakdownByCategoryData,dateRange, dispatch]);
 
   useEffect(() => {
-    if (!riskAnalysisData) {
+    if (!dateRange.start_date || !dateRange.end_date) return;
+    const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
+    if (fetchedFlaggedRange === currentKey) return;
+  
+  
+  // if (!riskAnalysisData) {
       dispatch(
         fetchRiskAnalysis({
-          start_date: "01-01-2022",
-          end_date: "31-12-2022",
+          start_date: dateRange.start_date,
+          end_date: dateRange.end_date,
         })
       );
-    }
-  }, [riskAnalysisData, dispatch]);
+      setFetchedFlaggedRange(currentKey);
+   // }
+  }, [riskAnalysisData,dateRange, dispatch]);
 
+  
 
+  console.log("data", data);
+  console.log("dateRange", dateRange);
 
-  // useEffect(() => {
-  //   if (riskBreakdownByCategoryData) {
-  //     setTotalVsFlaggedTaxpayersDataState(riskBreakdownByCategoryData);
-  //   }
-  // }, [riskBreakdownByCategoryData]);
-
-  // useEffect(() => {
-  //   if (totalVsFlaggedTaxpayersData) {
-  //     setRiskBreakdownByCategoryDataState(totalVsFlaggedTaxpayersData);
-  //   }
-  // }, [totalVsFlaggedTaxpayersData]);
+  
 
   console.log(
     "totalVsFlaggedTaxpayersDataState",
@@ -118,6 +138,7 @@ function RiskAssessment() {
     riskAnalysisLoading
   ) {
     return (
+      <Layout>
       <div
         style={{
           display: "flex",
@@ -129,71 +150,86 @@ function RiskAssessment() {
         <ClipLoader size={60} color="#2563eb" />
         <ToastContainer />
       </div>
+      </Layout>
     );
   }
   return (
     <Layout>
-      <div className="page-container">
-        <TenureFilter
-          onFilterChange={handleFilterChange}
-          tenureOptions={yearOptions}
-        />
-        {/* <h2 className="page-title">Risk Assessment</h2> */}
-        <div className="content">
-          {/* <div style={{display: 'flex', gap: "5px"}}> */}
+   
+    <div className="page-container">
+      <TenureFilter
+        onFilterChange={handleFilterChange}
+        tenureOptions={yearOptions}
+      />
+      {/* <h2 className="page-title">Risk Assessment</h2> */}
+      <div className="content">
+        {/* <div style={{display: 'flex', gap: "5px"}}> */}
+        <div
+          style={{
+            marginTop: 32,
+            border: '1px solid #e6edff',
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: '100%',
+            maxWidth: '100%',
+          }}
+        >
+          <RiskBreakdownByCategoryChart
+            riskBreakdownByCategoryData={riskBreakdownByCategoryData}
+          />
+        </div>
+
+        <div style={{ "display": "flex", "gap": "30px", justifyContent: 'space-between' }}>
           <div
             style={{
               marginTop: 32,
-              border: "1px solid #f1f5f9",
+              border: '1px solid #e6edff',
               borderRadius: 16,
-              background: "#fff",
-              boxShadow: "0 0 0 0 #0000",
-              padding: "24px 24px 8px 24px",
-              // minWidth: 900,
-              // maxWidth: 1200,
-              width: "100%",
-            }}
-          >
-            <RiskBreakdownByCategoryChart
-              riskBreakdownByCategoryData={riskBreakdownByCategoryData}
-            />
-          </div>
-          <div
-            style={{
-              marginTop: 32,
-              border: "1px solid #f1f5f9",
-              borderRadius: 16,
-              background: "#fff",
-              boxShadow: "0 0 0 0 #0000",
-              padding: "24px 24px 8px 24px",
-              // minWidth: 900,
-              // maxWidth: 1200,
-              width: "100%",
+              background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
+              boxShadow: '0 2px 16px 0 #e0e7ef55',
+              padding: '24px 24px 8px 24px',
+              maxWidth: '50%',
+              minWidth: '50%',
             }}
           >
             <TotalVsFlaggedLineChart
               totalTaxPayerVsRiskFlagged={totalVsFlaggedTaxpayersData}
             />
           </div>
-          {/* </div> */}
           <div
             style={{
               marginTop: 32,
-              border: "1px solid #f1f5f9",
+              border: '1px solid #e6edff',
               borderRadius: 16,
-              background: "#fff",
-              boxShadow: "0 0 0 0 #0000",
-              padding: "24px 24px 8px 24px",
-              minWidth: 900,
-              maxWidth: 1200,
+              background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
+              boxShadow: '0 2px 16px 0 #e0e7ef55',
+              padding: '24px 24px 8px 24px',
+              flex: 'auto',
             }}
           >
-            <RiskAnalysisByIndustryChart riskData={riskAnalysisData} />
+            4th Chart Risk Assessment
           </div>
-          {/* Done by Ankita */}
         </div>
+        <div
+          style={{
+            marginTop: 32,
+            border: '1px solid #e6edff',
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: '100%',
+            maxWidth: '100%',
+          }}
+        >
+          <RiskAnalysisByIndustryChart riskData={riskAnalysisData} />
+        </div>
+        {/* Done by Ankita */}
       </div>
-    </Layout>
+    </div>
+  </Layout>
   );
 }
 

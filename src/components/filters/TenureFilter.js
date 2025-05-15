@@ -21,7 +21,7 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
     () => tenureOptions || DEFAULT_TENURE_OPTIONS,
     [tenureOptions]
   );
-  const [selectedTenure, setSelectedTenure] = useState(options[0]?.value);
+  const [selectedTenure, setSelectedTenure] = useState(options[11]?.value);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [showDatePickers, setShowDatePickers] = useState(false);
