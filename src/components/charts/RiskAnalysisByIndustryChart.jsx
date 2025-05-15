@@ -1,3 +1,4 @@
+import { Tally1 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import Chart from "react-apexcharts";
 
@@ -80,29 +81,18 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
     },
   };
 
-//   if (!riskData) {
-//     return <div>No data available</div>;
-//   }
+  //   if (!riskData) {
+  //     return <div>No data available</div>;
+  //   }
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 16,
-        }}
-      >
-        <div
-          style={{
-            fontWeight: 600,
-            fontSize: 18,
-            color: "#222",
-          }}
-        >
-          Risk Analysis by Industry
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+        <h4 className="mb-0 me-3 fw-bold" style={{ color: '#6366F1', fontSize: '22px' }}>
+          Total Tax Payer vs Risk Flagged
+        </h4>
+        <Tally1 style={{ color: '#7c879d' }} />
+        <span style={{ color: "#7c879d", fontSize: '16px', marginRight: "10px" }}>Filter By : </span>
         <div>
           <select
             style={{
@@ -126,11 +116,13 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
               </option>
             ))}
           </select>
+          <span style={{ color: "#7c879d", fontSize: '16px', marginRight: "5px" }}>and</span>
           <select
             style={{
               padding: "4px 8px",
               borderRadius: 4,
               border: "1px solid #ccc",
+              width: "20rem"
             }}
             value={selectedIndustry}
             onChange={(e) => setSelectedIndustry(e.target.value)}
@@ -144,8 +136,8 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
           </select>
         </div>
       </div>
-    {riskData? <Chart options={options} series={series} type="heatmap" height={400} />
-    : <div>No data available</div>}
+      {riskData ? <Chart options={options} series={series} type="heatmap" height={400} />
+        : <div>No data available</div>}
     </div>
   );
 };

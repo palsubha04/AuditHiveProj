@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import EmployeeLineChart from './EmployeeLineChart';
+import { Tally1 } from 'lucide-react';
 
 const entityTypes = ['large', 'medium', 'small', 'micro'];
 
@@ -36,7 +37,7 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
       chart: {
         type: 'line',
         height: 320,
-        toolbar: { show: false },
+        toolbar: { show: true },
       },
       stroke: {
         width: 3,
@@ -83,10 +84,13 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-        <div style={{ fontWeight: 600, fontSize: 18, color: '#222' }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+        <h4 className="mb-0 me-3 fw-bold" style={{ color: '#6366F1', fontSize: '22px' }}>
           Total Tax Payer vs Risk Flagged
-        </div>
+        </h4>
+        <Tally1 style={{ color: '#7c879d' }} />
+        <span style={{ color: "#7c879d", fontSize: '16px', marginRight: "10px" }}>Filter By : </span>
+
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
