@@ -95,11 +95,11 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
           </select>
         </div>
       </div>
-
+      <Chart options={options} series={series} type="bar" height={350} />
       {/* Only render chart if series data exists */}
-      {riskBreakdownByCategoryData ? (series.length > 0 && (
+      {/* {riskBreakdownByCategoryData ? (series.length > 0 && (
         <Chart options={options} series={series} type="bar" height={350} />
-      )) : <div>No data available</div>}
+      )) : <div>No data available</div>} */}
     </div>
   );
 };

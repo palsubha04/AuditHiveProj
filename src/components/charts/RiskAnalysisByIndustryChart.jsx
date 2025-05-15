@@ -44,6 +44,46 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
     }
   }, [riskData]);
 
+  function generateRiskRanges(data) {
+    if(data && data.length > 0) {
+      let max = -Infinity;
+    let min = Infinity;
+
+    for (const size in data) {
+      const riskLevels = data[size];
+      for (const level in riskLevels) {
+        const value = riskLevels[level];
+        if (value > max) max = value;
+        if (value < min) min = value;
+      }
+    }
+
+
+    const range = max - min;
+    const step = range / 4;
+
+    const colors = ["#52C41A", "#FADB14", "#FA8C16", "#FF4D4F",];
+    const names = ["Low", "Medium", "High", "Very High"];
+
+    const ranges = [];
+
+    for (let i = 0; i < 4; i++) {
+      const from = Math.round(min + i * step);
+      const to = Math.round(min + (i + 1) * step) - 1;
+
+      ranges.push({
+        from,
+        to: i === 3 ? max : to, // Ensure the last "to" is exactly max
+        color: colors[i],
+        name: names[i]
+      });
+    }
+    console.log("Ranges ---> ", ranges);
+    return ranges;
+    }
+  }
+
+
   const series = Object.entries(filteredData).map(([size, risks]) => ({
     name: size.charAt(0).toUpperCase() + size.slice(1),
     data: riskLevels.map((level) => ({
@@ -51,17 +91,14 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
       y: risks[level] || 0,
     })),
   }));
-
+  
   const options = {
     chart: {
       type: "heatmap",
       toolbar: { show: true },
     },
     dataLabels: { enabled: true },
-    title: {
-      text: "Risk Breakdown by Industry",
-      align: "center",
-    },
+
     xaxis: {
       type: "category",
       categories: riskLevels,
@@ -70,15 +107,22 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
       heatmap: {
         shadeIntensity: 0.5,
         colorScale: {
-          ranges: [
-            { from: 0, to: 50, color: "#FF4D4F", name: "Very High" },
-            { from: 51, to: 100, color: "#FA8C16", name: "High" },
-            { from: 101, to: 150, color: "#FADB14", name: "Medium" },
-            { from: 151, to: 200, color: "#52C41A", name: "Low" },
-          ],
+          ranges: generateRiskRanges(riskData && riskData[selectedCategory] && riskData[selectedCategory][selectedIndustry] ? riskData[selectedCategory][selectedIndustry] : [])
         },
       },
     },
+    noData: {
+        text: 'No Data Found',
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: 0,
+        style: {
+          color: '#6c757d',
+          fontSize: '16px',
+          fontFamily: 'inherit',
+        },
+      },
   };
 
   //   if (!riskData) {
@@ -130,14 +174,15 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
           >
             {industries.map((ind) => (
               <option key={ind} value={ind}>
-                {ind.charAt(0).toUpperCase() + ind.slice(1)}
+                {ind.charAt(0).toUpperCase() + ind.slice(1).replaceAll("_", " ")}
               </option>
             ))}
           </select>
         </div>
       </div>
-      {riskData ? <Chart options={options} series={series} type="heatmap" height={400} />
-        : <div>No data available</div>}
+      <Chart options={options} series={series} type="heatmap" height={400} />
+      {/* {riskData ? <Chart options={options} series={series} type="heatmap" height={400} />
+        : <div>No data available</div>} */}
     </div>
   );
 };

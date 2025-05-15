@@ -5,6 +5,7 @@ import { Tally1 } from 'lucide-react';
 const entityTypes = ['large', 'medium', 'small', 'micro'];
 
 const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
+  console.log('TotalVsFlaggedLineChart from chart', totalTaxPayerVsRiskFlagged);
   const [selectedCategory, setSelectedCategory] = useState('gst');
   const [chartSeries, setChartSeries] = useState([]);
   const [chartOptions, setChartOptions] = useState({});
@@ -76,6 +77,18 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
         style: { fontSize: '15px' },
       },
       grid: { borderColor: '#e0e7ef', strokeDashArray: 4 },
+      noData: {
+        text: 'No Data Found',
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: 0,
+        style: {
+          color: '#6c757d',
+          fontSize: '16px',
+          fontFamily: 'inherit',
+        },
+      },
     });
   }, [selectedCategory, totalTaxPayerVsRiskFlagged]);
 
@@ -101,13 +114,14 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
           <option value="cit">CIT</option>
         </select>
       </div>
-      {isDataAvailable ? (
+      <EmployeeLineChart options={chartOptions} series={chartSeries} />
+      {/* {isDataAvailable ? (
         <EmployeeLineChart options={chartOptions} series={chartSeries} />
       ) : (
         <div style={{ textAlign: 'center', padding: '40px 0', color: '#888' }}>
           No data available for the selected category.
         </div>
-      )}
+      )} */}
     </>
   );
 };
