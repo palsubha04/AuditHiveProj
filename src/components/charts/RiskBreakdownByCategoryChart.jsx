@@ -1,26 +1,34 @@
 import { Tally1 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 
 const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
+  //console.log("data received in RiskBreakdownByCategoryChart", riskBreakdownByCategoryData);
   const [filterData, setFilterData] = useState(riskBreakdownByCategoryData ? riskBreakdownByCategoryData["gst"] ?? {} : {});
+
+  const defaultCategory = "gst";
+  useEffect(() => {
+    if (riskBreakdownByCategoryData?.[defaultCategory]) {
+      setFilterData(riskBreakdownByCategoryData[defaultCategory]);
+    }
+  }, [riskBreakdownByCategoryData]);
 
   // Define categories for x-axis
   const categories = ["large", "medium", "small", "micro"];
 
   // Risk levels to be used for each series
   const riskLevels = [
-    { key: 'Critical Risk', color: '#c0392b' },
-    { key: 'High Risk', color: '#e74c3c' },
-    { key: 'Moderate Risk', color: '#f39c12' },
-    { key: 'Elevated Risk', color: '#f1c40f' },
-    { key: 'Low Risk', color: '#2ecc71' },
-    { key: 'Very Low Risk', color: '#1abc9c' },
+    { key: 'Critical', color: '#c0392b' },
+    { key: 'High', color: '#e74c3c' },
+    { key: 'Moderate', color: '#f39c12' },
+    { key: 'Elevated', color: '#f1c40f' },
+    { key: 'Low', color: '#2ecc71' },
+    { key: 'Very Low', color: '#1abc9c' },
   ];
 
   const series = riskLevels.map(level => ({
     name: level.key,
-    data: categories.map(cat => filterData?.[cat]?.[level.key] ?? 0),
+    data: categories.map(cat => filterData?.[cat]?.[level.key+' Risk'] ?? 0),
   }));
 
   const options = {
@@ -68,6 +76,7 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
     const selectedData = riskBreakdownByCategoryData?.[category] ?? {};
     setFilterData(selectedData);
   };
+
 
   return (
     <div>

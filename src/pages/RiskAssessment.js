@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "../components/Layout";
 import MonthlySalesTaxSummaryChart from "../components/charts/MonthlySalesTaxSummaryChart";
 import RiskAnalysisByIndustryChart from "../components/charts/RiskAnalysisByIndustryChart";
@@ -14,6 +14,7 @@ import { fetchRiskAnalysis } from "../slice/riskAnalysisByIndustrySlice";
 import { ClipLoader } from "react-spinners";
 import { ToastContainer } from "react-toastify";
 import { fetchDatasets } from "../slice/datasetsSlice";
+import RiskAnomalyFrequencyChart from "../components/charts/RiskAnomalyFrequencyChart";
 //import { set } from "react-datepicker/dist/date_utils";
 
 // Added by Soham - Total Tax Payer vs Risk Flagged
@@ -21,6 +22,7 @@ import { fetchDatasets } from "../slice/datasetsSlice";
 const entityTypes = ["large", "medium", "small", "micro"];
 
 function RiskAssessment() {
+
   const [dateRange, setDateRange] = useState({
     start_date: null,
     end_date: null,
@@ -28,29 +30,23 @@ function RiskAssessment() {
   const dispatch = useDispatch();
 
   const { data, loading, error } = useSelector((state) => state?.datasets);
-  const [fetchedFlaggedRange, setFetchedFlaggedRange] = useState(null);
+  //const [fetchedFlaggedRange, setFetchedFlaggedRange] = useState(null);
 
   const {
     totalVsFlaggedTaxpayersData,
     totalVsFlaggedTaxpayersLoading,
     totalVsFlaggedTaxpayersError,
   } = useSelector((state) => state?.totalVsFlaggedTaxpayers);
+
   const {
     riskBreakdownByCategoryData,
     riskBreakdownByCategoryLoading,
     riskBreakdownByCategoryError,
   } = useSelector((state) => state?.riskBreakdownByCategory);
+
   const { riskAnalysisData, riskAnalysisLoading, riskAnalysisError } =
     useSelector((state) => state?.riskAnalysisByIndustry);
 
-  const [
-    totalVsFlaggedTaxpayersDataState,
-    setTotalVsFlaggedTaxpayersDataState,
-  ] = useState({});
-  const [
-    riskBreakdownByCategoryDataState,
-    setRiskBreakdownByCategoryDataState,
-  ] = useState({});
 
   useEffect(() => {
     if (!data) {
@@ -58,65 +54,33 @@ function RiskAssessment() {
     }
   }, [data, dispatch]);
 
-  useEffect(() => {
-    if (!dateRange.start_date || !dateRange.end_date) return;
-    const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
-    if (fetchedFlaggedRange === currentKey) return;
-
-    // if (!totalVsFlaggedTaxpayersData) {
-    dispatch(
-      fetchTotalVsFlaggedTaxpayers({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-      })
-    );
-    //}
-    setFetchedFlaggedRange(currentKey);
-  }, [totalVsFlaggedTaxpayersData, dateRange]);
+  const fetchedRangeRef = useRef(null);
 
   useEffect(() => {
     if (!dateRange.start_date || !dateRange.end_date) return;
+
     const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
-    if (fetchedFlaggedRange === currentKey) return;
+    if (fetchedRangeRef.current === currentKey) {
+      console.log("Skipping fetch, already fetched:", currentKey);
+      return;
+    }
 
-    // if (!riskBreakdownByCategoryData) {
-    dispatch(
-      fetchRiskBreakdownByCategory({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-      })
-    );
-    setFetchedFlaggedRange(currentKey);
-    // }
-  }, [riskBreakdownByCategoryData, dateRange]);
+    console.log("Dispatching for new range:", currentKey);
+    fetchedRangeRef.current = currentKey;
 
-  useEffect(() => {
-    if (!dateRange.start_date || !dateRange.end_date) return;
-    const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
-    if (fetchedFlaggedRange === currentKey) return;
-
-    // if (!riskAnalysisData) {
-    dispatch(
-      fetchRiskAnalysis({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-      })
-    );
-    setFetchedFlaggedRange(currentKey);
-    // }
-  }, [riskAnalysisData, dateRange]);
-
- // console.log("data", data);
-  console.log("dateRange", dateRange);
-  console.log("totalVsFlaggedTaxpayersData", totalVsFlaggedTaxpayersData);
-
-  // console.log(
-  //   "totalVsFlaggedTaxpayersDataState",
-  //   totalVsFlaggedTaxpayersDataState
-  // );
+    dispatch(fetchTotalVsFlaggedTaxpayers(dateRange));
+    dispatch(fetchRiskBreakdownByCategory(dateRange));
+    dispatch(fetchRiskAnalysis(dateRange));
+  }, [dateRange, dispatch]);
+  
 
   const handleFilterChange = (range) => {
-    setDateRange(range);
+    if (
+      range.start_date !== dateRange.start_date ||
+      range.end_date !== dateRange.end_date
+    ) {
+      setDateRange(range);
+    }
   };
   const yearOptions =
     data?.years?.map((year) => ({
@@ -124,31 +88,8 @@ function RiskAssessment() {
       value: String(year),
     })) || [];
 
-  // if (
-  //   loading ||
-  //   riskBreakdownByCategoryLoading ||
-  //   totalVsFlaggedTaxpayersLoading ||
-  //   riskAnalysisLoading
-  // ) {
-  //   return (
-  //     <Layout>
-  //     <div
-  //       style={{
-  //         display: "flex",
-  //         justifyContent: "center",
-  //         alignItems: "center",
-  //         minHeight: "60vh",
-  //       }}
-  //     >
-  //       <ClipLoader size={60} color="#2563eb" />
-  //       <ToastContainer />
-  //     </div>
-  //     </Layout>
-  //   );
-  // }
   return (
     <Layout>
-      
       <div className="page-container">
         <TenureFilter
           onFilterChange={handleFilterChange}
@@ -157,23 +98,6 @@ function RiskAssessment() {
         {/* <h2 className="page-title">Risk Assessment</h2> */}
         <div className="content">
           {/* <div style={{display: 'flex', gap: "5px"}}> */}
-
-          <div
-            style={{
-              marginTop: 32,
-              border: "1px solid #e6edff",
-              borderRadius: 16,
-              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
-              boxShadow: "0 2px 16px 0 #e0e7ef55",
-              padding: "24px 24px 8px 24px",
-              minWidth: "100%",
-              maxWidth: "100%",
-            }}
-          >
-            <RiskBreakdownByCategoryChart
-              riskBreakdownByCategoryData={riskBreakdownByCategoryData}
-            />
-          </div>
 
           <div
             style={{
@@ -209,8 +133,26 @@ function RiskAssessment() {
                 flex: "auto",
               }}
             >
-              4th Chart Risk Assessment
+              <RiskAnomalyFrequencyChart
+                
+              />
             </div>
+          </div>
+          <div
+            style={{
+              marginTop: 32,
+              border: "1px solid #e6edff",
+              borderRadius: 16,
+              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
+              boxShadow: "0 2px 16px 0 #e0e7ef55",
+              padding: "24px 24px 8px 24px",
+              minWidth: "100%",
+              maxWidth: "100%",
+            }}
+          >
+            <RiskBreakdownByCategoryChart
+              riskBreakdownByCategoryData={riskBreakdownByCategoryData}
+            />
           </div>
           <div
             style={{

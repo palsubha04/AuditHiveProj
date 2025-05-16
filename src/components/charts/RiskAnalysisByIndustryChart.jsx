@@ -1,5 +1,5 @@
-import { Tally1 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { Tally1 } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 
 const riskLevels = [
@@ -12,6 +12,7 @@ const riskLevels = [
 ];
 
 const RiskAnalysisByIndustryChart = ({ riskData }) => {
+  console.log("riskData", riskData);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedIndustry, setSelectedIndustry] = useState("");
   const [filteredData, setFilteredData] = useState({});
@@ -44,54 +45,59 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
     }
   }, [riskData]);
 
-  function generateRiskRanges(data) {
-    if(data && data.length > 0) {
-      let max = -Infinity;
-    let min = Infinity;
+  function generateRiskRanges() {
+    if (riskData && selectedCategory && selectedIndustry) {
+      const data = riskData[selectedCategory]?.[selectedIndustry];
+      if (data && typeof data === "object" && Object.keys(data).length > 0) {
+        let max = -Infinity;
+        let min = Infinity;
 
-    for (const size in data) {
-      const riskLevels = data[size];
-      for (const level in riskLevels) {
-        const value = riskLevels[level];
-        if (value > max) max = value;
-        if (value < min) min = value;
+        for (const size in data) {
+          const riskLevels = data[size];
+          for (const level in riskLevels) {
+            const value = riskLevels[level];
+            if (value > max) max = value;
+            if (value < min) min = value;
+          }
+        }
+
+        const range = max - min;
+        const step = range / 4;
+
+        const colors = ["#52C41A", "#FADB14", "#FA8C16", "#FF4D4F"];
+        const names = ["Low", "Medium", "High", "Very High"];
+
+        const ranges = [];
+
+        for (let i = 0; i < 4; i++) {
+          const from = Math.round(min + i * step);
+          const to = Math.round(min + (i + 1) * step) - 1;
+
+          ranges.push({
+            from,
+            to: i === 3 ? max : to,
+            color: colors[i],
+            name: names[i],
+          });
+        }
+
+        return ranges;
       }
     }
-
-
-    const range = max - min;
-    const step = range / 4;
-
-    const colors = ["#52C41A", "#FADB14", "#FA8C16", "#FF4D4F",];
-    const names = ["Low", "Medium", "High", "Very High"];
-
-    const ranges = [];
-
-    for (let i = 0; i < 4; i++) {
-      const from = Math.round(min + i * step);
-      const to = Math.round(min + (i + 1) * step) - 1;
-
-      ranges.push({
-        from,
-        to: i === 3 ? max : to, // Ensure the last "to" is exactly max
-        color: colors[i],
-        name: names[i]
-      });
-    }
-    console.log("Ranges ---> ", ranges);
-    return ranges;
-    }
+    return [];
   }
 
+  const series =
+    filteredData && typeof filteredData === "object"
+      ? Object.entries(filteredData).map(([size, risks]) => ({
+          name: size.charAt(0).toUpperCase() + size.slice(1),
+          data: riskLevels.map((level) => ({
+            x: level,
+            y: risks[level] || 0,
+          })),
+        }))
+      : [];
 
-  const series = Object.entries(filteredData).map(([size, risks]) => ({
-    name: size.charAt(0).toUpperCase() + size.slice(1),
-    data: riskLevels.map((level) => ({
-      x: level,
-      y: risks[level] || 0,
-    })),
-  }));
-  
   const options = {
     chart: {
       type: "heatmap",
@@ -105,24 +111,31 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
     },
     plotOptions: {
       heatmap: {
-        shadeIntensity: 0.5,
+        shadeIntensity: 0.8,
         colorScale: {
-          ranges: generateRiskRanges(riskData && riskData[selectedCategory] && riskData[selectedCategory][selectedIndustry] ? riskData[selectedCategory][selectedIndustry] : [])
+          ranges: generateRiskRanges(),
+          // ranges: generateRiskRanges(
+          //   riskData &&
+          //     riskData[selectedCategory] &&
+          //     riskData[selectedCategory][selectedIndustry]
+          //     ? riskData[selectedCategory][selectedIndustry]
+          //     : []
+          // ),
         },
       },
     },
     noData: {
-        text: 'No Data Found',
-        align: 'center',
-        verticalAlign: 'middle',
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-          color: '#6c757d',
-          fontSize: '16px',
-          fontFamily: 'inherit',
-        },
+      text: "No Data Found",
+      align: "center",
+      verticalAlign: "middle",
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: "#6c757d",
+        fontSize: "16px",
+        fontFamily: "inherit",
       },
+    },
   };
 
   //   if (!riskData) {
@@ -131,12 +144,19 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
-        <h4 className="mb-0 me-3 fw-bold" style={{ color: '#6366F1', fontSize: '22px' }}>
-          Total Tax Payer vs Risk Flagged
+      <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+        <h4
+          className="mb-0 me-3 fw-bold"
+          style={{ color: "#6366F1", fontSize: "22px" }}
+        >
+          Risk Analysis By Industry
         </h4>
-        <Tally1 style={{ color: '#7c879d' }} />
-        <span style={{ color: "#7c879d", fontSize: '16px', marginRight: "10px" }}>Filter By : </span>
+        <Tally1 style={{ color: "#7c879d" }} />
+        <span
+          style={{ color: "#7c879d", fontSize: "16px", marginRight: "10px" }}
+        >
+          Filter By :{" "}
+        </span>
         <div>
           <select
             style={{
@@ -154,19 +174,24 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
               setSelectedIndustry(firstIndustry); // Reset industry when category changes
             }}
           >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat.toUpperCase()}
-              </option>
-            ))}
+            {categories &&
+              categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat.toUpperCase()}
+                </option>
+              ))}
           </select>
-          <span style={{ color: "#7c879d", fontSize: '16px', marginRight: "5px" }}>and</span>
+          <span
+            style={{ color: "#7c879d", fontSize: "16px", marginRight: "5px" }}
+          >
+            and
+          </span>
           <select
             style={{
               padding: "4px 8px",
               borderRadius: 4,
               border: "1px solid #ccc",
-              width: "20rem"
+              width: "20rem",
             }}
             value={selectedIndustry}
             onChange={(e) => setSelectedIndustry(e.target.value)}
@@ -174,7 +199,8 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
           >
             {industries.map((ind) => (
               <option key={ind} value={ind}>
-                {ind.charAt(0).toUpperCase() + ind.slice(1).replaceAll("_", " ")}
+                {ind.charAt(0).toUpperCase() +
+                  ind.slice(1).replaceAll("_", " ")}
               </option>
             ))}
           </select>
