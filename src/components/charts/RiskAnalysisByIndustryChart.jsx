@@ -149,7 +149,7 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
           className="mb-0 me-3 fw-bold"
           style={{ color: "#6366F1", fontSize: "22px" }}
         >
-          Total Tax Payer vs Risk Flagged
+          Risk Analysis By Industry
         </h4>
         <Tally1 style={{ color: "#7c879d" }} />
         <span

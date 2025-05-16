@@ -14,6 +14,7 @@ import { fetchRiskAnalysis } from "../slice/riskAnalysisByIndustrySlice";
 import { ClipLoader } from "react-spinners";
 import { ToastContainer } from "react-toastify";
 import { fetchDatasets } from "../slice/datasetsSlice";
+import RiskAnomalyFrequencyChart from "../components/charts/RiskAnomalyFrequencyChart";
 //import { set } from "react-datepicker/dist/date_utils";
 
 // Added by Soham - Total Tax Payer vs Risk Flagged
@@ -73,65 +74,6 @@ function RiskAssessment() {
   }, [dateRange, dispatch]);
   
 
-  
-
-  // useEffect(() => {
-  //   if (!dateRange.start_date || !dateRange.end_date) return;
-  //   const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
-  //   if (fetchedFlaggedRange === currentKey) return;
-
-  //   // if (!totalVsFlaggedTaxpayersData) {
-  //   dispatch(
-  //     fetchTotalVsFlaggedTaxpayers({
-  //       start_date: dateRange.start_date,
-  //       end_date: dateRange.end_date,
-  //     })
-  //   );
-  //   //}
-  //   setFetchedFlaggedRange(currentKey);
-  // }, [totalVsFlaggedTaxpayersData, dateRange]);
-
-  // useEffect(() => {
-  //   if (!dateRange.start_date || !dateRange.end_date) return;
-  //   const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
-  //   if (fetchedFlaggedRange === currentKey) return;
-
-  //   // if (!riskBreakdownByCategoryData) {
-  //   dispatch(
-  //     fetchRiskBreakdownByCategory({
-  //       start_date: dateRange.start_date,
-  //       end_date: dateRange.end_date,
-  //     })
-  //   );
-  //   setFetchedFlaggedRange(currentKey);
-  //   // }
-  // }, [riskBreakdownByCategoryData, dateRange]);
-
-  // useEffect(() => {
-  //   if (!dateRange.start_date || !dateRange.end_date) return;
-  //   const currentKey = `${dateRange.start_date}-${dateRange.end_date}`;
-  //   if (fetchedFlaggedRange === currentKey) return;
-
-  //   // if (!riskAnalysisData) {
-  //   dispatch(
-  //     fetchRiskAnalysis({
-  //       start_date: dateRange.start_date,
-  //       end_date: dateRange.end_date,
-  //     })
-  //   );
-  //   setFetchedFlaggedRange(currentKey);
-  //   // }
-  // }, [riskAnalysisData, dateRange]);
-
-//  console.log("data", data);
-//   console.log("dateRange", dateRange);
-//   console.log("riskBreakdownByCategoryData", riskBreakdownByCategoryData);
-
-  // console.log(
-  //   "totalVsFlaggedTaxpayersDataState",
-  //   totalVsFlaggedTaxpayersDataState
-  // );
-
   const handleFilterChange = (range) => {
     if (
       range.start_date !== dateRange.start_date ||
@@ -148,7 +90,6 @@ function RiskAssessment() {
 
   return (
     <Layout>
-      
       <div className="page-container">
         <TenureFilter
           onFilterChange={handleFilterChange}
@@ -157,23 +98,6 @@ function RiskAssessment() {
         {/* <h2 className="page-title">Risk Assessment</h2> */}
         <div className="content">
           {/* <div style={{display: 'flex', gap: "5px"}}> */}
-
-          <div
-            style={{
-              marginTop: 32,
-              border: "1px solid #e6edff",
-              borderRadius: 16,
-              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
-              boxShadow: "0 2px 16px 0 #e0e7ef55",
-              padding: "24px 24px 8px 24px",
-              minWidth: "100%",
-              maxWidth: "100%",
-            }}
-          >
-            <RiskBreakdownByCategoryChart
-              riskBreakdownByCategoryData={riskBreakdownByCategoryData}
-            />
-          </div>
 
           <div
             style={{
@@ -209,8 +133,26 @@ function RiskAssessment() {
                 flex: "auto",
               }}
             >
-              4th Chart Risk Assessment
+              <RiskAnomalyFrequencyChart
+                
+              />
             </div>
+          </div>
+          <div
+            style={{
+              marginTop: 32,
+              border: "1px solid #e6edff",
+              borderRadius: 16,
+              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
+              boxShadow: "0 2px 16px 0 #e0e7ef55",
+              padding: "24px 24px 8px 24px",
+              minWidth: "100%",
+              maxWidth: "100%",
+            }}
+          >
+            <RiskBreakdownByCategoryChart
+              riskBreakdownByCategoryData={riskBreakdownByCategoryData}
+            />
           </div>
           <div
             style={{
