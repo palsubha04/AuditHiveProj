@@ -24,7 +24,6 @@ import { Spinner } from "react-bootstrap";
 const entityTypes = ["large", "medium", "small", "micro"];
 
 function RiskAssessment() {
-
   const [dateRange, setDateRange] = useState({
     start_date: null,
     end_date: null,
@@ -46,18 +45,14 @@ function RiskAssessment() {
     riskBreakdownByCategoryError,
   } = useSelector((state) => state?.riskBreakdownByCategory);
 
-  const { 
-    riskAnalysisData, 
-    riskAnalysisLoading, 
-    riskAnalysisError 
-  } = useSelector((state) => state?.riskAnalysisByIndustry);
+  const { riskAnalysisData, riskAnalysisLoading, riskAnalysisError } =
+    useSelector((state) => state?.riskAnalysisByIndustry);
 
-  const { 
-    riskAnomalyFrequencyData, 
-    riskAnomalyFrequencyLoading, 
-    riskAnomalyFrequencyError 
+  const {
+    riskAnomalyFrequencyData,
+    riskAnomalyFrequencyLoading,
+    riskAnomalyFrequencyError,
   } = useSelector((state) => state?.riskAnomalyFrequency);
-
 
   useEffect(() => {
     if (!data) {
@@ -84,7 +79,6 @@ function RiskAssessment() {
     dispatch(fetchRiskAnalysis(dateRange));
     dispatch(fetchRiskAnomaly(dateRange));
   }, [dateRange, dispatch]);
-
 
   const handleFilterChange = (range) => {
     if (
@@ -135,13 +129,17 @@ function RiskAssessment() {
                 maxHeight: "500px",
               }}
             >
-            { totalVsFlaggedTaxpayersLoading ?  <Spinner animation="border" role="status" variant="primary">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner> :
-          <div className="p-0 w-100">
-              <TotalVsFlaggedLineChart
-                totalTaxPayerVsRiskFlagged={totalVsFlaggedTaxpayersData}
-              /></div>}
+              {totalVsFlaggedTaxpayersLoading ? (
+                <Spinner animation="border" role="status" variant="primary">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              ) : (
+                <div className="p-0 w-100">
+                  <TotalVsFlaggedLineChart
+                    totalTaxPayerVsRiskFlagged={totalVsFlaggedTaxpayersData}
+                  />
+                </div>
+              )}
             </div>
             <div
               style={{
@@ -160,14 +158,17 @@ function RiskAssessment() {
                 alignItems: "center",
               }}
             >
-               { riskAnomalyFrequencyLoading ?  <Spinner animation="border" role="status" variant="primary">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner> :
-          <div className="p-0 w-100">
-              <RiskAnomalyFrequencyChart
-                riskAnomalyFrequencyData={riskAnomalyFrequencyData}
-              />
-              </div>}
+              {riskAnomalyFrequencyLoading ? (
+                <Spinner animation="border" role="status" variant="primary">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              ) : (
+                <div className="p-0 w-100">
+                  <RiskAnomalyFrequencyChart
+                    riskAnomalyFrequencyData={riskAnomalyFrequencyData}
+                  />
+                </div>
+              )}
             </div>
           </div>
           <div
@@ -187,13 +188,17 @@ function RiskAssessment() {
               alignItems: "center",
             }}
           >
-              { riskBreakdownByCategoryLoading ?  <Spinner animation="border" role="status" variant="primary">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner> :
-          <div className="p-0 w-100">
-            <RiskBreakdownByCategoryChart
-              riskBreakdownByCategoryData={riskBreakdownByCategoryData}
-            /></div>}
+            {riskBreakdownByCategoryLoading ? (
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            ) : (
+              <div className="p-0 w-100">
+                <RiskBreakdownByCategoryChart
+                  riskBreakdownByCategoryData={riskBreakdownByCategoryData}
+                />
+              </div>
+            )}
           </div>
           <div
             style={{
@@ -212,12 +217,15 @@ function RiskAssessment() {
               alignItems: "center",
             }}
           >
-            { riskAnalysisLoading ?  <Spinner animation="border" role="status" variant="primary">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner> :
-          <div className="p-0 w-100">
-            <RiskAnalysisByIndustryChart riskData={riskAnalysisData} />
-            </div>}
+            {riskAnalysisLoading ? (
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            ) : (
+              <div className="p-0 w-100">
+                <RiskAnalysisByIndustryChart riskData={riskAnalysisData} />
+              </div>
+            )}
           </div>
           {/* Done by Ankita */}
         </div>
