@@ -5,26 +5,27 @@ import Chart from "react-apexcharts";
 
 const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
   //console.log("riskAnomalyFrequencyData", riskAnomalyFrequencyData);
-  const [selectedCategory, setSelectedCategory] = useState("gst");
+ const [selectedCategory, setSelectedCategory] = useState("gst");
   const [filteredData, setFilteredData] = useState(riskAnomalyFrequencyData && riskAnomalyFrequencyData["gst"] ? riskAnomalyFrequencyData["gst"].fraud_rules : []);
 
+  const defaultCategory = "gst";
   useEffect(() => {
-    if (riskAnomalyFrequencyData?.['gst']) {
-      setFilteredData(riskAnomalyFrequencyData['gst']);
+    if (riskAnomalyFrequencyData?.[defaultCategory]) {
+      setFilteredData(riskAnomalyFrequencyData[defaultCategory].fraud_rules);
     }
   }, [riskAnomalyFrequencyData]);
 
-  const [series, setSeries] = useState([]);
-  const [labels, setLabels] = useState([]);
+  // const [series, setSeries] = useState([]);
+  // const [labels, setLabels] = useState([]);
 
   const categories = ['gst', 'swt', 'cit']
 
   if (filteredData.length > 0) {
-    setLabels(filteredData.map((item) => item.rule));
-    setSeries(filteredData.map((item) => item.count));
+   var labels = filteredData.map((item) => item.rule);
+   var series = filteredData.map((item) => item.count);
   } else {
-    setLabels([]);
-    setSeries([]);
+    var labels = [];
+    var series = [];
   }
 
   console.log("series label", series, labels);
@@ -115,7 +116,7 @@ const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
           width: "100%",
         }}
       >
-        <ReactApexChart
+        <Chart
           options={options}
           series={series}
           type="pie"
