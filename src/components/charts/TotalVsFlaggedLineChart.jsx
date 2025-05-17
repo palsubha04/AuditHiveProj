@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import EmployeeLineChart from './EmployeeLineChart';
 import { Tally1 } from 'lucide-react';
+import ReactApexChart from 'react-apexcharts';
 
 const entityTypes = ['large', 'medium', 'small', 'micro'];
 
 const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
+  console.log('TotalVsFlaggedLineChart from chart', totalTaxPayerVsRiskFlagged);
   const [selectedCategory, setSelectedCategory] = useState('gst');
   const [chartSeries, setChartSeries] = useState([]);
   const [chartOptions, setChartOptions] = useState({});
@@ -45,11 +47,11 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
       },
       xaxis: {
         categories: ['Large', 'Medium', 'Small', 'Micro'],
-        title: { text: 'Company Size' },
+        title: { text: 'Segmentation' },
         labels: { style: { fontWeight: 500, color: '#334155', fontSize: '14px' } },
       },
       yaxis: {
-        title: { text: 'Taxpayers' },
+        title: { text: 'Number of Taxpayers' },
         labels: { style: { fontWeight: 500, color: '#334155' } },
       },
       legend: { position: 'top', fontWeight: 600 },
@@ -76,6 +78,18 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
         style: { fontSize: '15px' },
       },
       grid: { borderColor: '#e0e7ef', strokeDashArray: 4 },
+      noData: {
+        text: 'No Data Found',
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: 0,
+        style: {
+          color: '#6c757d',
+          fontSize: '16px',
+          fontFamily: 'inherit',
+        },
+      },
     });
   }, [selectedCategory, totalTaxPayerVsRiskFlagged]);
 
@@ -84,30 +98,48 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
 
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
-        <h4 className="mb-0 me-3 fw-bold" style={{ color: '#6366F1', fontSize: '22px' }}>
-          Total Tax Payer vs Risk Flagged
+      <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+        <h4
+          className="mb-0 me-3 fw-bold"
+          style={{ color: "#6366F1", fontSize: "22px" }}
+        >
+         Total Taxpayers vs Risk-Flagged
         </h4>
-        <Tally1 style={{ color: '#7c879d' }} />
-        <span style={{ color: "#7c879d", fontSize: '16px', marginRight: "10px" }}>Filter By : </span>
+        <Tally1 style={{ color: "#7c879d" }} />
+        <span
+          style={{ color: "#7c879d", fontSize: "16px", marginRight: "10px" }}
+        >
+          Filter By :{" "}
+        </span>
 
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          style={{ padding: '4px 8px', borderRadius: 4, border: '1px solid #ccc' }}
+          style={{
+            padding: "4px 8px",
+            borderRadius: 4,
+            border: "1px solid #ccc",
+          }}
         >
           <option value="gst">GST</option>
           <option value="swt">SWT</option>
           <option value="cit">CIT</option>
         </select>
       </div>
-      {isDataAvailable ? (
+      <ReactApexChart
+        options={chartOptions}
+        series={chartSeries}
+        type="line"
+        
+      />
+      {/* <EmployeeLineChart options={chartOptions} series={chartSeries} /> */}
+      {/* {isDataAvailable ? (
         <EmployeeLineChart options={chartOptions} series={chartSeries} />
       ) : (
         <div style={{ textAlign: 'center', padding: '40px 0', color: '#888' }}>
           No data available for the selected category.
         </div>
-      )}
+      )} */}
     </>
   );
 };
