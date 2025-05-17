@@ -3,6 +3,7 @@ import { Card, Row, Col, Form, Badge } from 'react-bootstrap';
 import Table from '../Table';
 import gstService from '../../services/gst.service';
 import debounce from 'lodash/debounce';
+import "../../pages/Dashboard.css";
 
 const TaxRecordsTable = ({ startDate, endDate }) => {
   const [records, setRecords] = useState([]);
@@ -137,7 +138,7 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
   ];
 
   return (
-    <Card className="mb-4">
+    <Card className="mb-4 box-background">
       <Card.Body>
         {loading ? (
           <div className="text-center">Loading...</div>

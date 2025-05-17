@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import swtService from '../../services/swt.service';
+import "../../pages/Dashboard.css";
+
 
 const SummaryCard = ({ title, value, icon }) => (
-  <Card className="h-100">
+  <Card className="h-100 box-background">
     <Card.Body>
       <div className="d-flex justify-content-between align-items-center">
         <div className="flex-grow-1">
@@ -68,10 +70,10 @@ const SWTSummaryCards = ({ startDate, endDate }) => {
 
   if (loading) {
     return (
-      <Row className="mb-4 g-3">
+      <Row className="mb-4 g-3 ">
         {[1, 2, 3, 4, 5].map((index) => (
           <Col key={index}>
-            <Card className="h-100">
+            <Card className="h-100 box-background">
               <Card.Body className="d-flex align-items-center justify-content-center" style={{ height: '100px' }}>
                 <Spinner animation="border" role="status" variant="primary" size="sm">
                   <span className="visually-hidden">Loading...</span>
@@ -88,7 +90,7 @@ const SWTSummaryCards = ({ startDate, endDate }) => {
     return (
       <Row className="mb-4 g-3">
         <Col>
-          <Card className="h-100">
+          <Card className="h-100 box-background">
             <Card.Body className="text-center text-danger">
               {error}
             </Card.Body>

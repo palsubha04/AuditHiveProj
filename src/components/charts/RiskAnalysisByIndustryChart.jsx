@@ -102,6 +102,7 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
     chart: {
       type: "heatmap",
       toolbar: { show: true },
+      height: 350,
     },
     dataLabels: { enabled: true },
 

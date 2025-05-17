@@ -3,6 +3,7 @@ import { Card, Row, Col, Form, Badge, Spinner } from 'react-bootstrap';
 import Table from '../Table';
 import swtService from '../../services/swt.service';
 import debounce from 'lodash/debounce';
+import "../../pages/Dashboard.css";
 
 const SWTTaxRecordsTable = ({ startDate, endDate }) => {
   const [records, setRecords] = useState([]);
@@ -151,7 +152,7 @@ const SWTTaxRecordsTable = ({ startDate, endDate }) => {
   ];
 
   return (
-    <Card className="mb-4">
+    <Card className="mb-4 box-background">
       <Card.Body>
         {loading ? (
           <div className="text-center" style={{ height: '350px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

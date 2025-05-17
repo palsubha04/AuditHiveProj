@@ -396,3 +396,9 @@
   font-size: 0.875rem;
   font-weight: 500;
 } 
+.box-background {
+  border: "1px solid #e6edff";
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f1f5ff 80%, #fff 100%);
+  box-shadow: 0 2px 16px 0 #e0e7ef55;
+}

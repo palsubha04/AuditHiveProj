@@ -33,6 +33,7 @@ import SWTSalesComparison from '../components/charts/SWTSalesComparison';
 import TenureFilter from '../components/filters/TenureFilter';
 import SWTTaxRecordsTable from '../components/tables/SWTTaxRecordsTable';
 
+
 function SWT() {
   const [dateRange, setDateRange] = useState({
     start_date: '',
@@ -48,7 +49,10 @@ function SWT() {
       <Container fluid>
         <h1 className="mb-4">SWT Analytics</h1>
         
-        <TenureFilter onFilterChange={handleFilterChange} />
+        {/* <TenureFilter onFilterChange={handleFilterChange} /> */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
+          <TenureFilter onFilterChange={handleFilterChange} />
+         </div>
         
         <SWTSummaryCards startDate={dateRange.start_date} endDate={dateRange.end_date} />
         

@@ -16,6 +16,7 @@ import { ToastContainer } from "react-toastify";
 import { fetchDatasets } from "../slice/datasetsSlice";
 import RiskAnomalyFrequencyChart from "../components/charts/RiskAnomalyFrequencyChart";
 import { fetchRiskAnomaly } from "../slice/riskAnomalyFrequencySlice";
+import { Spinner } from "react-bootstrap";
 //import { set } from "react-datepicker/dist/date_utils";
 
 // Added by Soham - Total Tax Payer vs Risk Flagged
@@ -127,11 +128,20 @@ function RiskAssessment() {
                 padding: "24px 24px 8px 24px",
                 maxWidth: "50%",
                 minWidth: "50%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "500px",
+                maxHeight: "500px",
               }}
             >
+            { totalVsFlaggedTaxpayersLoading ?  <Spinner animation="border" role="status" variant="primary">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner> :
+          <div className="p-0 w-100">
               <TotalVsFlaggedLineChart
                 totalTaxPayerVsRiskFlagged={totalVsFlaggedTaxpayersData}
-              />
+              /></div>}
             </div>
             <div
               style={{
@@ -141,12 +151,23 @@ function RiskAssessment() {
                 background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
                 boxShadow: "0 2px 16px 0 #e0e7ef55",
                 padding: "24px 24px 8px 24px",
-                flex: "auto",
+                maxWidth: "50%",
+                minWidth: "50%",
+                minHeight: "500px",
+                maxHeight: "500px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
+               { riskAnomalyFrequencyLoading ?  <Spinner animation="border" role="status" variant="primary">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner> :
+          <div className="p-0 w-100">
               <RiskAnomalyFrequencyChart
                 riskAnomalyFrequencyData={riskAnomalyFrequencyData}
               />
+              </div>}
             </div>
           </div>
           <div
@@ -159,11 +180,20 @@ function RiskAssessment() {
               padding: "24px 24px 8px 24px",
               minWidth: "100%",
               maxWidth: "100%",
+              minHeight: "500px",
+              maxHeight: "500px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
+              { riskBreakdownByCategoryLoading ?  <Spinner animation="border" role="status" variant="primary">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner> :
+          <div className="p-0 w-100">
             <RiskBreakdownByCategoryChart
               riskBreakdownByCategoryData={riskBreakdownByCategoryData}
-            />
+            /></div>}
           </div>
           <div
             style={{
@@ -175,9 +205,19 @@ function RiskAssessment() {
               padding: "24px 24px 8px 24px",
               minWidth: "100%",
               maxWidth: "100%",
+              minHeight: "500px",
+              maxHeight: "500px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
+            { riskAnalysisLoading ?  <Spinner animation="border" role="status" variant="primary">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner> :
+          <div className="p-0 w-100">
             <RiskAnalysisByIndustryChart riskData={riskAnalysisData} />
+            </div>}
           </div>
           {/* Done by Ankita */}
         </div>
