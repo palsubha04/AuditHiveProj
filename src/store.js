@@ -4,6 +4,7 @@ import salesComparisonReducer from './slice/salesComparisonSlice';
 import riskBreakdownByCategoryReducer from './slice/riskBreakdownByCategorySlice';
 import totalVsFlaggedTaxpayersReducer from './slice/totalVsFlaggedTaxpayersSlice';
 import riskAnalysisByIndustryReducer from './slice/riskAnalysisByIndustrySlice';
+import riskAnomalyFrequencyReducer from './slice/riskAnomalyFrequencySlice';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     riskBreakdownByCategory: riskBreakdownByCategoryReducer,
     totalVsFlaggedTaxpayers: totalVsFlaggedTaxpayersReducer,
     riskAnalysisByIndustry: riskAnalysisByIndustryReducer,
+    riskAnomalyFrequency: riskAnomalyFrequencyReducer,
   },
 });
 
