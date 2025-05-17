@@ -15,6 +15,7 @@ import { ClipLoader } from "react-spinners";
 import { ToastContainer } from "react-toastify";
 import { fetchDatasets } from "../slice/datasetsSlice";
 import RiskAnomalyFrequencyChart from "../components/charts/RiskAnomalyFrequencyChart";
+import { fetchRiskAnomaly } from "../slice/riskAnomalyFrequencySlice";
 //import { set } from "react-datepicker/dist/date_utils";
 
 // Added by Soham - Total Tax Payer vs Risk Flagged
@@ -44,8 +45,17 @@ function RiskAssessment() {
     riskBreakdownByCategoryError,
   } = useSelector((state) => state?.riskBreakdownByCategory);
 
-  const { riskAnalysisData, riskAnalysisLoading, riskAnalysisError } =
-    useSelector((state) => state?.riskAnalysisByIndustry);
+  const { 
+    riskAnalysisData, 
+    riskAnalysisLoading, 
+    riskAnalysisError 
+  } = useSelector((state) => state?.riskAnalysisByIndustry);
+
+  const { 
+    riskAnomalyFrequencyData, 
+    riskAnomalyFrequencyLoading, 
+    riskAnomalyFrequencyError 
+  } = useSelector((state) => state?.riskAnomalyFrequency);
 
 
   useEffect(() => {
@@ -71,8 +81,9 @@ function RiskAssessment() {
     dispatch(fetchTotalVsFlaggedTaxpayers(dateRange));
     dispatch(fetchRiskBreakdownByCategory(dateRange));
     dispatch(fetchRiskAnalysis(dateRange));
+    dispatch(fetchRiskAnomaly(dateRange));
   }, [dateRange, dispatch]);
-  
+
 
   const handleFilterChange = (range) => {
     if (
@@ -134,7 +145,7 @@ function RiskAssessment() {
               }}
             >
               <RiskAnomalyFrequencyChart
-                
+                riskAnomalyFrequencyData={riskAnomalyFrequencyData}
               />
             </div>
           </div>

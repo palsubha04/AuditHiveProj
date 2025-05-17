@@ -3,38 +3,29 @@ import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import Chart from "react-apexcharts";
 
-const riskData = {
-  gst: [{ rule1: 100, rule2: 50, rule3: 60 }],
-  swt: [{ rule1: 150, rule2: 50, rule3: 60 }],
-  cit: [{ rule1: 130, rule2: 50, rule3: 60 }],
-};
-
-const RiskAnomalyFrequencyChart = () => {
-  //console.log("riskData", riskData);
+const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
+  //console.log("riskAnomalyFrequencyData", riskAnomalyFrequencyData);
   const [selectedCategory, setSelectedCategory] = useState("gst");
-  const [filteredData, setFilteredData] = useState(riskData["gst"] || []);
+  const [filteredData, setFilteredData] = useState(riskAnomalyFrequencyData && riskAnomalyFrequencyData["gst"] ? riskAnomalyFrequencyData["gst"].fraud_rules : []);
+
+  useEffect(() => {
+    if (riskAnomalyFrequencyData?.['gst']) {
+      setFilteredData(riskAnomalyFrequencyData['gst']);
+    }
+  }, [riskAnomalyFrequencyData]);
+
   const [series, setSeries] = useState([]);
   const [labels, setLabels] = useState([]);
 
-  useEffect(() => {
-    const data = riskData[selectedCategory] || [];
-    console.log("in use effect---------------------------------------", data);
-    setFilteredData(data);
+  const categories = ['gst', 'swt', 'cit']
 
-    if (data.length > 0) {
-      const newSeries = Object.values(data[0]);
-      const newLabels = Object.keys(data[0]);
-
-      setSeries(newSeries);
-      setLabels(newLabels);
-    } else {
-      setSeries([]);
-      setLabels([]);
-    }
-  }, [selectedCategory]);
-
-  // Safe access to categories
-  const categories = riskData ? Object.keys(riskData) : [];
+  if (filteredData.length > 0) {
+    setLabels(filteredData.map((item) => item.rule));
+    setSeries(filteredData.map((item) => item.count));
+  } else {
+    setLabels([]);
+    setSeries([]);
+  }
 
   console.log("series label", series, labels);
   const options = {
@@ -62,19 +53,19 @@ const RiskAnomalyFrequencyChart = () => {
 
   // useEffect(() => {
   //   //console.log("in use effect")
-  //   if (riskData && selectedCategory) {
+  //   if (riskAnomalyFrequencyData && selectedCategory) {
   //     console.log("category changed",selectedCategory)
-  //     const data = riskData[selectedCategory];
+  //     const data = riskAnomalyFrequencyData[selectedCategory];
   //     console.log("current filtered data",data);
   //     setFilteredData(data || []);
   //   } else {
   //     setFilteredData([]);
   //   }
-  // }, [riskData, selectedCategory]);
+  // }, [riskAnomalyFrequencyData, selectedCategory]);
 
   const changeChartCategory = (val) => {
-    console.log("category changed", val, riskData[val]);
-    setFilteredData(riskData && riskData[val] ? riskData[val] : []);
+    console.log("category changed", val, riskAnomalyFrequencyData[val]);
+    setFilteredData(riskAnomalyFrequencyData && riskAnomalyFrequencyData[val] ? riskAnomalyFrequencyData[val].fraud_rules : []);
   };
 
   return (
@@ -102,9 +93,8 @@ const RiskAnomalyFrequencyChart = () => {
             }}
             value={selectedCategory}
             onChange={(e) => {
-              const newCategory = e.target.value;
-              setSelectedCategory(newCategory);
-              //changeChartCategory(e.target.value)
+              setSelectedCategory(e.target.value);
+              changeChartCategory(e.target.value);
             }}
           >
             {categories &&
@@ -137,3 +127,4 @@ const RiskAnomalyFrequencyChart = () => {
 };
 
 export default RiskAnomalyFrequencyChart;
+
