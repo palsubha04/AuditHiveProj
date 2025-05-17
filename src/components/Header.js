@@ -55,6 +55,10 @@ function Header() {
     headerTitle = 'Risk Assessment';
     headerSubtitle = '';
   }
+  else if (location.pathname === '/risk-profiling') {
+    headerTitle = 'Risk Profiling';
+    headerSubtitle = '';
+  }
 
   return (
     <Navbar className="header">
