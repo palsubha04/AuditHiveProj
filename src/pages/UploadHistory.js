@@ -1,276 +1,171 @@
-import React, { useState } from 'react';
-import Layout from '../components/Layout';
-import { Eye, Download, ArrowUpDown, ArrowDownUp } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Container, Table, Button } from 'react-bootstrap';
+import { Download } from 'lucide-react';
 import * as XLSX from 'xlsx';
-//import './UploadHistory.css';
-import {
-  Table,
-  Button,
-  Card,
-  Pagination,
-  Container,
-  Row,
-  Col,
-} from 'react-bootstrap';
+import Layout from '../components/Layout';
 
-const tableData = [
+const data = [
   {
-    No: 1,
-    'File Name': '#12594',
-    'Uploaded By': 'John Dow',
-    'Tax Parameter': 'GST',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 2,
-    'File Name': '#12595',
-    'Uploaded By': 'Victor Meza',
-    'Tax Parameter': 'Income Tax',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 3,
-    'File Name': '#12596',
-    'Uploaded By': 'John Nethan',
-    'Tax Parameter': 'VAT',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 4,
-    'File Name': '#12597',
-    'Uploaded By': 'Jeff Kuang',
-    'Tax Parameter': 'Sales Tax',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 5,
-    'File Name': '#12598',
-    'Uploaded By': 'Christian Bale',
-    'Tax Parameter': 'GST',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 6,
-    'File Name': '#12599',
-    'Uploaded By': 'Lionel Mesi',
-    'Tax Parameter': 'Income Tax',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 7,
-    'File Name': '#12600',
-    'Uploaded By': 'Ed Sheren',
-    'Tax Parameter': 'VAT',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 8,
-    'File Name': '#12601',
-    'Uploaded By': 'Cristiano Ronaldo',
-    'Tax Parameter': 'Sales Tax',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 9,
-    'File Name': '#12602',
-    'Uploaded By': 'Benzema',
-    'Tax Parameter': 'Sales Tax',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 10,
-    'File Name': '#12603',
-    'Uploaded By': 'Torres',
-    'Tax Parameter': 'VAT',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 11,
-    'File Name': '#12604',
-    'Uploaded By': 'Torres',
-    'Tax Parameter': 'VAT',
-    Date: '31/03/2024',
-    Time: '12:30',
-  },
-  {
-    No: 12,
-    'File Name': '#12605',
-    'Uploaded By': 'Ansu Fati',
-    'Tax Parameter': 'GST',
-    Date: '31/03/2024',
-    Time: '12:30',
+    id: 1,
+    fileName: '#12594',
+    uploadedBy: 'John Dow',
+    taxParameter: 'GST',
+    date: '31/03/2024',
+    time: '12:30',
   },
 ];
 
 const UploadHistory = () => {
-  const [sortConfig, setSortConfig] = useState({
-    key: null,
-    direction: 'ascending',
-  });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Number of items per page, changed to 10
+  // For demo, repeat the same row 18 times
+  const rowsData = Array.from({ length: 18 }, (_, i) => ({
+    ...data[0],
+    id: i + 1,
+  }));
 
-  const sortData = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [visibleCount, setVisibleCount] = useState(10);
+  const scrollRef = useRef(null);
 
-  const getSortedData = () => {
-    if (!sortConfig.key) return tableData;
-
-    return [...tableData].sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? -1 : 1;
+  const handleSort = (key) => {
+    setSortConfig((prev) => {
+      if (prev.key === key) {
+        // Toggle direction
+        return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' };
       }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? 1 : -1;
-      }
-      return 0;
+      return { key, direction: 'asc' };
     });
   };
 
-  const SortIcon = ({ columnName }) => {
-    if (sortConfig.key !== columnName) {
-      return <ArrowUpDown className="h-3 w-3 inline-block ml-1" />;
+  const sortedRows = React.useMemo(() => {
+    let sortableRows = [...rowsData];
+    if (sortConfig.key) {
+      sortableRows.sort((a, b) => {
+        let aValue = a[sortConfig.key];
+        let bValue = b[sortConfig.key];
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          aValue = aValue.toLowerCase();
+          bValue = bValue.toLowerCase();
+        }
+        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
     }
-    return sortConfig.direction === 'ascending' ? (
-      <ArrowDownUp className="h-4 w-4 inline-block ml-1" />
-    ) : (
-      <ArrowUpDown className="h-4 w-4 inline-block ml-1" />
-    );
-  };
+    return sortableRows;
+  }, [rowsData, sortConfig]);
 
-  const downloadExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(tableData);
+  const handleDownload = () => {
+    const excelData = sortedRows.map((row) => ({
+      No: row.id,
+      'File Name': row.fileName,
+      'Uploaded By': row.uploadedBy,
+      'Tax Parameter': row.taxParameter,
+      Date: row.date,
+      Time: row.time,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    XLSX.writeFile(workbook, 'table_data.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Upload Validation');
+    XLSX.writeFile(workbook, 'upload_validation.xlsx');
   };
 
-  // Get current items
-  const sortedData = getSortedData();
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedData.slice(indexOfFirstItem, indexOfLastItem);
+  const getSortIndicator = (key) => {
+    if (sortConfig.key !== key) return '⇅';
+    return sortConfig.direction === 'asc' ? '↑' : '↓';
+  };
 
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // Infinite scroll handler
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (el && el.scrollTop + el.clientHeight >= el.scrollHeight - 10) {
+      setVisibleCount((prev) => {
+        if (prev < sortedRows.length) {
+          return Math.min(prev + 10, sortedRows.length);
+        }
+        return prev;
+      });
+    }
+  };
 
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(sortedData.length / itemsPerPage); i++) {
-    pageNumbers.push(i);
-  }
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) {
+      el.addEventListener('scroll', handleScroll);
+      return () => el.removeEventListener('scroll', handleScroll);
+    }
+  }, [sortedRows.length]);
 
   return (
     <Layout>
-      <div className="page-container">
-        <h4 className="page-title">Upload History</h4>
-        <Container
-          fluid
-          className="d-flex align-items-center justify-content-center min-vh-100"
+      <Container
+        className="p-4"
+        style={{
+          background: '#fff',
+          borderRadius: 16,
+          border: '1px solid #e9eaf0',
+        }}
+      >
+        <h4 className="mb-4" style={{ color: '#1a237e', fontWeight: 700 }}>
+          Upload Validation
+        </h4>
+        <div
+          ref={scrollRef}
+          style={{
+            maxHeight: 400,
+            overflowY: 'auto',
+            borderRadius: 8,
+            border: '1px solid #f0f0f0',
+          }}
         >
-          <Row className="w-100 justify-content-center">
-            <Col md={10} lg={12}>
-              <Card>
-                <Card.Body>
-                  <Card.Title className="mb-4">Upload Validation</Card.Title>
-                  <div className="table-responsive">
-                    <Table striped bordered hover>
-                      <thead>
-                        <tr>
-                          <th>No</th>
-                          <th
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => sortData('File Name')}
-                          >
-                            File Name
-                            <SortIcon columnName="File Name" />
-                          </th>
-                          <th>Uploaded By</th>
-                          <th
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => sortData('Tax Parameter')}
-                          >
-                            Tax Parameter
-                            <SortIcon columnName="Tax Parameter" />
-                          </th>
-                          <th>Date</th>
-                          <th>Time</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {currentItems.map((item) => (
-                          <tr key={item.No}>
-                            <td>{item.No}</td>
-                            <td style={{ color: '#2563eb' }}>
-                              {item['File Name']}
-                            </td>
-                            <td>{item['Uploaded By']}</td>
-                            <td>{item['Tax Parameter']}</td>
-                            <td>{item.Date}</td>
-                            <td>{item.Time}</td>
-                            <td>
-                              <div className="d-flex align-items-center gap-2">
-                                <Button
-                                  variant="outline-primary"
-                                  size="sm"
-                                  onClick={downloadExcel}
-                                  className="me-2"
-                                >
-                                  <Download className="h-4 w-4" />
-                                </Button>
-                                <Button variant="outline-secondary" size="sm">
-                                  <Eye className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  </div>
-                  {/* Pagination */}
-                  <Pagination className="justify-content-center mt-4">
-                    <Pagination.Prev
-                      onClick={() => paginate(Math.max(1, currentPage - 1))}
-                      disabled={currentPage === 1}
-                    />
-                    {pageNumbers.map((number) => (
-                      <Pagination.Item
-                        key={number}
-                        active={currentPage === number}
-                        onClick={() => paginate(number)}
-                      >
-                        {number}
-                      </Pagination.Item>
-                    ))}
-                    <Pagination.Next
-                      onClick={() =>
-                        paginate(Math.min(currentPage + 1, pageNumbers.length))
-                      }
-                      disabled={currentPage === pageNumbers.length}
-                    />
-                  </Pagination>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-      </div>
+          <Table hover responsive>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleSort('fileName')}
+                >
+                  {getSortIndicator('fileName')} File Name
+                </th>
+                <th>Uploaded By</th>
+                <th
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleSort('taxParameter')}
+                >
+                  Tax Parameter {getSortIndicator('taxParameter')}
+                </th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedRows.slice(0, visibleCount).map((row) => (
+                <tr key={row.id}>
+                  <td>{row.id}</td>
+                  <td>{row.fileName}</td>
+                  <td>{row.uploadedBy}</td>
+                  <td>{row.taxParameter}</td>
+                  <td>{row.date}</td>
+                  <td>{row.time}</td>
+                  <td>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      className="p-0 me-2"
+                      title="Download"
+                      onClick={handleDownload}
+                    >
+                      <Download size={18} color="#90a4ae" />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      </Container>
     </Layout>
   );
 };
