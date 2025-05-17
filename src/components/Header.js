@@ -59,6 +59,10 @@ function Header() {
     headerTitle = 'Upload History';
     headerSubtitle = '';
   }
+  else if (location.pathname === '/risk-profiling') {
+    headerTitle = 'Risk Profiling';
+    headerSubtitle = '';
+  }
 
   return (
     <Navbar className="header">

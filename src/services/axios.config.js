@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { authService } from './auth.service';
 
-const BASE_URL = 'http://api.audithive.in/api/v1';
+//const BASE_URL = 'http://api.audithive.in/api/v1';
+const BASE_URL = "http://13.126.14.135:8000/api/v1"
 
 // Create axios instance
 const api = axios.create({

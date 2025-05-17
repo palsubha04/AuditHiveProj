@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { Tally1 } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 
 const riskLevels = [
@@ -11,6 +12,7 @@ const riskLevels = [
 ];
 
 const RiskAnalysisByIndustryChart = ({ riskData }) => {
+  console.log("riskData", riskData);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedIndustry, setSelectedIndustry] = useState("");
   const [filteredData, setFilteredData] = useState({});
@@ -43,66 +45,119 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
     }
   }, [riskData]);
 
-  const series = Object.entries(filteredData).map(([size, risks]) => ({
-    name: size.charAt(0).toUpperCase() + size.slice(1),
-    data: riskLevels.map((level) => ({
-      x: level,
-      y: risks[level] || 0,
-    })),
-  }));
+  function generateRiskRanges() {
+    if (riskData && selectedCategory && selectedIndustry) {
+      const data = riskData[selectedCategory]?.[selectedIndustry];
+      if (data && typeof data === "object" && Object.keys(data).length > 0) {
+        let max = -Infinity;
+        let min = Infinity;
+
+        for (const size in data) {
+          const riskLevels = data[size];
+          for (const level in riskLevels) {
+            const value = riskLevels[level];
+            if (value > max) max = value;
+            if (value < min) min = value;
+          }
+        }
+
+        const range = max - min;
+        const step = range / 4;
+
+        const colors = ["#52C41A", "#FADB14", "#FA8C16", "#FF4D4F"];
+        const names = ["Low", "Medium", "High", "Very High"];
+
+        const ranges = [];
+
+        for (let i = 0; i < 4; i++) {
+          const from = Math.round(min + i * step);
+          const to = Math.round(min + (i + 1) * step) - 1;
+
+          ranges.push({
+            from,
+            to: i === 3 ? max : to,
+            color: colors[i],
+            name: names[i],
+          });
+        }
+
+        return ranges;
+      }
+    }
+    return [];
+  }
+
+  const series =
+    filteredData && typeof filteredData === "object"
+      ? Object.entries(filteredData).map(([size, risks]) => ({
+          name: size.charAt(0).toUpperCase() + size.slice(1),
+          data: riskLevels.map((level) => ({
+            x: level,
+            y: risks[level] || 0,
+          })),
+        }))
+      : [];
 
   const options = {
     chart: {
       type: "heatmap",
       toolbar: { show: true },
+      height: 350,
     },
     dataLabels: { enabled: true },
-    title: {
-      text: "Risk Breakdown by Industry",
-      align: "center",
-    },
+
     xaxis: {
       type: "category",
       categories: riskLevels,
     },
     plotOptions: {
       heatmap: {
-        shadeIntensity: 0.5,
+        shadeIntensity: 0.8,
         colorScale: {
-          ranges: [
-            { from: 0, to: 50, color: "#FF4D4F", name: "Very High" },
-            { from: 51, to: 100, color: "#FA8C16", name: "High" },
-            { from: 101, to: 150, color: "#FADB14", name: "Medium" },
-            { from: 151, to: 200, color: "#52C41A", name: "Low" },
-          ],
+          ranges: generateRiskRanges(),
+          // ranges: generateRiskRanges(
+          //   riskData &&
+          //     riskData[selectedCategory] &&
+          //     riskData[selectedCategory][selectedIndustry]
+          //     ? riskData[selectedCategory][selectedIndustry]
+          //     : []
+          // ),
         },
+      },
+    },
+    noData: {
+      text: "No Data Found",
+      align: "center",
+      verticalAlign: "middle",
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: "#6c757d",
+        fontSize: "16px",
+        fontFamily: "inherit",
       },
     },
   };
 
-//   if (!riskData) {
-//     return <div>No data available</div>;
-//   }
+  //   if (!riskData) {
+  //     return <div>No data available</div>;
+  //   }
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 16,
-        }}
-      >
-        <div
-          style={{
-            fontWeight: 600,
-            fontSize: 18,
-            color: "#222",
-          }}
+      <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+        <h4
+          className="mb-0 me-3 fw-bold"
+          style={{ color: "#6366F1", fontSize: "22px" }}
         >
-          Risk Analysis by Industry
-        </div>
+          Risk Analysis By Industry
+        </h4>
+        <Tally1 style={{ color: "#7c879d" }} />
+        <span
+          style={{ color: "#7c879d", fontSize: "16px", marginRight: "10px" }}
+        >
+          Filter By :{" "}
+        </span>
         <div>
           <select
             style={{
@@ -120,17 +175,24 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
               setSelectedIndustry(firstIndustry); // Reset industry when category changes
             }}
           >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat.toUpperCase()}
-              </option>
-            ))}
+            {categories &&
+              categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat.toUpperCase()}
+                </option>
+              ))}
           </select>
+          <span
+            style={{ color: "#7c879d", fontSize: "16px", marginRight: "5px" }}
+          >
+            and
+          </span>
           <select
             style={{
               padding: "4px 8px",
               borderRadius: 4,
               border: "1px solid #ccc",
+              width: "20rem",
             }}
             value={selectedIndustry}
             onChange={(e) => setSelectedIndustry(e.target.value)}
@@ -138,14 +200,16 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
           >
             {industries.map((ind) => (
               <option key={ind} value={ind}>
-                {ind.charAt(0).toUpperCase() + ind.slice(1)}
+                {ind.charAt(0).toUpperCase() +
+                  ind.slice(1).replaceAll("_", " ")}
               </option>
             ))}
           </select>
         </div>
       </div>
-    {riskData? <Chart options={options} series={series} type="heatmap" height={400} />
-    : <div>No data available</div>}
+      <Chart options={options} series={series} type="heatmap" height={400} />
+      {/* {riskData ? <Chart options={options} series={series} type="heatmap" height={400} />
+        : <div>No data available</div>} */}
     </div>
   );
 };

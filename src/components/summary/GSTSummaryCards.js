@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import gstService from '../../services/gst.service';
+import "../../pages/Dashboard.css";
 
 const SummaryCard = ({ title, value, icon }) => (
-  <Card className="h-100">
+  <Card className="h-100 box-background">
     <Card.Body>
       <div className="d-flex justify-content-between align-items-center">
         <div className="flex-grow-1">
