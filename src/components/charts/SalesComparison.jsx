@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col } from 'react-bootstrap';
 import gstService from '../../services/gst.service';
+import '../../pages/Dashboard.css';
 
 const SalesComparison = ({ startDate, endDate }) => {
   const [chartData, setChartData] = useState({
@@ -138,7 +139,7 @@ const SalesComparison = ({ startDate, endDate }) => {
   };
 
   return (
-    <Card className="mb-4">
+    <Card className="mb-4 box-background">
       <Card.Body>
         <Row className="mb-4">
           <Col>

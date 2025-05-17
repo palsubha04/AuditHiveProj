@@ -38,7 +38,7 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
     setChartOptions({
       chart: {
         type: 'line',
-        height: 320,
+        height: 350,
         toolbar: { show: true },
       },
       stroke: {

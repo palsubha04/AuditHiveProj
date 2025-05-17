@@ -163,6 +163,7 @@ const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
   const options = {
     chart: {
       type: "pie",
+      height: 350,
       toolbar: { show: true },
     },
     labels: labels,

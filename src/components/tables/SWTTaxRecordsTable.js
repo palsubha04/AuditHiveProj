@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, Row, Col, Form, Badge } from 'react-bootstrap';
+import { Card, Row, Col, Form, Badge, Spinner } from 'react-bootstrap';
 import Table from '../Table';
-import gstService from '../../services/gst.service';
+import swtService from '../../services/swt.service';
 import debounce from 'lodash/debounce';
 import "../../pages/Dashboard.css";
 
-const TaxRecordsTable = ({ startDate, endDate }) => {
+const SWTTaxRecordsTable = ({ startDate, endDate }) => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,7 +15,7 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const fetchRecords = async (tin = '', page = 1, append = false) => {
-    if (loading || isLoadingMore) return;
+    if (append && (loading || isLoadingMore)) return;
     
     if (page === 1) {
       setLoading(true);
@@ -27,10 +27,16 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
     try {
       let response;
       if (tin) {
-        response = await gstService.getTaxRecordsByTIN(tin);
-        setRecords(response.records);
+        response = await swtService.getTaxRecordsByTIN(tin, startDate, endDate, page);
+        if (response.error) {
+          setError(response.error);
+          setRecords([]);
+        } else {
+          setRecords(Array.isArray(response.records) ? response.records : []);
+          setError(null);
+        }
       } else {
-        response = await gstService.getTaxRecords(startDate, endDate, page);
+        response = await swtService.getTaxRecords(startDate, endDate, page);
         if (append) {
           setRecords(prev => [...prev, ...response.records]);
         } else {
@@ -83,9 +89,10 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
   }, [records.length, totalRecords, loading, isLoadingMore, currentPage, searchTin]);
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-PG', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'PGK',
+      currencyDisplay: 'symbol',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(value);
@@ -102,26 +109,30 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
       cell: ({ getValue }) => getValue() || 'N/A'
     },
     {
-      accessorKey: 'taxpayer_type',
-      header: 'Type'
-    },
-    {
       accessorKey: 'segmentation',
       header: 'Segmentation'
     },
     {
-      accessorKey: 'total_sales_income',
-      header: 'Total Sales',
+      accessorKey: 'employees_on_payroll',
+      header: 'Employees on Payroll'
+    },
+    {
+      accessorKey: 'employees_paid_swt',
+      header: 'Employees Paid SWT'
+    },
+    {
+      accessorKey: 'total_salary_wages_paid',
+      header: 'Total Salary Wages Paid',
       cell: ({ getValue }) => formatCurrency(getValue())
     },
     {
-      accessorKey: 'gst_payable',
-      header: 'GST Payable',
+      accessorKey: 'sw_paid_for_swt_deduction',
+      header: 'Salary Wages Paid for SWT Deduction',
       cell: ({ getValue }) => formatCurrency(getValue())
     },
     {
-      accessorKey: 'gst_refundable',
-      header: 'GST Refundable',
+      accessorKey: 'total_swt_tax_deducted',
+      header: 'Total SWT Tax Deducted',
       cell: ({ getValue }) => formatCurrency(getValue())
     },
     {
@@ -131,9 +142,12 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
         <Badge bg={getValue() ? 'danger' : 'success'}>
           {getValue() ? 'Fraud' : 'Valid'}
         </Badge>
-      ),
-      // Override the header to prevent filter functionality
-      header: 'Is Fraud'
+      )
+    },
+    {
+      accessorKey: 'fraud_reason',
+      header: 'Fraud Reason',
+      cell: ({ getValue }) => getValue() || 'N/A'
     }
   ];
 
@@ -141,7 +155,11 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
     <Card className="mb-4 box-background">
       <Card.Body>
         {loading ? (
-          <div className="text-center">Loading...</div>
+          <div className="text-center" style={{ height: '350px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Spinner animation="border" role="status" variant="primary">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
         ) : error ? (
           <div className="text-center text-danger">{error}</div>
         ) : records.length === 0 ? (
@@ -180,4 +198,4 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
   );
 };
 
-export default TaxRecordsTable; 
+export default SWTTaxRecordsTable; 
