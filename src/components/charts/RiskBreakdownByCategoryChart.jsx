@@ -48,7 +48,7 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
     },
     yaxis: {
       title: {
-        text: 'Number of Companies',
+        text: 'Number of Taxpayers',
       },
     },
     legend: {

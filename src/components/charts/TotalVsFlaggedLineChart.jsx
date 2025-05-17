@@ -47,11 +47,11 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
       },
       xaxis: {
         categories: ['Large', 'Medium', 'Small', 'Micro'],
-        title: { text: 'Company Size' },
+        title: { text: 'Segmentation' },
         labels: { style: { fontWeight: 500, color: '#334155', fontSize: '14px' } },
       },
       yaxis: {
-        title: { text: 'Taxpayers' },
+        title: { text: 'Number of Taxpayers' },
         labels: { style: { fontWeight: 500, color: '#334155' } },
       },
       legend: { position: 'top', fontWeight: 600 },
@@ -103,7 +103,7 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
           className="mb-0 me-3 fw-bold"
           style={{ color: "#6366F1", fontSize: "22px" }}
         >
-          Total Tax Payer vs Risk Flagged
+         Total Taxpayers vs Risk-Flagged
         </h4>
         <Tally1 style={{ color: "#7c879d" }} />
         <span

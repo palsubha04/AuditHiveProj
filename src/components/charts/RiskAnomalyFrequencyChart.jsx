@@ -180,6 +180,9 @@ const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
     },
     legend: {
       position: "bottom",
+      onItemClick: {
+        toggleDataSeries: true, // explicitly allow toggling
+      },
     },
   };
 
