@@ -6,12 +6,14 @@ import { FixedSizeList as List } from 'react-window';
 import EmployeeLineChart from '../components/charts/EmployeeLineChart';
 import MonthlySalesTaxSummaryChart from '../components/charts/MonthlySalesTaxSummaryChart';
 import SwtSalariesChart from '../components/charts/SwtSalariesChart';
+import TaxpayersRiskChart from '../components/charts/TaxpayersRiskChart';
 import TenureFilter from '../components/filters/TenureFilter';
 import Layout from '../components/Layout';
 import { fetchDatasets } from '../slice/datasetsSlice';
 import { fetchSalesComparison } from '../slice/salesComparisonSlice';
+import { fetchEmployeeOnPayroll } from '../slice/employeeOnPayrollSlice';
+import { fetchGstPayableVsRefundable } from '../slice/gstPayableVsRefundableSlice';
 import { ChevronDown } from 'lucide-react';
-import TaxpayersRiskChart from '../components/charts/TaxpayersRiskChart';
 import TaxPayersGrid from '../components/TaxPayersGrid';
 
 const Compliance = () => {
@@ -23,9 +25,13 @@ const Compliance = () => {
   const { data, loading, error } = useSelector((state) => state?.datasets);
   const { monthlySalesData, monthlySalesLoading, monthlySalesError } =
     useSelector((state) => state?.salesComparison);
+  const { payrollData, payrollLoading, payrollError } = useSelector(
+    (state) => state?.employeeOnPayroll
+  );
+  const { gstData, gstLoading, gstError } = useSelector(
+    (state) => state?.gstPayableVsRefundable
+  );
   const [salesData, setSalesData] = useState({});
-
-  console.log('current data', dateRange);
 
   useEffect(() => {
     if (!monthlySalesData) {
@@ -40,12 +46,36 @@ const Compliance = () => {
   }, [monthlySalesData, dispatch]);
 
   useEffect(() => {
+    if (!payrollData) {
+      dispatch(
+        fetchEmployeeOnPayroll({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
+  }, [payrollData, dispatch]);
+
+  useEffect(() => {
+    if (!gstData) {
+      dispatch(
+        fetchGstPayableVsRefundable({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
+  }, [gstData, dispatch]);
+
+  //console.log('GST Data: ', gstData);
+
+  useEffect(() => {
     if (monthlySalesData) {
       setSalesData(monthlySalesData);
     }
   }, [monthlySalesData]);
-
-  console.log('Sales Data: ', salesData);
 
   const tins = data?.tins || [];
   const yearOptions =
@@ -54,22 +84,12 @@ const Compliance = () => {
       value: String(year),
     })) || [];
 
-  console.log('year options: ', yearOptions);
-
   const handleFilterChange = (range) => {
     setDateRange(range);
   };
 
-  // const formatDate = (date) => {
-  //   const day = String(date.getDate()).padStart(2, '0');
-  //   const month = String(date.getMonth() + 1).padStart(2, '0');
-  //   const year = date.getFullYear();
-  //   return `${day}-${month}-${year}`;
-  // };
-
   const handleSearch = () => {
     // Implement search logic here
-    // You can use selectedTax, dateRange.start_date, dateRange.end_date
     dispatch(
       fetchSalesComparison({
         start_date: dateRange.start_date,
@@ -84,7 +104,21 @@ const Compliance = () => {
     //     tin: '500000009',
     //   })
     // );
+    dispatch(
+      fetchEmployeeOnPayroll({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
   };
+  dispatch(
+    fetchGstPayableVsRefundable({
+      start_date: '01-01-2022',
+      end_date: '31-12-2022',
+      tin: '500000009',
+    })
+  );
 
   useEffect(() => {
     if (!data) {
@@ -103,10 +137,10 @@ const Compliance = () => {
   }, []);
 
   useEffect(() => {
-    if (error || monthlySalesError) {
+    if (error || monthlySalesError || payrollError || gstError) {
       toast.error(error, { position: 'top-right' });
     }
-  }, [error, monthlySalesError]);
+  }, [error, monthlySalesError, payrollError, gstError]);
 
   useEffect(() => {
     if (data?.tins && data.tins.length > 0) {
@@ -268,80 +302,66 @@ const Compliance = () => {
         {/* End Chart Card Section */}
 
         {/* --- Bar Chart Row --- */}
+
+        {/* Line Chart Card */}
         <div
           style={{
-            display: 'flex',
-            gap: 32,
             marginTop: 32,
-            width: '100%',
-            justifyContent: 'center',
+            border: '1px solid #f1f5f9',
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: 900,
+            maxWidth: 1200,
           }}
         >
-          {/* Line Chart Card */}
           <div
             style={{
-              flex: 1,
-              maxWidth: '50%',
-              border: '1px solid #e0e7ef',
-              borderRadius: 18,
-              background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-              boxShadow: '0 2px 16px 0 #e0e7ef55',
-              padding: '32px 32px 16px 32px',
-              minWidth: 0,
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
             }}
           >
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: 20,
-                color: '#6366f1',
-                letterSpacing: 1,
-                minHeight: 28,
-                marginBottom: 18,
-                display: 'flex',
-                alignItems: 'flex-start',
-              }}
-            >
-              Employees on Payroll vs Paid SWT
-            </div>
-            <EmployeeLineChart />
+            Employees on Payroll vs Paid SWT
           </div>
+          <EmployeeLineChart data={payrollData} />
+        </div>
 
-          {/* Bar Chart Card */}
+        {/* Bar Chart Card */}
+        <div
+          style={{
+            marginTop: 32,
+            border: '1px solid #f1f5f9',
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: 900,
+            maxWidth: 1200,
+          }}
+        >
           <div
             style={{
-              flex: 1,
-              maxWidth: '50%',
-              border: '1px solid #e0e7ef',
-              borderRadius: 18,
-              background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-              boxShadow: '0 2px 16px 0 #e0e7ef55',
-              padding: '32px 32px 16px 32px',
-              minWidth: 0, // allow shrinking
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
             }}
           >
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: 20,
-                color: '#6366f1',
-                letterSpacing: 1,
-                minHeight: 28,
-                marginBottom: 18,
-                display: 'flex',
-                alignItems: 'flex-start',
-              }}
-            >
-              Total TaxPayers vs Risk Flagged
-            </div>
-            <TaxpayersRiskChart />
+            GST Payable vs GST refundable
           </div>
+          <TaxpayersRiskChart data={gstData} />
+          {/* <TaxpayersRiskChart /> */}
         </div>
 
         {/* --- Line & SWT Chart Row --- */}

@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Container, Table, Button } from 'react-bootstrap';
 import { Download } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import Layout from '../components/Layout';
 
-// ... existing code ...
 const data = [
   {
     id: 1,
@@ -14,17 +13,18 @@ const data = [
     date: '31/03/2024',
     time: '12:30',
   },
-  // ... existing code ...
 ];
 
 const UploadHistory = () => {
-  // For demo, repeat the same row 8 times
-  const rowsData = Array.from({ length: 8 }, (_, i) => ({
+  // For demo, repeat the same row 18 times
+  const rowsData = Array.from({ length: 18 }, (_, i) => ({
     ...data[0],
     id: i + 1,
   }));
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [visibleCount, setVisibleCount] = useState(10);
+  const scrollRef = useRef(null);
 
   const handleSort = (key) => {
     setSortConfig((prev) => {
@@ -75,6 +75,27 @@ const UploadHistory = () => {
     return sortConfig.direction === 'asc' ? '↑' : '↓';
   };
 
+  // Infinite scroll handler
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (el && el.scrollTop + el.clientHeight >= el.scrollHeight - 10) {
+      setVisibleCount((prev) => {
+        if (prev < sortedRows.length) {
+          return Math.min(prev + 10, sortedRows.length);
+        }
+        return prev;
+      });
+    }
+  };
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) {
+      el.addEventListener('scroll', handleScroll);
+      return () => el.removeEventListener('scroll', handleScroll);
+    }
+  }, [sortedRows.length]);
+
   return (
     <Layout>
       <Container
@@ -88,52 +109,62 @@ const UploadHistory = () => {
         <h4 className="mb-4" style={{ color: '#1a237e', fontWeight: 700 }}>
           Upload Validation
         </h4>
-        <Table hover responsive>
-          <thead>
-            <tr>
-              <th>No</th>
-              <th
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleSort('fileName')}
-              >
-                {getSortIndicator('fileName')} File Name
-              </th>
-              <th>Uploaded By</th>
-              <th
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleSort('taxParameter')}
-              >
-                Tax Parameter {getSortIndicator('taxParameter')}
-              </th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedRows.map((row) => (
-              <tr key={row.id}>
-                <td>{row.id}</td>
-                <td>{row.fileName}</td>
-                <td>{row.uploadedBy}</td>
-                <td>{row.taxParameter}</td>
-                <td>{row.date}</td>
-                <td>{row.time}</td>
-                <td>
-                  <Button
-                    variant="link"
-                    size="sm"
-                    className="p-0 me-2"
-                    title="Download"
-                    onClick={handleDownload}
-                  >
-                    <Download size={18} color="#90a4ae" />
-                  </Button>
-                </td>
+        <div
+          ref={scrollRef}
+          style={{
+            maxHeight: 400,
+            overflowY: 'auto',
+            borderRadius: 8,
+            border: '1px solid #f0f0f0',
+          }}
+        >
+          <Table hover responsive>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleSort('fileName')}
+                >
+                  {getSortIndicator('fileName')} File Name
+                </th>
+                <th>Uploaded By</th>
+                <th
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleSort('taxParameter')}
+                >
+                  Tax Parameter {getSortIndicator('taxParameter')}
+                </th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {sortedRows.slice(0, visibleCount).map((row) => (
+                <tr key={row.id}>
+                  <td>{row.id}</td>
+                  <td>{row.fileName}</td>
+                  <td>{row.uploadedBy}</td>
+                  <td>{row.taxParameter}</td>
+                  <td>{row.date}</td>
+                  <td>{row.time}</td>
+                  <td>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      className="p-0 me-2"
+                      title="Download"
+                      onClick={handleDownload}
+                    >
+                      <Download size={18} color="#90a4ae" />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
       </Container>
     </Layout>
   );

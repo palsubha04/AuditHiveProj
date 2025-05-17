@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { authService } from './auth.service';
 
-const BASE_URL = 'http://api.audithive.in/api/v1';
+const BASE_URL = 'http://13.126.14.135:8000/api/v1';
 
 // Create axios instance
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }
+    Accept: 'application/json',
+  },
 });
 
 // Request interceptor
@@ -40,11 +40,12 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     // Check if error is due to token expiration
-    const isTokenExpiredError = error.response.status === 401 && 
-      (error.response.data?.detail?.toLowerCase().includes('token') || 
-       error.response.data?.detail?.toLowerCase().includes('expired') ||
-       error.response.data?.message?.toLowerCase().includes('token') ||
-       error.response.data?.message?.toLowerCase().includes('expired'));
+    const isTokenExpiredError =
+      error.response.status === 401 &&
+      (error.response.data?.detail?.toLowerCase().includes('token') ||
+        error.response.data?.detail?.toLowerCase().includes('expired') ||
+        error.response.data?.message?.toLowerCase().includes('token') ||
+        error.response.data?.message?.toLowerCase().includes('expired'));
 
     // Only handle token expiration errors
     if (isTokenExpiredError) {
@@ -67,14 +68,14 @@ api.interceptors.response.use(
 
         // Call refresh token endpoint
         const response = await axios.post(`${BASE_URL}/token/refresh`, {
-          refresh: refreshToken
+          refresh: refreshToken,
         });
 
         const { access_token } = response.data;
-        
+
         // Update the access token
         localStorage.setItem('access_token', access_token);
-        
+
         // Retry the original request with new token
         originalRequest.headers.Authorization = `Bearer ${access_token}`;
         return api(originalRequest);
@@ -93,4 +94,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api; 
+export default api;

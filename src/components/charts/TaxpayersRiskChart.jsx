@@ -1,47 +1,44 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-const TaxpayersRiskChart = () => {
-  const risk_flagged_summary = [
-    {
-      tax_type: 'gst',
-      total_taxpayers: 100000,
-      risk_flagged_taxpayers: 2500,
-      risk_flagged_percentage: 2.5,
-    },
-    {
-      tax_type: 'swt',
-      total_taxpayers: 80000,
-      risk_flagged_taxpayers: 3000,
-      risk_flagged_percentage: 3.75,
-    },
-    {
-      tax_type: 'cit',
-      total_taxpayers: 60000,
-      risk_flagged_taxpayers: 1200,
-      risk_flagged_percentage: 2.0,
-    },
+const TaxpayersRiskChart = ({ data }) => {
+  // Prepare data for the chart from the new data structure
+  const monthlySummary = data?.records[0]?.monthly_summary || [];
+  console.log('data from chart', monthlySummary);
+
+  // Map months to labels (e.g., Jan, Feb, ...)
+  const monthLabels = [
+    '',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
-  // Prepare data for the chart
-  const categories = risk_flagged_summary.map((item) =>
-    item.tax_type.toUpperCase()
-  );
-  const totalTaxpayersData = risk_flagged_summary.map(
-    (item) => item.total_taxpayers
-  );
-  const riskFlaggedData = risk_flagged_summary.map(
-    (item) => item.risk_flagged_taxpayers
-  );
+  // Extract months present in the data and sort them
+  const categories = monthlySummary
+    .map((item) => monthLabels[item.month])
+    .filter(Boolean);
+
+  const gstPayableData = monthlySummary.map((item) => item.gst_payable);
+  const gstRefundableData = monthlySummary.map((item) => item.gst_refundable);
 
   const series = [
     {
-      name: 'Total TaxPayers',
-      data: totalTaxpayersData,
+      name: 'GST Payable',
+      data: gstPayableData,
     },
     {
-      name: 'Risk Flagged',
-      data: riskFlaggedData,
+      name: 'GST Refundable',
+      data: gstRefundableData,
     },
   ];
 
@@ -89,7 +86,7 @@ const TaxpayersRiskChart = () => {
         },
       },
       min: 0,
-      max: Math.max(...totalTaxpayersData) * 1.1,
+      max: Math.max(...gstPayableData, ...gstRefundableData) * 1.1,
       tickAmount: 4,
     },
     legend: {
@@ -114,7 +111,7 @@ const TaxpayersRiskChart = () => {
       custom: function ({ series, seriesIndex, dataPointIndex, w }) {
         const taxType = categories[dataPointIndex];
         const value = series[seriesIndex][dataPointIndex];
-        const label = seriesIndex === 0 ? 'Total TaxPayers' : 'Risk Flagged';
+        const label = seriesIndex === 0 ? 'GST Payable' : 'GST Refundable';
         return `<div style="padding:10px 16px;background:#45457A;color:#fff;border-radius:10px;box-shadow:0 2px 8px #0002;">
           <div style="font-size:15px;font-weight:500;">${taxType} - ${label}</div>
           <div style="font-size:18px;font-weight:600;">${value.toLocaleString(
@@ -131,6 +128,18 @@ const TaxpayersRiskChart = () => {
       },
       xaxis: {
         lines: { show: false },
+      },
+    },
+    noData: {
+      text: 'No Data Found',
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: '#6c757d',
+        fontSize: '16px',
+        fontFamily: 'inherit',
       },
     },
   };

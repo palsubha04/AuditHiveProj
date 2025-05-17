@@ -1,24 +1,14 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 
-const EmployeeLineChart = () => {
-  const employeeData = {
-    year: 2024,
-    monthly_data: [
-      { month: '01', employees_on_payroll: 1200, employees_paid_swt: 950 },
-      { month: '02', employees_on_payroll: 1250, employees_paid_swt: 980 },
-      { month: '03', employees_on_payroll: 1300, employees_paid_swt: 1000 },
-      { month: '04', employees_on_payroll: 1280, employees_paid_swt: 1020 },
-      { month: '05', employees_on_payroll: 1350, employees_paid_swt: 1100 },
-      { month: '06', employees_on_payroll: 1400, employees_paid_swt: 1150 },
-      { month: '07', employees_on_payroll: 1425, employees_paid_swt: 1200 },
-      { month: '08', employees_on_payroll: 1450, employees_paid_swt: 1250 },
-      { month: '09', employees_on_payroll: 1500, employees_paid_swt: 1300 },
-      { month: '10', employees_on_payroll: 1520, employees_paid_swt: 1350 },
-      { month: '11', employees_on_payroll: 1550, employees_paid_swt: 1400 },
-      { month: '12', employees_on_payroll: 1600, employees_paid_swt: 1450 },
-    ],
-  };
+const EmployeeLineChart = ({ data }) => {
+  // let employeeData = {};
+  // if (data && Object.keys(data).length > 0 && data.records) {
+  //   employeeData = data?.records[0];
+  // }
+  const monthlySummary = data?.records[0]?.monthly_summary || [];
+  // console.log('Data from chart: ', employeeData);
+
   const employeeMonths = [
     'Jan',
     'Feb',
@@ -36,11 +26,11 @@ const EmployeeLineChart = () => {
   const employeeLineSeries = [
     {
       name: 'Employees on Payroll',
-      data: employeeData.monthly_data.map((m) => m.employees_on_payroll),
+      data: monthlySummary?.map((m) => m.employees_on_payroll),
     },
     {
       name: 'Employees Paid SWT',
-      data: employeeData.monthly_data.map((m) => m.employees_paid_swt),
+      data: monthlySummary?.map((m) => m.employees_paid_swt),
     },
   ];
   const employeeLineOptions = {
@@ -82,6 +72,18 @@ const EmployeeLineChart = () => {
     grid: {
       borderColor: '#e0e7ef',
       strokeDashArray: 4,
+    },
+    noData: {
+      text: 'No Data Found',
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: '#6c757d',
+        fontSize: '16px',
+        fontFamily: 'inherit',
+      },
     },
   };
   return (

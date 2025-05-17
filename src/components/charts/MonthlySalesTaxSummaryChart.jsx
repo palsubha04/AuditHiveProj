@@ -5,8 +5,6 @@ const MonthlySalesTaxSummaryChart = ({ salesData }) => {
   let chartData = {};
   if (salesData && Object.keys(salesData).length > 0 && salesData.records) {
     chartData = salesData.records[0];
-    console.log('MonthlySalesTaxSummaryChart props salesData:', salesData);
-    console.log('MonthlySalesTaxSummaryChart props chartData:', chartData);
   }
 
   const months = [
