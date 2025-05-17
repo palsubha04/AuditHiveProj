@@ -36,6 +36,7 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
       type: 'bar',
       stacked: true,
       toolbar: { show: true },
+      height: 350,
     },
     plotOptions: {
       bar: {

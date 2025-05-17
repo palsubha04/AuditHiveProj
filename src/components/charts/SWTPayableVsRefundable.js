@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import swtService from '../../services/swt.service';
+import "../../pages/Dashboard.css";
 
 const SWTPayableVsRefundable = ({ startDate, endDate }) => {
   const [chartData, setChartData] = useState({
@@ -152,7 +153,7 @@ const SWTPayableVsRefundable = ({ startDate, endDate }) => {
 
   if (loading) {
     return (
-      <Card className="mb-4">
+      <Card className="mb-4 box-background">
         <Card.Body className="d-flex align-items-center justify-content-center" style={{ height: '350px' }}>
           <Spinner animation="border" role="status" variant="primary">
             <span className="visually-hidden">Loading...</span>
@@ -164,7 +165,7 @@ const SWTPayableVsRefundable = ({ startDate, endDate }) => {
 
   if (error) {
     return (
-      <Card className="mb-4">
+      <Card className="mb-4 box-background">
         <Card.Body className="text-center text-danger" style={{ height: '350px' }}>
           {error}
         </Card.Body>
@@ -173,7 +174,7 @@ const SWTPayableVsRefundable = ({ startDate, endDate }) => {
   }
 
   return (
-    <Card className="mb-4">
+    <Card className="mb-4 box-background">
       <Card.Body>
         <Row className="mb-4">
           <Col>
