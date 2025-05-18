@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ClipLoader } from 'react-spinners';
 import { ToastContainer, toast } from 'react-toastify';
 import { FixedSizeList as List } from 'react-window';
 import EmployeeLineChart from '../components/charts/EmployeeLineChart';
@@ -13,15 +12,23 @@ import { fetchDatasets } from '../slice/datasetsSlice';
 import { fetchSalesComparison } from '../slice/salesComparisonSlice';
 import { fetchEmployeeOnPayroll } from '../slice/employeeOnPayrollSlice';
 import { fetchGstPayableVsRefundable } from '../slice/gstPayableVsRefundableSlice';
+import { fetchswtSalariesComparison } from '../slice/swtSalariesComparisonSlice';
+import { fetchtaxPayersDetails } from '../slice/taxPayersDetailsSlice';
 import { ChevronDown } from 'lucide-react';
 import TaxPayersGrid from '../components/TaxPayersGrid';
+import { Spinner } from 'react-bootstrap';
+import './Compliance.css';
 
 const Compliance = () => {
   const dispatch = useDispatch();
   const [selectedTIN, setSelectedTIN] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const [dateRange, setDateRange] = useState('');
+  const [searchTerm, setSearchTerm] = useState(''); // Added for search functionality
+  const [dateRange, setDateRange] = useState({
+    start_date: null,
+    end_date: null,
+  });
   const { data, loading, error } = useSelector((state) => state?.datasets);
   const { monthlySalesData, monthlySalesLoading, monthlySalesError } =
     useSelector((state) => state?.salesComparison);
@@ -31,51 +38,84 @@ const Compliance = () => {
   const { gstData, gstLoading, gstError } = useSelector(
     (state) => state?.gstPayableVsRefundable
   );
-  const [salesData, setSalesData] = useState({});
+  const {
+    swtSalariesComparisonData,
+    swtSalariesComparisonLoading,
+    swtSalariesComparisonError,
+  } = useSelector((state) => state?.swtSalariesComparison);
+  const { taxPayersData, taxPayersLoading, taxPayersError } = useSelector(
+    (state) => state?.taxPayersDetails
+  );
+
+  // console.log('Tin Data', data);
 
   useEffect(() => {
-    if (!monthlySalesData) {
+    if (!data) {
+      dispatch(fetchDatasets());
+    }
+  }, [data, dispatch]);
+
+  // useEffect(() => {
+  //   if (!monthlySalesData) {
+  //     dispatch(
+  //       fetchSalesComparison({
+  //         start_date: '01-01-2021',
+  //         end_date: '31-12-2021',
+  //         tin: '500000009',
+  //       })
+  //     );
+  //   }
+  // }, [monthlySalesData, dispatch]);
+
+  // useEffect(() => {
+  //   if (!payrollData) {
+  //     dispatch(
+  //       fetchEmployeeOnPayroll({
+  //         start_date: '01-01-2020',
+  //         end_date: '31-12-2020',
+  //         tin: '500000009',
+  //       })
+  //     );
+  //   }
+  // }, [payrollData, dispatch]);
+
+  // useEffect(() => {
+  //   if (!gstData) {
+  //     dispatch(
+  //       fetchGstPayableVsRefundable({
+  //         start_date: '01-01-2020',
+  //         end_date: '31-12-2020',
+  //         tin: '500000009',
+  //       })
+  //     );
+  //   }
+  // }, [gstData, dispatch]);
+
+  // useEffect(() => {
+  //   if (!swtSalariesComparisonData) {
+  //     dispatch(
+  //       fetchswtSalariesComparison({
+  //         start_date: '01-01-2022',
+  //         end_date: '31-12-2022',
+  //         tin: '500000009',
+  //       })
+  //     );
+  //   }
+  // }, [swtSalariesComparisonData, dispatch]);
+
+  useEffect(() => {
+    if (!taxPayersData) {
       dispatch(
-        fetchSalesComparison({
-          start_date: '01-01-2021',
-          end_date: '31-12-2021',
+        fetchtaxPayersDetails({
+          start_date: '01-01-2022',
+          end_date: '31-12-2022',
           tin: '500000009',
         })
       );
     }
-  }, [monthlySalesData, dispatch]);
+  }, [taxPayersData, dispatch]);
 
-  useEffect(() => {
-    if (!payrollData) {
-      dispatch(
-        fetchEmployeeOnPayroll({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
-        })
-      );
-    }
-  }, [payrollData, dispatch]);
-
-  useEffect(() => {
-    if (!gstData) {
-      dispatch(
-        fetchGstPayableVsRefundable({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
-        })
-      );
-    }
-  }, [gstData, dispatch]);
-
-  //console.log('GST Data: ', gstData);
-
-  useEffect(() => {
-    if (monthlySalesData) {
-      setSalesData(monthlySalesData);
-    }
-  }, [monthlySalesData]);
+  // console.log('Tax Payers Data: ', taxPayersData);
 
   const tins = data?.tins || [];
   const yearOptions =
@@ -84,8 +124,15 @@ const Compliance = () => {
       value: String(year),
     })) || [];
 
+  //console.log('year Options: ', yearOptions);
+
   const handleFilterChange = (range) => {
-    setDateRange(range);
+    if (
+      range.start_date !== dateRange.start_date ||
+      range.end_date !== dateRange.end_date
+    ) {
+      setDateRange(range);
+    }
   };
 
   const handleSearch = () => {
@@ -97,13 +144,6 @@ const Compliance = () => {
         tin: selectedTIN,
       })
     );
-    // dispatch(
-    //   fetchSalesComparison({
-    //     start_date: '01-01-2022',
-    //     end_date: '31-12-2022',
-    //     tin: '500000009',
-    //   })
-    // );
     dispatch(
       fetchEmployeeOnPayroll({
         start_date: dateRange.start_date,
@@ -111,20 +151,21 @@ const Compliance = () => {
         tin: selectedTIN,
       })
     );
+    dispatch(
+      fetchGstPayableVsRefundable({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
+    dispatch(
+      fetchswtSalariesComparison({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
   };
-  dispatch(
-    fetchGstPayableVsRefundable({
-      start_date: '01-01-2022',
-      end_date: '31-12-2022',
-      tin: '500000009',
-    })
-  );
-
-  useEffect(() => {
-    if (!data) {
-      dispatch(fetchDatasets());
-    }
-  }, [data, dispatch]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -136,46 +177,28 @@ const Compliance = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    if (error || monthlySalesError || payrollError || gstError) {
-      toast.error(error, { position: 'top-right' });
-    }
-  }, [error, monthlySalesError, payrollError, gstError]);
+  // useEffect(() => {
+  //   if (error || monthlySalesError || payrollError || gstError || swtSalariesComparisonError) {
+  //     toast.error(error, { position: 'top-right' });
+  //   }
+  // }, [error, monthlySalesError, payrollError, gstError, swtSalariesComparisonError]);
 
   useEffect(() => {
-    if (data?.tins && data.tins.length > 0) {
+    if (data?.tins && data.tins.length > 0 && !selectedTIN) {
+      // Ensure selectedTIN is set only once initially
       setSelectedTIN(data.tins[0]);
     }
-  }, [data?.tins]);
+  }, [data?.tins, selectedTIN]); // Added selectedTIN to dependency array
 
-  // if (loading || monthlySalesLoading) {
-  //   return (
-  //     <div
-  //       style={{
-  //         display: 'flex',
-  //         justifyContent: 'center',
-  //         alignItems: 'center',
-  //         minHeight: '60vh',
-  //       }}
-  //     >
-  //       <ClipLoader size={60} color="#2563eb" />
-  //       <ToastContainer />
-  //     </div>
-  //   );
-  // }
+  const filteredTins = tins.filter((tin) =>
+    tin.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <>
       <Layout>
         <div className="page-container">
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              marginBottom: '24px',
-            }}
-          >
+          <div className="filter-container">
             <label style={{ fontWeight: 'bold', marginRight: 8 }}>TIN</label>
             <div ref={dropdownRef} style={{ position: 'relative', width: 200 }}>
               <div
@@ -207,15 +230,32 @@ const Compliance = () => {
                     borderRadius: 4,
                     background: '#fff',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                    maxHeight: 200,
+                    maxHeight: 240, // Adjusted maxHeight to accommodate input
                     overflow: 'hidden',
+                    display: 'flex', // Added to manage layout of input and list
+                    flexDirection: 'column', // Added for vertical layout
                   }}
                 >
+                  <input
+                    type="text"
+                    placeholder="Search TIN..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{
+                      padding: '8px 12px',
+                      border: 'none',
+                      borderBottom: '1px solid #eee',
+                      outline: 'none',
+                      width: 'calc(100% - 24px)', // Adjust width to account for padding
+                      boxSizing: 'border-box',
+                    }}
+                    autoFocus // Optional: to focus input when dropdown opens
+                  />
                   <List
-                    height={200}
-                    itemCount={tins.length}
+                    height={200} // Adjusted height for the list itself
+                    itemCount={filteredTins.length}
                     itemSize={35}
-                    width={240}
+                    width={'100%'} // Changed width to be responsive
                   >
                     {({ index, style }) => (
                       <div
@@ -223,16 +263,19 @@ const Compliance = () => {
                           ...style,
                           padding: '8px 12px',
                           background:
-                            tins[index] === selectedTIN ? '#e0e7ef' : '#fff',
+                            filteredTins[index] === selectedTIN
+                              ? '#e0e7ef'
+                              : '#fff',
                           cursor: 'pointer',
                         }}
                         onClick={() => {
-                          setSelectedTIN(tins[index]);
+                          setSelectedTIN(filteredTins[index]);
                           setIsDropdownOpen(false);
+                          setSearchTerm(''); // Reset search term on selection
                         }}
-                        key={tins[index]}
+                        key={filteredTins[index]}
                       >
-                        {tins[index]}
+                        {filteredTins[index]}
                       </div>
                     )}
                   </List>
@@ -281,6 +324,7 @@ const Compliance = () => {
             padding: '24px 24px 8px 24px',
             minWidth: 900,
             maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
           }}
         >
           <div
@@ -297,7 +341,22 @@ const Compliance = () => {
           >
             Monthly Sales & Tax Summary
           </div>
-          <MonthlySalesTaxSummaryChart salesData={salesData} />
+          {monthlySalesLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
+            >
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <MonthlySalesTaxSummaryChart salesData={monthlySalesData} />
+          )}
         </div>
         {/* End Chart Card Section */}
 
@@ -314,6 +373,7 @@ const Compliance = () => {
             padding: '24px 24px 8px 24px',
             minWidth: 900,
             maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
           }}
         >
           <div
@@ -330,7 +390,22 @@ const Compliance = () => {
           >
             Employees on Payroll vs Paid SWT
           </div>
-          <EmployeeLineChart data={payrollData} />
+          {payrollLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
+            >
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <EmployeeLineChart data={payrollData} />
+          )}
         </div>
 
         {/* Bar Chart Card */}
@@ -344,6 +419,7 @@ const Compliance = () => {
             padding: '24px 24px 8px 24px',
             minWidth: 900,
             maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
           }}
         >
           <div
@@ -360,8 +436,22 @@ const Compliance = () => {
           >
             GST Payable vs GST refundable
           </div>
-          <TaxpayersRiskChart data={gstData} />
-          {/* <TaxpayersRiskChart /> */}
+          {gstLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
+            >
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <TaxpayersRiskChart data={gstData} />
+          )}
         </div>
 
         {/* --- Line & SWT Chart Row --- */}
@@ -375,6 +465,7 @@ const Compliance = () => {
             padding: '24px 24px 8px 24px',
             minWidth: 900,
             maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
           }}
         >
           <div
@@ -391,7 +482,22 @@ const Compliance = () => {
           >
             SWT Salaries Comparison
           </div>
-          <SwtSalariesChart />
+          {swtSalariesComparisonLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
+            >
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <SwtSalariesChart data={swtSalariesComparisonData} />
+          )}
         </div>
 
         {/* --- Dat Grid Row --- */}

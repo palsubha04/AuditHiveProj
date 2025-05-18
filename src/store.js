@@ -7,6 +7,8 @@ import riskAnalysisByIndustryReducer from './slice/riskAnalysisByIndustrySlice';
 import employeeOnPayrollReducer from './slice/employeeOnPayrollSlice';
 import gstPayableVsRefundableReducer from './slice/gstPayableVsRefundableSlice';
 import riskAnomalyFrequencyReducer from './slice/riskAnomalyFrequencySlice';
+import swtSalariesComparisonReducer from './slice/swtSalariesComparisonSlice';
+import taxPayersDetailsReducer from './slice/taxPayersDetailsSlice';
 
 const store = configureStore({
   reducer: {
@@ -18,6 +20,8 @@ const store = configureStore({
     employeeOnPayroll: employeeOnPayrollReducer,
     gstPayableVsRefundable: gstPayableVsRefundableReducer,
     riskAnomalyFrequency: riskAnomalyFrequencyReducer,
+    swtSalariesComparison: swtSalariesComparisonReducer,
+    taxPayersDetails: taxPayersDetailsReducer,
   },
 });
 

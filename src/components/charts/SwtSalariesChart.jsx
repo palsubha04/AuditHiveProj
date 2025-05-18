@@ -1,90 +1,9 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 
-const SwtSalariesChart = () => {
+const SwtSalariesChart = ({ data }) => {
   // SWT Salaries Comparison Data
-  const swtSalariesData = {
-    year: 2024,
-    monthly_data: [
-      {
-        month: 1,
-        total_salary_wages_paid: 1000000,
-        sw_paid_for_swt_deduction: 800000,
-        total_swt_tax_deducted: 1060000,
-      },
-      {
-        month: 2,
-        total_salary_wages_paid: 1050000,
-        sw_paid_for_swt_deduction: 850000,
-        total_swt_tax_deducted: 68000,
-      },
-      {
-        month: 3,
-        total_salary_wages_paid: 1100000,
-        sw_paid_for_swt_deduction: 60000,
-        total_swt_tax_deducted: 1100000,
-      },
-      {
-        month: 4,
-        total_salary_wages_paid: 280000,
-        sw_paid_for_swt_deduction: 870000,
-        total_swt_tax_deducted: 71000,
-      },
-      {
-        month: 5,
-        total_salary_wages_paid: 1150000,
-        sw_paid_for_swt_deduction: 920000,
-        total_swt_tax_deducted: 75000,
-      },
-      {
-        month: 6,
-        total_salary_wages_paid: 2200000,
-        sw_paid_for_swt_deduction: 950000,
-        total_swt_tax_deducted: 1900000,
-      },
-      {
-        month: 7,
-        total_salary_wages_paid: 2230000,
-        sw_paid_for_swt_deduction: 90000,
-        total_swt_tax_deducted: 80000,
-      },
-      {
-        month: 8,
-        total_salary_wages_paid: 50000,
-        sw_paid_for_swt_deduction: 1000000,
-        total_swt_tax_deducted: 82000,
-      },
-      {
-        month: 9,
-        total_salary_wages_paid: 1270000,
-        sw_paid_for_swt_deduction: 1020000,
-        total_swt_tax_deducted: 83000,
-      },
-      {
-        month: 10,
-        total_salary_wages_paid: 1300000,
-        sw_paid_for_swt_deduction: 1040000,
-        total_swt_tax_deducted: 85000,
-      },
-      {
-        month: 11,
-        total_salary_wages_paid: 20000,
-        sw_paid_for_swt_deduction: 1060000,
-        total_swt_tax_deducted: 86000,
-      },
-      {
-        month: 12,
-        total_salary_wages_paid: 1350000,
-        sw_paid_for_swt_deduction: 1080000,
-        total_swt_tax_deducted: 88000,
-      },
-    ],
-    totals: {
-      total_salary_wages_paid: 14630000,
-      total_sw_paid_for_swt_deduction: 11510000,
-      total_swt_tax_deducted: 960000,
-    },
-  };
+  const monthlySummary = data?.records[0]?.monthly_summary || [];
 
   const swtSalariesMonths = [
     'Jan',
@@ -157,22 +76,36 @@ const SwtSalariesChart = () => {
       borderColor: '#e5e7eb',
       strokeDashArray: 4,
     },
+    noData: {
+      text: 'No Data Found',
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: '#6c757d',
+        fontSize: '16px',
+        fontFamily: 'inherit',
+      },
+    },
   };
 
   const swtSalariesChartSeries = [
     {
       name: 'Total Salary Wages Paid',
-      data: swtSalariesData.monthly_data.map((m) => m.total_salary_wages_paid),
+      data:
+        monthlySummary && monthlySummary.map((m) => m.total_salary_wages_paid),
     },
     {
       name: 'SW Paid for SWT Deduction',
-      data: swtSalariesData.monthly_data.map(
-        (m) => m.sw_paid_for_swt_deduction
-      ),
+      data:
+        monthlySummary &&
+        monthlySummary.map((m) => m.sw_paid_for_swt_deduction),
     },
     {
       name: 'Total SWT Tax Deducted',
-      data: swtSalariesData.monthly_data.map((m) => m.total_swt_tax_deducted),
+      data:
+        monthlySummary && monthlySummary.map((m) => m.total_swt_tax_deducted),
     },
   ];
 
