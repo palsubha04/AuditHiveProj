@@ -3,16 +3,12 @@ import Layout from '../components/Layout';
 import TenureFilter from '../components/filters/TenureFilter';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDatasets } from '../slice/datasetsSlice';
-import { ToastContainer, toast } from 'react-toastify';
 import { ChevronDown } from 'lucide-react';
 import { FixedSizeList as List } from 'react-window';
 import { fetchRiskBreakdownByCategoryProfiling } from '../slice/risk-profiling/riskBreakdownCategoryProfilingSlice';
 import { Spinner } from 'react-bootstrap';
-import RiskBreakdownCategoryProfiling from '../components/charts/risk-profiling/RiskBreakdownCategoryProfilingChart';
 import { fetchFrequencyOfAnomalyProfiling } from '../slice/risk-profiling/frequencyOfAnomalyProfilingSlice';
 import RiskAnomalyFrequencyChart from '../components/charts/RiskAnomalyFrequencyChart';
-import { fetchTopFraudRulesProfiling } from '../slice/risk-profiling/topFraudRulesProfilingSlice';
-import TopFraudRulesProfiling from '../components/charts/risk-profiling/TopFraudRulesProfiling';
 import RiskBreakdownCategoryProfilingChart from '../components/charts/risk-profiling/RiskBreakdownCategoryProfilingChart';
 import GSTBenchmarkProfilingChart from '../components/charts/risk-profiling/GSTBenchmarkProfilingChart';
 import SWTBenchmarkProfilingChart from '../components/charts/risk-profiling/SWTBenchmarkProfilingChart';
@@ -24,6 +20,17 @@ import { fetchGstBenchmarkCreditsProfiling } from '../slice/risk-profiling/gstBe
 import { fetchSwtBenchmarkEmployeesProfiling } from '../slice/risk-profiling/swtBenchmarkEmployeesProfilingSlice';
 import SWTBenchmarkEmployeesProfilingChart from '../components/charts/risk-profiling/SWTBenchmarkEmployeesProfilingChart';
 import GSTBenchmarkCreditsProfilingChart from '../components/charts/risk-profiling/GSTBenchmarkCreditsProfilingChart';
+import EmployeeLineChart from '../components/charts/EmployeeLineChart';
+import MonthlySalesTaxSummaryChart from '../components/charts/MonthlySalesTaxSummaryChart';
+import SwtSalariesChart from '../components/charts/SwtSalariesChart';
+import TaxpayersRiskChart from '../components/charts/TaxpayersRiskChart';
+import { fetchSalesComparison } from '../slice/salesComparisonSlice';
+import { fetchEmployeeOnPayroll } from '../slice/employeeOnPayrollSlice';
+import { fetchGstPayableVsRefundable } from '../slice/gstPayableVsRefundableSlice';
+import { fetchswtSalariesComparison } from '../slice/swtSalariesComparisonSlice';
+import { fetchtaxPayersDetails } from '../slice/taxPayersDetailsSlice';
+import TaxPayersGrid from '../components/TaxPayersGrid';
+import './Compliance.css';
 
 function RiskProfiling() {
   const [dateRange, setDateRange] = useState({
@@ -35,11 +42,8 @@ function RiskProfiling() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const { data, loading, error } = useSelector((state) => state?.datasets);
 
-  //filters for top fraud
-  const [selectedTaxType, setSelectedTaxType] = useState('gst');
-  const [selectedSegmentation, setSelectedSegmentation] = useState('all');
+  const { data, loading, error } = useSelector((state) => state?.datasets);
 
   const {
     riskBreakdownByCategoryProfilingData,
@@ -52,12 +56,6 @@ function RiskProfiling() {
     frequencyOfAnomalyProfilingLoading,
     frequencyOfAnomalyProfilingError,
   } = useSelector((state) => state?.frequencyOfAnomalyProfiling);
-
-  const {
-    topFraudRulesProfilingData,
-    topFraudRulesProfilingLoading,
-    topFraudRulesProfilingError,
-  } = useSelector((state) => state?.topFraudRulesProfiling);
 
   // gst benchmark store
   const {
@@ -92,6 +90,35 @@ function RiskProfiling() {
     swtBenchmarkEmployeesProfilingError,
   } = useSelector((state) => state?.swtBenchmarkEmployeesProfiling);
 
+  const {
+    monthlySalesData,
+    monthlySalesLoading,
+    monthlySalesError
+  } = useSelector((state) => state?.salesComparison);
+
+  const {
+    payrollData,
+    payrollLoading,
+    payrollError
+  } = useSelector((state) => state?.employeeOnPayroll);
+
+  const {
+    gstData,
+    gstLoading,
+    gstError
+  } = useSelector((state) => state?.gstPayableVsRefundable);
+
+  const {
+    swtSalariesComparisonData,
+    swtSalariesComparisonLoading,
+    swtSalariesComparisonError,
+  } = useSelector((state) => state?.swtSalariesComparison);
+
+  const {
+    taxPayersData,
+    taxPayersLoading,
+    taxPayersError } = useSelector((state) => state?.taxPayersDetails);
+
   useEffect(() => {
     if (!data) {
       dispatch(fetchDatasets());
@@ -115,27 +142,28 @@ function RiskProfiling() {
       value: String(year),
     })) || [];
 
-    useEffect(() => {
-      function handleClickOutside(event) {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-          setIsDropdownOpen(false);
-        }
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
       }
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-  
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-    useEffect(() => {
-      if (data?.tins && data.tins.length > 0 && !selectedTIN) {
-        // Ensure selectedTIN is set only once initially
-        setSelectedTIN(data.tins[0]);
-      }
-    }, [data?.tins, selectedTIN]); // Added selectedTIN to dependency array
-  
-    const filteredTins = tins.filter((tin) =>
-      tin.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+
+  useEffect(() => {
+    if (data?.tins && data.tins.length > 0 && !selectedTIN) {
+      // Ensure selectedTIN is set only once initially
+      setSelectedTIN(data.tins[0]);
+    }
+  }, [data?.tins, selectedTIN]); // Added selectedTIN to dependency array
+
+  const filteredTins = tins.filter((tin) =>
+    tin.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
 
   useEffect(() => {
 
@@ -148,7 +176,7 @@ function RiskProfiling() {
         })
       );
     }
- if (!swtBenchmarkEmployeesProfilingData) {
+    if (!swtBenchmarkEmployeesProfilingData) {
       dispatch(
         fetchSwtBenchmarkEmployeesProfiling({
           start_date: dateRange.start_date,
@@ -167,17 +195,6 @@ function RiskProfiling() {
       );
     }
 
-    if (!topFraudRulesProfilingData) {
-      dispatch(
-        fetchTopFraudRulesProfiling({
-          start_date: dateRange.start_date,
-          end_date: dateRange.end_date,
-          tin: selectedTIN,
-          taxType: 'gst',
-          segmentation: 'large',
-        })
-      );
-    }
     if (!gstBenchmarkProfilingData) {
       dispatch(
         fetchGstBenchmarkProfiling({
@@ -216,6 +233,51 @@ function RiskProfiling() {
         })
       );
     }
+    if (!monthlySalesData) {
+      dispatch(
+        fetchSalesComparison({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
+    if (!payrollData) {
+      dispatch(
+        fetchEmployeeOnPayroll({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
+    if (!gstData) {
+      dispatch(
+        fetchGstPayableVsRefundable({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
+    if (!swtSalariesComparisonData) {
+      dispatch(
+        fetchswtSalariesComparison({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
+    if (!taxPayersData) {
+      dispatch(
+        fetchtaxPayersDetails({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
   }, []);
 
   const handleSearch = () => {
@@ -226,7 +288,7 @@ function RiskProfiling() {
         tin: selectedTIN,
       })
     );
-dispatch(
+    dispatch(
       fetchSwtBenchmarkEmployeesProfiling({
         start_date: dateRange.start_date,
         end_date: dateRange.end_date,
@@ -249,15 +311,7 @@ dispatch(
       })
     );
 
-    dispatch(
-      fetchTopFraudRulesProfiling({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-        tin: '500000009',
-        taxType: 'gst',
-        segmentation: 'large',
-      })
-    );
+
     dispatch(
       fetchGstBenchmarkProfiling({
         start_date: dateRange.start_date,
@@ -281,28 +335,47 @@ dispatch(
         tin: selectedTIN,
       })
     );
+    dispatch(
+      fetchSalesComparison({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
+    dispatch(
+      fetchEmployeeOnPayroll({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
+    dispatch(
+      fetchGstPayableVsRefundable({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
+    dispatch(
+      fetchswtSalariesComparison({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
+    dispatch(
+      fetchtaxPayersDetails({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
   };
   console.log(
     'riskBreakdownByCategoryProfilingData',
     riskBreakdownByCategoryProfilingData
   );
 
-  const handleTopFraudFilterChange = (taxType, segmentation) => {
-    console.log('filter chaged');
-    console.log('taxtype', taxType);
-    console.log('segmentaion', segmentation);
-    setSelectedTaxType(taxType);
-    setSelectedSegmentation(segmentation);
-    dispatch(
-      fetchTopFraudRulesProfiling({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-        tin: '500000009',
-        taxType: taxType,
-        segmentation: segmentation,
-      })
-    );
-  };
   return (
     <Layout>
       <div className="page-container">
@@ -316,87 +389,87 @@ dispatch(
         >
           <label style={{ fontWeight: 'bold', marginRight: 8 }}>TIN</label>
           <div ref={dropdownRef} style={{ position: 'relative', width: 200 }}>
+            <div
+              style={{
+                border: '1px solid #ccc',
+                borderRadius: 4,
+                padding: 3,
+                background: '#fff',
+                cursor: 'pointer',
+                minHeight: 6,
+                userSelect: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+              onClick={() => setIsDropdownOpen((open) => !open)}
+            >
+              {selectedTIN || 'Select TIN'} <ChevronDown />
+            </div>
+            {isDropdownOpen && (
               <div
                 style={{
-                  border: '1px solid #ccc',
+                  position: 'absolute',
+                  top: '110%',
+                  left: 0,
+                  width: '100%',
+                  zIndex: 10,
+                  border: '1px solid #eee',
                   borderRadius: 4,
-                  padding: 3,
                   background: '#fff',
-                  cursor: 'pointer',
-                  minHeight: 6,
-                  userSelect: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  maxHeight: 240, // Adjusted maxHeight to accommodate input
+                  overflow: 'hidden',
+                  display: 'flex', // Added to manage layout of input and list
+                  flexDirection: 'column', // Added for vertical layout
                 }}
-                onClick={() => setIsDropdownOpen((open) => !open)}
               >
-                {selectedTIN || 'Select TIN'} <ChevronDown />
-              </div>
-              {isDropdownOpen && (
-                <div
+                <input
+                  type="text"
+                  placeholder="Search TIN..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   style={{
-                    position: 'absolute',
-                    top: '110%',
-                    left: 0,
-                    width: '100%',
-                    zIndex: 10,
-                    border: '1px solid #eee',
-                    borderRadius: 4,
-                    background: '#fff',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                    maxHeight: 240, // Adjusted maxHeight to accommodate input
-                    overflow: 'hidden',
-                    display: 'flex', // Added to manage layout of input and list
-                    flexDirection: 'column', // Added for vertical layout
+                    padding: '8px 12px',
+                    border: 'none',
+                    borderBottom: '1px solid #eee',
+                    outline: 'none',
+                    width: 'calc(100% - 24px)', // Adjust width to account for padding
+                    boxSizing: 'border-box',
                   }}
+                  autoFocus // Optional: to focus input when dropdown opens
+                />
+                <List
+                  height={200} // Adjusted height for the list itself
+                  itemCount={filteredTins.length}
+                  itemSize={35}
+                  width={'100%'} // Changed width to be responsive
                 >
-                  <input
-                    type="text"
-                    placeholder="Search TIN..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{
-                      padding: '8px 12px',
-                      border: 'none',
-                      borderBottom: '1px solid #eee',
-                      outline: 'none',
-                      width: 'calc(100% - 24px)', // Adjust width to account for padding
-                      boxSizing: 'border-box',
-                    }}
-                    autoFocus // Optional: to focus input when dropdown opens
-                  />
-                  <List
-                    height={200} // Adjusted height for the list itself
-                    itemCount={filteredTins.length}
-                    itemSize={35}
-                    width={'100%'} // Changed width to be responsive
-                  >
-                    {({ index, style }) => (
-                      <div
-                        style={{
-                          ...style,
-                          padding: '8px 12px',
-                          background:
-                            filteredTins[index] === selectedTIN
-                              ? '#e0e7ef'
-                              : '#fff',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => {
-                          setSelectedTIN(filteredTins[index]);
-                          setIsDropdownOpen(false);
-                          setSearchTerm(''); // Reset search term on selection
-                        }}
-                        key={filteredTins[index]}
-                      >
-                        {filteredTins[index]}
-                      </div>
-                    )}
-                  </List>
-                </div>
-              )}
-            </div>
+                  {({ index, style }) => (
+                    <div
+                      style={{
+                        ...style,
+                        padding: '8px 12px',
+                        background:
+                          filteredTins[index] === selectedTIN
+                            ? '#e0e7ef'
+                            : '#fff',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => {
+                        setSelectedTIN(filteredTins[index]);
+                        setIsDropdownOpen(false);
+                        setSearchTerm(''); // Reset search term on selection
+                      }}
+                      key={filteredTins[index]}
+                    >
+                      {filteredTins[index]}
+                    </div>
+                  )}
+                </List>
+              </div>
+            )}
+          </div>
           <div
             style={{
               flex: '0 1 auto',
@@ -497,8 +570,8 @@ dispatch(
             )}
           </div>
         </div>
-       {/*gst Benchmark */}
-       <div
+        {/*gst Benchmark */}
+        <div
           style={{
             display: "flex",
             gap: "30px",
@@ -639,6 +712,187 @@ dispatch(
           </div>
         </div>
 
+        <div
+          style={{
+            marginTop: 32,
+            border: '1px solid #f1f5f9',
+            borderRadius: 18,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: 900,
+            maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
+              display: 'flex',
+              alignItems: 'flex-start',
+            }}
+          >
+            GST Sales Comparison
+          </div>
+          {monthlySalesLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
+            >
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <MonthlySalesTaxSummaryChart salesData={monthlySalesData} />
+          )}
+        </div>
+
+        <div
+          style={{
+            marginTop: 32,
+            border: '1px solid #f1f5f9',
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: 900,
+            maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
+              display: 'flex',
+              alignItems: 'flex-start',
+            }}
+          >
+            GST Payable vs GST refundable
+          </div>
+          {gstLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
+            >
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <TaxpayersRiskChart data={gstData} />
+          )}
+        </div>
+
+        <div
+          style={{
+            marginTop: 32,
+            border: '1px solid #f1f5f9',
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: 900,
+            maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
+              display: 'flex',
+              alignItems: 'flex-start',
+            }}
+          >
+            Employees on Payroll vs Paid SWT
+          </div>
+          {payrollLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
+            >
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <EmployeeLineChart data={payrollData} />
+          )}
+        </div>
+
+        {/* --- Line & SWT Chart Row --- */}
+        <div
+          style={{
+            marginTop: 32,
+            border: '1px solid #f1f5f9',
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: 900,
+            maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
+              display: 'flex',
+              alignItems: 'flex-start',
+            }}
+          >
+            SWT Salaries Comparison
+          </div>
+          {swtSalariesComparisonLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
+            >
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <SwtSalariesChart data={swtSalariesComparisonData} />
+          )}
+        </div>
+
         {/*cit Benchmark */}
         {/* <div
           style={{
@@ -678,45 +932,6 @@ dispatch(
           </div>
         </div> */}
 
-       
-
-        <div
-          style={{
-            display: 'flex',
-            gap: '30px',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div
-            style={{
-              marginTop: 32,
-              border: '1px solid #e6edff',
-              borderRadius: 16,
-              background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
-              boxShadow: '0 2px 16px 0 #e0e7ef55',
-              padding: '24px 24px 24px 24px',
-              maxWidth: '100%',
-              minWidth: '100%',
-              maxHeight: '530px',
-              minHeight: '530px',
-            }}
-          >
-            {topFraudRulesProfilingLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100 h-100">
-                <TopFraudRulesProfiling
-                  topFraudRulesProfilingData={topFraudRulesProfilingData}
-                  handleTopFraudFilterChange={handleTopFraudFilterChange}
-                  selectedTaxType={selectedTaxType}
-                  selectedSegmentation={selectedSegmentation}
-                />
-              </div>
-            )}
-          </div>
-        </div>
       </div>
     </Layout>
   );
