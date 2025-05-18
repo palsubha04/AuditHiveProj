@@ -9,7 +9,7 @@ export const fetchTopFraudRulesProfiling = createAsyncThunk(
     console.log("end_date", end_date);
     console.log("tin", tin);
     const response = await api.get(
-      `/analytics/compliance/table/${tin}?tax_type=${taxType}&segmentation=${segmentation}&start_date=${start_date}&end_date=${end_date}`
+      `/analytics/compliance/table?tax_type=${taxType}&segmentation=${segmentation}&start_date=${start_date}&end_date=${end_date}`
     );
     console.log("response", response);
     return response.data;

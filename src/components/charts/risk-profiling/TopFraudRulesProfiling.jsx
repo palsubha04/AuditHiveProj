@@ -52,12 +52,14 @@ const TopFraudRulesProfiling = ({
     {
       accessorKey: "fraud_reason",
       header: "Fraud Reason",
-      cell: ({ getValue }) => getValue() || "N/A",
+      cell: ({ getValue }) => (
+        <span style={{ textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={getValue() || "N/A"} >{getValue() || "N/A"}</span>
+      ),
     },
   ];
 
   return (
-    <div>
+    <div className="d-flex h-100 flex-column">
       <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
         <h4
           className="mb-0 me-3 fw-bold"
@@ -118,20 +120,18 @@ const TopFraudRulesProfiling = ({
               </option>
             ))}
           </select>
+          <span style={{ color: "#7c879d", fontSize: "16px", marginLeft: "5px" }}> (Segmentation) </span>
         </div>
       </div>
       <Table
         columns={columns}
         data={filteredData}
-        // loading={loading}
-        // error={error}
-        // hasMore={records.length < totalRecords}
-        // onLoadMore={handleLoadMore}
-        // loadingMore={isLoadingMore}
+      // loading={loading}
+      // error={error}
+      // hasMore={records.length < totalRecords}
+      // onLoadMore={handleLoadMore}
+      // loadingMore={isLoadingMore}
       />
-      {/* <Chart options={options} series={series} type="heatmap" height={400} /> */}
-      {/* {riskData ? <Chart options={options} series={series} type="heatmap" height={400} />
-        : <div>No data available</div>} */}
     </div>
   );
 };
