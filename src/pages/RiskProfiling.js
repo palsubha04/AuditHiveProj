@@ -714,78 +714,63 @@ function RiskProfiling() {
 
         <div
           style={{
-            display: "flex",
-            gap: "30px",
-            justifyContent: "space-between",
-            width: '98%',
+            marginTop: 32,
+            border: '1px solid #f1f5f9',
+            borderRadius: 18,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: 900,
+            maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
           }}
         >
           <div
             style={{
-              marginTop: 32,
-              border: "1px solid #e6edff",
-              borderRadius: 16,
-              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
-              boxShadow: "0 2px 16px 0 #e0e7ef55",
-              padding: "24px 24px 8px 24px",
-              maxWidth: "50%",
-              minWidth: "50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "500px",
-              maxHeight: "500px",
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
+              display: 'flex',
+              alignItems: 'flex-start',
             }}
           >
+            GST Sales Comparison
+          </div>
+          {monthlySalesLoading ? (
             <div
               style={{
-                fontWeight: 700,
-                fontSize: 20,
-                color: '#6366f1',
-                letterSpacing: 1,
-                minHeight: 28,
-                marginBottom: 18,
                 display: 'flex',
-                alignItems: 'flex-start',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
               }}
             >
-              GST Sales Comparison
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
             </div>
-            {monthlySalesLoading ? (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: 250,
-                }}
-              >
-                <Spinner animation="border" role="status" variant="primary">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              </div>
-            ) : (
-              <MonthlySalesTaxSummaryChart salesData={monthlySalesData} />
-            )}
-          </div>
+          ) : (
+            <MonthlySalesTaxSummaryChart salesData={monthlySalesData} />
+          )}
+        </div>
+
+        <div
+          style={{
+            marginTop: 32,
+            border: '1px solid #f1f5f9',
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: 900,
+            maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
+          }}
+        >
           <div
-            style={{
-              marginTop: 32,
-              border: "1px solid #e6edff",
-              borderRadius: 16,
-              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
-              boxShadow: "0 2px 16px 0 #e0e7ef55",
-              padding: "24px 24px 8px 24px",
-              maxWidth: "50%",
-              minWidth: "50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "500px",
-              maxHeight: "500px",
-            }}
-          >
-            <div
             style={{
               fontWeight: 700,
               fontSize: 20,
@@ -815,10 +800,7 @@ function RiskProfiling() {
           ) : (
             <TaxpayersRiskChart data={gstData} />
           )}
-          </div>
         </div>
-
-        
 
         <div
           style={{
