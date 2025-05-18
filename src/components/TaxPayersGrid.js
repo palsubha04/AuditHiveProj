@@ -89,7 +89,7 @@ function TaxPayersGrid() {
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <div className="d-flex align-items-center">
           <h4 className="mb-0 me-3 fw-bold" style={{ color: '#6366F1' }}>
-            Tax Payers Name
+            Tax Payers Details
           </h4>
           <DropdownButton
             id="dropdown-basic-button"

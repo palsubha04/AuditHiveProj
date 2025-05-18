@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import analyticsService from '../../services/analytics.service';
-import "../../pages/Dashboard.css";
+import '../../pages/Dashboard.css';
 
 const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
   const [loading, setLoading] = useState(false);
@@ -18,8 +18,8 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
         stacked: true,
         stackType: '100%',
         toolbar: {
-          show: true
-        }
+          show: true,
+        },
       },
       plotOptions: {
         bar: {
@@ -27,8 +27,8 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
           columnWidth: '40%',
           endingShape: 'rounded',
           dataLabels: {
-            position: 'center'
-          }
+            position: 'center',
+          },
         },
       },
       dataLabels: {
@@ -39,75 +39,77 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
         style: {
           fontSize: '12px',
           fontWeight: 'bold',
-          colors: ['#fff']
+          colors: ['#fff'],
         },
         offsetY: 0,
         background: {
-          enabled: false
+          enabled: false,
         },
         dropShadow: {
           enabled: true,
           opacity: 0.3,
           blur: 3,
           left: -2,
-          top: 2
-        }
+          top: 2,
+        },
       },
       stroke: {
         show: true,
         width: 0,
-        colors: ['transparent']
+        colors: ['transparent'],
       },
       xaxis: {
         categories: ['Micro', 'Small', 'Medium', 'Large'],
         title: {
-          text: 'Segmentation'
+          text: 'Segmentation',
         },
         labels: {
           style: {
-            fontSize: '12px'
-          }
+            fontSize: '12px',
+          },
         },
         axisBorder: {
-          show: true
+          show: true,
         },
         axisTicks: {
-          show: true
-        }
+          show: true,
+        },
       },
       yaxis: {
         title: {
-          text: 'Percentage of Taxpayers'
+          text: 'Percentage of Taxpayers',
         },
         labels: {
           formatter: function (val) {
             return `${val}%`;
-          }
+          },
         },
         min: 0,
         max: 100,
-        tickAmount: 5
+        tickAmount: 5,
       },
       fill: {
         opacity: 1,
         colors: ['#2ECC71', '#E74C3C'],
-        type: 'solid'
+        type: 'solid',
       },
       grid: {
         show: true,
         borderColor: '#f1f1f1',
         strokeDashArray: 4,
-        position: 'back'
+        position: 'back',
       },
       legend: {
         position: 'top',
         horizontalAlign: 'center',
-        offsetY: 0
+        offsetY: 0,
       },
       tooltip: {
         y: {
           formatter: function (val, { seriesIndex, dataPointIndex }) {
-            const segment = ['micro', 'small', 'medium', 'large'][dataPointIndex];
+            const segment = ['micro', 'small', 'medium', 'large'][
+              dataPointIndex
+            ];
             const data = rawData[segment];
             let actual = 0;
             let percent = 0;
@@ -120,9 +122,11 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
               actual = data.risk_flagged_taxpayers;
               percent = data.risk_flagged_percentage;
             }
-            return `${percent.toFixed(2)}% (${actual.toLocaleString()} taxpayers)`;
-          }
-        }
+            return `${percent.toFixed(
+              2
+            )}% (${actual.toLocaleString()} taxpayers)`;
+          },
+        },
       },
       noData: {
         text: 'No Data Found',
@@ -133,10 +137,10 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
         style: {
           color: '#6c757d',
           fontSize: '16px',
-          fontFamily: 'inherit'
-        }
-      }
-    }
+          fontFamily: 'inherit',
+        },
+      },
+    },
   });
 
   useEffect(() => {
@@ -144,12 +148,15 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
       try {
         setLoading(true);
         setError(null);
-        const response = await analyticsService.getTotalVsFlaggedTaxpayers(startDate, endDate);
-        
+        const response = await analyticsService.getTotalVsFlaggedTaxpayers(
+          startDate,
+          endDate
+        );
+
         if (!response || !response[taxType]) {
-          setChartData(prevData => ({
+          setChartData((prevData) => ({
             ...prevData,
-            series: []
+            series: [],
           }));
           return;
         }
@@ -160,22 +167,23 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
         const series = [
           {
             name: 'Non-Risk Flagged',
-            data: segments.map(segment => {
+            data: segments.map((segment) => {
               const data = response[taxType][segment];
-              const nonFlagged = data.total_taxpayers - data.risk_flagged_taxpayers;
+              const nonFlagged =
+                data.total_taxpayers - data.risk_flagged_taxpayers;
               return nonFlagged;
-            })
+            }),
           },
           {
             name: 'Risk Flagged',
-            data: segments.map(segment => {
+            data: segments.map((segment) => {
               const data = response[taxType][segment];
               return data.risk_flagged_taxpayers;
-            })
-          }
+            }),
+          },
         ];
 
-        setChartData(prevData => ({
+        setChartData((prevData) => ({
           ...prevData,
           series: series,
           options: {
@@ -183,22 +191,26 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
             tooltip: {
               y: {
                 formatter: function (val, { seriesIndex, dataPointIndex }) {
-                  const segment = ['micro', 'small', 'medium', 'large'][dataPointIndex];
+                  const segment = ['micro', 'small', 'medium', 'large'][
+                    dataPointIndex
+                  ];
                   const data = response[taxType][segment];
-                  
+
                   if (seriesIndex === 0) {
                     // Non-Risk Flagged
-                    const percentage = (100 - data.risk_flagged_percentage).toFixed(2);
+                    const percentage = (
+                      100 - data.risk_flagged_percentage
+                    ).toFixed(2);
                     return `${percentage}% (${val.toLocaleString()} taxpayers)`;
                   } else {
                     // Risk Flagged
                     const percentage = data.risk_flagged_percentage.toFixed(2);
                     return `${percentage}% (${val.toLocaleString()} taxpayers)`;
                   }
-                }
-              }
-            }
-          }
+                },
+              },
+            },
+          },
         }));
       } catch (err) {
         console.error('Error fetching risk categories:', err);
@@ -212,27 +224,30 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
       fetchData();
     } else {
       setLoading(false);
-      setChartData(prevData => ({
+      setChartData((prevData) => ({
         ...prevData,
-        series: []
+        series: [],
       }));
     }
   }, [startDate, endDate, taxType]);
 
   // Add a useEffect to monitor rawData changes
-  useEffect(() => {
-    console.log('rawData changed:', rawData);
-  }, [rawData]);
+  // useEffect(() => {
+  //   console.log('rawData changed:', rawData);
+  // }, [rawData]);
 
-  // Add a useEffect to monitor chartData changes
-  useEffect(() => {
-    console.log('chartData changed:', chartData);
-  }, [chartData]);
+  // // Add a useEffect to monitor chartData changes
+  // useEffect(() => {
+  //   console.log('chartData changed:', chartData);
+  // }, [chartData]);
 
   if (loading) {
     return (
       <Card className="mb-4 box-background">
-        <Card.Body className="d-flex align-items-center justify-content-center" style={{ height: '400px' }}>
+        <Card.Body
+          className="d-flex align-items-center justify-content-center"
+          style={{ height: '400px' }}
+        >
           <Spinner animation="border" role="status" variant="primary">
             <span className="visually-hidden">Loading...</span>
           </Spinner>
@@ -244,7 +259,10 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
   if (error) {
     return (
       <Card className="mb-4 box-background">
-        <Card.Body className="text-center text-danger" style={{ height: '400px' }}>
+        <Card.Body
+          className="text-center text-danger"
+          style={{ height: '400px' }}
+        >
           {error}
         </Card.Body>
       </Card>
@@ -256,7 +274,9 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
       <Card.Body>
         <Row className="mb-4">
           <Col>
-            <h5 className="card-title">Risk Flagged vs Non-Risk Flagged Taxpayers</h5>
+            <h5 className="card-title">
+              Risk Flagged vs Non-Risk Flagged Taxpayers
+            </h5>
           </Col>
         </Row>
         <ReactApexChart
@@ -270,4 +290,4 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
   );
 };
 
-export default RiskCategoriesChart; 
+export default RiskCategoriesChart;

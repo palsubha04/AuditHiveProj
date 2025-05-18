@@ -4,7 +4,7 @@ import ReactApexChart from 'react-apexcharts';
 const TaxpayersRiskChart = ({ data }) => {
   // Prepare data for the chart from the new data structure
   const monthlySummary = data?.records[0]?.monthly_summary || [];
-  console.log('data from chart', monthlySummary);
+  //console.log('data from chart', monthlySummary);
 
   // Map months to labels (e.g., Jan, Feb, ...)
   const monthLabels = [
