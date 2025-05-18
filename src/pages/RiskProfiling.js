@@ -336,30 +336,16 @@ function RiskProfiling() {
               background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
               boxShadow: "0 2px 16px 0 #e0e7ef55",
               padding: "24px 24px 8px 24px",
-              maxWidth: "50%",
-              minWidth: "50%",
+              // maxWidth: "50%",
+              // minWidth: "50%",
+              flex : "auto",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               minHeight: "500px",
               maxHeight: "500px",
             }}
-          >
-            {topFraudRulesProfilingLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100">
-                <TopFraudRulesProfiling
-                  topFraudRulesProfilingData={topFraudRulesProfilingData}
-                  handleTopFraudFilterChange={handleTopFraudFilterChange}
-                  selectedTaxType={selectedTaxType}
-                  selectedSegmentation={selectedSegmentation}
-                />
-              </div>
-            )}
-          </div>
+          >2</div>
         </div>
 
         <div
@@ -377,25 +363,24 @@ function RiskProfiling() {
               background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
               boxShadow: "0 2px 16px 0 #e0e7ef55",
               padding: "24px 24px 8px 24px",
-              maxWidth: "50%",
-              minWidth: "50%",
+              maxWidth: "100%",
+              minWidth: "100%",
             }}
           >
-            {" "}
-            4
-          </div>
-          <div
-            style={{
-              marginTop: 32,
-              border: "1px solid #e6edff",
-              borderRadius: 16,
-              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
-              boxShadow: "0 2px 16px 0 #e0e7ef55",
-              padding: "24px 24px 8px 24px",
-              flex: "auto",
-            }}
-          >
-            5
+            {topFraudRulesProfilingLoading ? (
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            ) : (
+              <div className="p-0 w-100">
+                <TopFraudRulesProfiling
+                  topFraudRulesProfilingData={topFraudRulesProfilingData}
+                  handleTopFraudFilterChange={handleTopFraudFilterChange}
+                  selectedTaxType={selectedTaxType}
+                  selectedSegmentation={selectedSegmentation}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
