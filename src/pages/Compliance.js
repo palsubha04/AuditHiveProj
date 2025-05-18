@@ -55,67 +55,65 @@ const Compliance = () => {
     }
   }, [data, dispatch]);
 
-  // useEffect(() => {
-  //   if (!monthlySalesData) {
-  //     dispatch(
-  //       fetchSalesComparison({
-  //         start_date: '01-01-2021',
-  //         end_date: '31-12-2021',
-  //         tin: '500000009',
-  //       })
-  //     );
-  //   }
-  // }, [monthlySalesData, dispatch]);
+  useEffect(() => {
+    if (!monthlySalesData) {
+      dispatch(
+        fetchSalesComparison({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
+  }, [monthlySalesData, dispatch]);
 
-  // useEffect(() => {
-  //   if (!payrollData) {
-  //     dispatch(
-  //       fetchEmployeeOnPayroll({
-  //         start_date: '01-01-2020',
-  //         end_date: '31-12-2020',
-  //         tin: '500000009',
-  //       })
-  //     );
-  //   }
-  // }, [payrollData, dispatch]);
+  useEffect(() => {
+    if (!payrollData) {
+      dispatch(
+        fetchEmployeeOnPayroll({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
+  }, [payrollData, dispatch]);
 
-  // useEffect(() => {
-  //   if (!gstData) {
-  //     dispatch(
-  //       fetchGstPayableVsRefundable({
-  //         start_date: '01-01-2020',
-  //         end_date: '31-12-2020',
-  //         tin: '500000009',
-  //       })
-  //     );
-  //   }
-  // }, [gstData, dispatch]);
+  useEffect(() => {
+    if (!gstData) {
+      dispatch(
+        fetchGstPayableVsRefundable({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
+  }, [gstData, dispatch]);
 
-  // useEffect(() => {
-  //   if (!swtSalariesComparisonData) {
-  //     dispatch(
-  //       fetchswtSalariesComparison({
-  //         start_date: '01-01-2022',
-  //         end_date: '31-12-2022',
-  //         tin: '500000009',
-  //       })
-  //     );
-  //   }
-  // }, [swtSalariesComparisonData, dispatch]);
+  useEffect(() => {
+    if (!swtSalariesComparisonData) {
+      dispatch(
+        fetchswtSalariesComparison({
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
+          tin: '500000009',
+        })
+      );
+    }
+  }, [swtSalariesComparisonData, dispatch]);
 
   useEffect(() => {
     if (!taxPayersData) {
       dispatch(
         fetchtaxPayersDetails({
-          start_date: '01-01-2022',
-          end_date: '31-12-2022',
+          start_date: '01-01-2020',
+          end_date: '31-12-2020',
           tin: '500000009',
         })
       );
     }
   }, [taxPayersData, dispatch]);
-
-  // console.log('Tax Payers Data: ', taxPayersData);
 
   const tins = data?.tins || [];
   const yearOptions =
@@ -123,8 +121,6 @@ const Compliance = () => {
       label: String(year),
       value: String(year),
     })) || [];
-
-  //console.log('year Options: ', yearOptions);
 
   const handleFilterChange = (range) => {
     if (
@@ -160,6 +156,13 @@ const Compliance = () => {
     );
     dispatch(
       fetchswtSalariesComparison({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
+    dispatch(
+      fetchtaxPayersDetails({
         start_date: dateRange.start_date,
         end_date: dateRange.end_date,
         tin: selectedTIN,
@@ -339,7 +342,7 @@ const Compliance = () => {
               alignItems: 'flex-start',
             }}
           >
-            Monthly Sales & Tax Summary
+            GST Sales Comparison
           </div>
           {monthlySalesLoading ? (
             <div
@@ -358,57 +361,7 @@ const Compliance = () => {
             <MonthlySalesTaxSummaryChart salesData={monthlySalesData} />
           )}
         </div>
-        {/* End Chart Card Section */}
 
-        {/* --- Bar Chart Row --- */}
-
-        {/* Line Chart Card */}
-        <div
-          style={{
-            marginTop: 32,
-            border: '1px solid #f1f5f9',
-            borderRadius: 16,
-            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #e0e7ef55',
-            padding: '24px 24px 8px 24px',
-            minWidth: 900,
-            maxWidth: 1200,
-            minHeight: 350, // <-- Add this line to keep the div height intact
-          }}
-        >
-          <div
-            style={{
-              fontWeight: 700,
-              fontSize: 20,
-              color: '#6366f1',
-              letterSpacing: 1,
-              minHeight: 28,
-              marginBottom: 18,
-              display: 'flex',
-              alignItems: 'flex-start',
-            }}
-          >
-            Employees on Payroll vs Paid SWT
-          </div>
-          {payrollLoading ? (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 250,
-              }}
-            >
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
-            <EmployeeLineChart data={payrollData} />
-          )}
-        </div>
-
-        {/* Bar Chart Card */}
         <div
           style={{
             marginTop: 32,
@@ -451,6 +404,51 @@ const Compliance = () => {
             </div>
           ) : (
             <TaxpayersRiskChart data={gstData} />
+          )}
+        </div>
+
+        <div
+          style={{
+            marginTop: 32,
+            border: '1px solid #f1f5f9',
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
+            boxShadow: '0 2px 16px 0 #e0e7ef55',
+            padding: '24px 24px 8px 24px',
+            minWidth: 900,
+            maxWidth: 1200,
+            minHeight: 350, // <-- Add this line to keep the div height intact
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 20,
+              color: '#6366f1',
+              letterSpacing: 1,
+              minHeight: 28,
+              marginBottom: 18,
+              display: 'flex',
+              alignItems: 'flex-start',
+            }}
+          >
+            Employees on Payroll vs Paid SWT
+          </div>
+          {payrollLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
+            >
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <EmployeeLineChart data={payrollData} />
           )}
         </div>
 
@@ -513,7 +511,22 @@ const Compliance = () => {
             maxWidth: 1200,
           }}
         >
-          <TaxPayersGrid />
+          {taxPayersLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 250,
+              }}
+            >
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <TaxPayersGrid data={taxPayersData} />
+          )}
         </div>
         {/* --- End Line & SWT Chart Row --- */}
       </Layout>
