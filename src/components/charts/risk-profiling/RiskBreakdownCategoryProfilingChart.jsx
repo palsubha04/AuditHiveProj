@@ -59,14 +59,16 @@ const RiskBreakdownCategoryProfilingChart = ({
   const [selectedCategory, setSelectedCategory] = useState('gst');
   const [filteredData, setFilteredData] = useState([]);
 
+  console.log("riskBreakdownByCategoryDataProfiling", riskBreakdownByCategoryDataProfiling);
+
   const riskLevels = [
-    'Critical',
-    'High',
-    'Moderate',
-    'Elevated',
-    'Low',
-    'Very Low',
-    'Unknown',
+    'Critical Risk',
+    'High Risk',
+    'Moderate Risk',
+    'Elevated Risk',
+    'Low Risk',
+    'Very Low Risk',
+    'No Risk',
   ];
 
   // const series = []

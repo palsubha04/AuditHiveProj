@@ -9,7 +9,7 @@ export const fetchSwtBenchmarkProfiling = createAsyncThunk(
     console.log("end_date", end_date);
     console.log("tin", tin);
     const response = await api.get(
-      `/analytics/compliance/benchmark/swt_payable_vs_swt_refundable/${tin}?start_date=${start_date}&end_date=${end_date}`
+      `/analytics/compliance/benchmark/total_salary_wages_paid_vs_total_swt_tax_deducted/${tin}?start_date=${start_date}&end_date=${end_date}`
     );
     console.log("response", response);
     return response.data;

@@ -15,6 +15,8 @@ import topFraudRulesProfilingReducer from './slice/risk-profiling/topFraudRulesP
 import gstBenchmarkProfilingReducer from './slice/risk-profiling/gstBenchmarkProfilingSlice';
 import citBenchmarkProfilingReducer from './slice/risk-profiling/citBenchmarkProfilingSlice';
 import swtBenchmarkProfilingReducer from './slice/risk-profiling/swtBenchmarkProfilingSlice';
+import gstBenchmarkCreditsProfilingReducer from "./slice/risk-profiling/gstBenchmarkCreditsProfilingSlice";
+import swtBenchmarkEmployeesProfilingReducer from "./slice/risk-profiling/swtBenchmarkEmployeesProfilingSlice";
 
 const store = configureStore({
   reducer: {
@@ -32,8 +34,10 @@ const store = configureStore({
     frequencyOfAnomalyProfiling: frequencyOfAnomalyProfilingReducer,
     topFraudRulesProfiling: topFraudRulesProfilingReducer,
     gstBenchmarkProfiling: gstBenchmarkProfilingReducer,
+    gstBenchmarkCreditsProfiling: gstBenchmarkCreditsProfilingReducer,
     citBenchmarkProfiling: citBenchmarkProfilingReducer,
     swtBenchmarkProfiling: swtBenchmarkProfilingReducer,
+    swtBenchmarkEmployeesProfiling: swtBenchmarkEmployeesProfilingReducer,
   },
 });
 
