@@ -13,6 +13,13 @@ import { fetchFrequencyOfAnomalyProfiling } from "../slice/risk-profiling/freque
 import RiskAnomalyFrequencyChart from "../components/charts/RiskAnomalyFrequencyChart";
 import { fetchTopFraudRulesProfiling } from "../slice/risk-profiling/topFraudRulesProfilingSlice";
 import TopFraudRulesProfiling from "../components/charts/risk-profiling/TopFraudRulesProfiling";
+import RiskBreakdownCategoryProfilingChart from "../components/charts/risk-profiling/RiskBreakdownCategoryProfilingChart";
+import GSTBenchmarkProfilingChart from "../components/charts/risk-profiling/GSTBenchmarkProfilingChart";
+import SWTBenchmarkProfilingChart from "../components/charts/risk-profiling/SWTBenchmarkProfilingChart";
+import CITBenchmarkProfilingChart from "../components/charts/risk-profiling/CITBenchmarkProfilingChart";
+import { fetchGstBenchmarkProfiling } from "../slice/risk-profiling/gstBenchmarkProfilingSlice";
+import { fetchSwtBenchmarkProfiling } from "../slice/risk-profiling/swtBenchmarkProfilingSlice";
+import { fetchCitBenchmarkProfiling } from "../slice/risk-profiling/citBenchmarkProfilingSlice";
 
 function RiskProfiling() {
   const [dateRange, setDateRange] = useState({
@@ -30,9 +37,9 @@ function RiskProfiling() {
   const [selectedSegmentation, setSelectedSegmentation] = useState("all");
 
   const {
-    riskBreakdownByCategoryDataProfiling,
-    riskBreakdownByCategoryLoadingProfiling,
-    riskBreakdownByCategoryErrorProfiling,
+    riskBreakdownByCategoryProfilingData,
+    riskBreakdownByCategoryProfilingLoading,
+    riskBreakdownByCategoryProfilingError,
   } = useSelector((state) => state?.riskBreakdownByCategoryProfiling);
 
   const {
@@ -46,6 +53,27 @@ function RiskProfiling() {
     topFraudRulesProfilingLoading,
     topFraudRulesProfilingError,
   } = useSelector((state) => state?.topFraudRulesProfiling);
+
+  // gst benchmark store
+  const {
+    gstBenchmarkProfilingData,
+    gstBenchmarkProfilingLoading,
+    gstBenchmarkProfilingError,
+  } = useSelector((state) => state?.gstBenchmarkProfiling);
+
+  // swt benchmark store
+  const {
+    swtBenchmarkProfilingData,
+    swtBenchmarkProfilingLoading,
+    swtBenchmarkProfilingError,
+  } = useSelector((state) => state?.swtBenchmarkProfiling);
+
+  // cit benchmark store
+  const {
+    citBenchmarkProfilingData,
+    citBenchmarkProfilingLoading,
+    citBenchmarkProfilingError,
+  } = useSelector((state) => state?.citBenchmarkProfiling);
 
   useEffect(() => {
     if (!data) {
@@ -87,7 +115,7 @@ function RiskProfiling() {
   }, [data?.tins]);
 
     useEffect(() => {
-      if (!riskBreakdownByCategoryDataProfiling) {
+      if (!riskBreakdownByCategoryProfilingData) {
         dispatch(
           fetchRiskBreakdownByCategoryProfiling({
             start_date: "01-01-2021",
@@ -108,6 +136,36 @@ function RiskProfiling() {
           })
         );
       }
+      if (!gstBenchmarkProfilingData) {
+        dispatch(
+          fetchGstBenchmarkProfiling({
+            start_date: "01-01-2021",
+            end_date: "31-12-2021",
+            tin: "500000009",
+          })
+        );
+      }
+  
+      if (!swtBenchmarkProfilingData) {
+        dispatch(
+          fetchSwtBenchmarkProfiling({
+            start_date: "01-01-2021",
+            end_date: "31-12-2021",
+            tin: "500000009",
+          })
+        );
+      }
+  
+      if (!citBenchmarkProfilingData) {
+        dispatch(
+          fetchCitBenchmarkProfiling({
+            start_date: "01-01-2021",
+            end_date: "31-12-2021",
+            tin: "500000009",
+          })
+        );
+      }
+      
     }, []);
 
   const handleSearch = () => {
@@ -136,8 +194,32 @@ function RiskProfiling() {
         segmentation: "large",
       })
     );
+    dispatch(
+      fetchGstBenchmarkProfiling({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
+
+    dispatch(
+      fetchSwtBenchmarkProfiling({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
+
+    dispatch(
+      fetchCitBenchmarkProfiling({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
 
   };
+  console.log("riskBreakdownByCategoryProfilingData", riskBreakdownByCategoryProfilingData);
 
   const handleTopFraudFilterChange = (taxType, segmentation) => {
     console.log("filter chaged");
@@ -260,43 +342,129 @@ function RiskProfiling() {
         </div>
 
         <div className="content">{/* Content will be added later */}</div>
-        <div
-          style={{
-            marginTop: 32,
-            border: "1px solid #e6edff",
-            borderRadius: 16,
-            background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
-            boxShadow: "0 2px 16px 0 #e0e7ef55",
-            padding: "24px 24px 8px 24px",
-            maxWidth: "100%",
-            minWidth: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: "500px",
-            maxHeight: "500px",
-          }}
-        >
-          {riskBreakdownByCategoryLoadingProfiling ? (
-            <Spinner animation="border" role="status" variant="primary">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
-          ) : (
-            <div className="p-0 w-100">
-              <RiskBreakdownCategoryProfiling
-                riskBreakdownByCategoryDataProfiling={
-                  riskBreakdownByCategoryDataProfiling
-                }
-              />
-            </div>
-          )}
-          3
-        </div>
+        {/*gst Benchmark */}
         <div
           style={{
             display: "flex",
             gap: "30px",
             justifyContent: "space-between",
+          }}
+        >
+          <div
+            style={{
+              marginTop: 32,
+              border: "1px solid #e6edff",
+              borderRadius: 16,
+              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
+              boxShadow: "0 2px 16px 0 #e0e7ef55",
+              padding: "24px 24px 8px 24px",
+              maxWidth: "100%",
+              minWidth: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "500px",
+              maxHeight: "500px",
+            }}
+          >
+            {gstBenchmarkProfilingLoading ? (
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            ) : (
+              <div className="p-0 w-100">
+                <GSTBenchmarkProfilingChart
+                  gstBenchmarkProfilingData={gstBenchmarkProfilingData}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/*swt Benchmark */}
+        <div
+          style={{
+            display: "flex",
+            gap: "30px",
+            justifyContent: "space-between",
+          }}
+        >
+          <div
+            style={{
+              marginTop: 32,
+              border: "1px solid #e6edff",
+              borderRadius: 16,
+              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
+              boxShadow: "0 2px 16px 0 #e0e7ef55",
+              padding: "24px 24px 8px 24px",
+              maxWidth: "100%",
+              minWidth: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "500px",
+              maxHeight: "500px",
+            }}
+          >
+            {swtBenchmarkProfilingLoading ? (
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            ) : (
+              <div className="p-0 w-100">
+                <SWTBenchmarkProfilingChart
+                  swtBenchmarkProfilingData={swtBenchmarkProfilingData}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/*cit Benchmark */}
+        <div
+          style={{
+            display: "flex",
+            gap: "30px",
+            justifyContent: "space-between",
+          }}
+        >
+          <div
+            style={{
+              marginTop: 32,
+              border: "1px solid #e6edff",
+              borderRadius: 16,
+              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
+              boxShadow: "0 2px 16px 0 #e0e7ef55",
+              padding: "24px 24px 8px 24px",
+              maxWidth: "100%",
+              minWidth: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "500px",
+              maxHeight: "500px",
+            }}
+          >
+            {citBenchmarkProfilingLoading ? (
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            ) : (
+              <div className="p-0 w-100">
+                <CITBenchmarkProfilingChart
+                  citBenchmarkProfilingData={citBenchmarkProfilingData}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+       
+        <div
+          style={{
+            display: "flex",
+            gap: "30px",
+            justifyContent: "space-between",
+            width:"98%"
           }}
         >
           <div
@@ -336,16 +504,25 @@ function RiskProfiling() {
               background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
               boxShadow: "0 2px 16px 0 #e0e7ef55",
               padding: "24px 24px 8px 24px",
-              // maxWidth: "50%",
-              // minWidth: "50%",
-              flex : "auto",
+              maxWidth: "50%",
+              minWidth: "50%",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               minHeight: "500px",
               maxHeight: "500px",
             }}
-          >2</div>
+          >
+            {riskBreakdownByCategoryProfilingLoading ? (
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            ) : (
+              <div className="p-0 w-100">
+            <RiskBreakdownCategoryProfilingChart riskBreakdownByCategoryProfilingData={riskBreakdownByCategoryProfilingData}/>
+              </div>
+            )}
+            </div>
         </div>
 
         <div
@@ -362,9 +539,11 @@ function RiskProfiling() {
               borderRadius: 16,
               background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
               boxShadow: "0 2px 16px 0 #e0e7ef55",
-              padding: "24px 24px 8px 24px",
+              padding: "24px 24px 24px 24px",
               maxWidth: "100%",
               minWidth: "100%",
+              maxHeight: "530px",
+              minHeight: "530px"
             }}
           >
             {topFraudRulesProfilingLoading ? (
@@ -372,7 +551,7 @@ function RiskProfiling() {
                 <span className="visually-hidden">Loading...</span>
               </Spinner>
             ) : (
-              <div className="p-0 w-100">
+              <div className="p-0 w-100 h-100">
                 <TopFraudRulesProfiling
                   topFraudRulesProfilingData={topFraudRulesProfilingData}
                   handleTopFraudFilterChange={handleTopFraudFilterChange}

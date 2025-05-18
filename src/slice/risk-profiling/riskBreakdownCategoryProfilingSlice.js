@@ -11,7 +11,7 @@ export const fetchRiskBreakdownByCategoryProfiling = createAsyncThunk(
     const response = await api.get(
       `analytics/risk-profiling/risk-category/${tin}?start_date=${start_date}&end_date=${end_date}`
     );
-    console.log("response", response);
+    console.log("risk breakdown response", response);
     return response.data;
   }
 );
