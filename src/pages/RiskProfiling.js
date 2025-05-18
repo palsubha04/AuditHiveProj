@@ -118,9 +118,9 @@ function RiskProfiling() {
       if (!riskBreakdownByCategoryProfilingData) {
         dispatch(
           fetchRiskBreakdownByCategoryProfiling({
-            start_date: "01-01-2021",
-            end_date: "31-12-2021",
-            tin: "500000009",
+            start_date: dateRange.start_date,
+            end_date: dateRange.end_date,
+            tin: selectedTIN,
           })
         );
       }
@@ -128,9 +128,9 @@ function RiskProfiling() {
       if(!topFraudRulesProfilingData){
         dispatch(
           fetchTopFraudRulesProfiling({
-            start_date: "01-01-2021",
-            end_date: "31-12-2021",
-            tin: "500000009",
+            start_date: dateRange.start_date,
+            end_date: dateRange.end_date,
+            tin: selectedTIN,
             taxType: "gst",
             segmentation: "large",
           })
@@ -139,9 +139,9 @@ function RiskProfiling() {
       if (!gstBenchmarkProfilingData) {
         dispatch(
           fetchGstBenchmarkProfiling({
-            start_date: "01-01-2021",
-            end_date: "31-12-2021",
-            tin: "500000009",
+            start_date: dateRange.start_date,
+            end_date: dateRange.end_date,
+            tin: selectedTIN,
           })
         );
       }
@@ -149,9 +149,9 @@ function RiskProfiling() {
       if (!swtBenchmarkProfilingData) {
         dispatch(
           fetchSwtBenchmarkProfiling({
-            start_date: "01-01-2021",
-            end_date: "31-12-2021",
-            tin: "500000009",
+            start_date: dateRange.start_date,
+            end_date: dateRange.end_date,
+            tin: selectedTIN,
           })
         );
       }
@@ -159,9 +159,18 @@ function RiskProfiling() {
       if (!citBenchmarkProfilingData) {
         dispatch(
           fetchCitBenchmarkProfiling({
-            start_date: "01-01-2021",
-            end_date: "31-12-2021",
-            tin: "500000009",
+            start_date: dateRange.start_date,
+            end_date: dateRange.end_date,
+            tin: selectedTIN,
+          })
+        );
+      }
+      if (!frequencyOfAnomalyProfilingData) {
+        dispatch(
+          fetchFrequencyOfAnomalyProfiling({
+            start_date: dateRange.start_date,
+            end_date: dateRange.end_date,
+            tin: selectedTIN,
           })
         );
       }
