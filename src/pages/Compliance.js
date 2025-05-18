@@ -499,7 +499,7 @@ const Compliance = () => {
         </div>
 
         {/* --- Dat Grid Row --- */}
-        <div
+        {/* <div
           style={{
             marginTop: 32,
             border: '1px solid #f1f5f9',
@@ -527,7 +527,7 @@ const Compliance = () => {
           ) : (
             <TaxPayersGrid data={taxPayersData} />
           )}
-        </div>
+        </div> */}
         {/* --- End Line & SWT Chart Row --- */}
       </Layout>
     </>

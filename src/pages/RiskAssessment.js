@@ -3,7 +3,7 @@ import Layout from '../components/Layout';
 import MonthlySalesTaxSummaryChart from '../components/charts/MonthlySalesTaxSummaryChart';
 import RiskAnalysisByIndustryChart from '../components/charts/RiskAnalysisByIndustryChart';
 import RiskBreakdownByCategoryChart from '../components/charts/RiskBreakdownByCategoryChart';
-
+import { fetchTopFraudRulesProfiling } from '../slice/risk-profiling/topFraudRulesProfilingSlice';
 import EmployeeLineChart from '../components/charts/EmployeeLineChart';
 import TotalVsFlaggedLineChart from '../components/charts/TotalVsFlaggedLineChart';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +17,7 @@ import { fetchDatasets } from '../slice/datasetsSlice';
 import RiskAnomalyFrequencyChart from '../components/charts/RiskAnomalyFrequencyChart';
 import { fetchRiskAnomaly } from '../slice/riskAnomalyFrequencySlice';
 import { Spinner } from 'react-bootstrap';
+import TopFraudRulesProfiling from '../components/charts/risk-profiling/TopFraudRulesProfiling';
 //import { set } from "react-datepicker/dist/date_utils";
 
 // Added by Soham - Total Tax Payer vs Risk Flagged
@@ -32,6 +33,10 @@ function RiskAssessment() {
 
   const { data, loading, error } = useSelector((state) => state?.datasets);
   //const [fetchedFlaggedRange, setFetchedFlaggedRange] = useState(null);
+
+  //filters for top fraud
+  const [selectedTaxType, setSelectedTaxType] = useState('gst');
+  const [selectedSegmentation, setSelectedSegmentation] = useState('all');
 
   const {
     totalVsFlaggedTaxpayersData,
@@ -54,6 +59,12 @@ function RiskAssessment() {
     riskAnomalyFrequencyError,
   } = useSelector((state) => state?.riskAnomalyFrequency);
 
+  const {
+    topFraudRulesProfilingData,
+    topFraudRulesProfilingLoading,
+    topFraudRulesProfilingError,
+  } = useSelector((state) => state?.topFraudRulesProfiling);
+
   useEffect(() => {
     if (!data) {
       dispatch(fetchDatasets());
@@ -69,6 +80,17 @@ function RiskAssessment() {
     if (fetchedRangeRef.current === currentKey) {
       console.log('Skipping fetch, already fetched:', currentKey);
       return;
+    }
+
+    if (!topFraudRulesProfilingData) {
+      dispatch(
+        fetchTopFraudRulesProfiling({
+          start_date: dateRange.start_date,
+          end_date: dateRange.end_date,
+          taxType: 'gst',
+          segmentation: 'large',
+        })
+      );
     }
 
     console.log('Dispatching for new range:', currentKey);
@@ -88,6 +110,23 @@ function RiskAssessment() {
       setDateRange(range);
     }
   };
+
+  const handleTopFraudFilterChange = (taxType, segmentation) => {
+    console.log('filter chaged');
+    console.log('taxtype', taxType);
+    console.log('segmentaion', segmentation);
+    setSelectedTaxType(taxType);
+    setSelectedSegmentation(segmentation);
+    dispatch(
+      fetchTopFraudRulesProfiling({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        taxType: taxType,
+        segmentation: segmentation,
+      })
+    );
+  };
+
   const yearOptions =
     data?.years?.map((year) => ({
       label: String(year),
@@ -228,10 +267,49 @@ function RiskAssessment() {
               </div>
             )}
           </div>
-          {/* Done by Ankita */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '30px',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div
+              style={{
+                marginTop: 32,
+                border: '1px solid #e6edff',
+                borderRadius: 16,
+                background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
+                boxShadow: '0 2px 16px 0 #e0e7ef55',
+                padding: '24px 24px 24px 24px',
+                maxWidth: '100%',
+                minWidth: '100%',
+                maxHeight: '530px',
+                minHeight: '530px',
+              }}
+            >
+              {topFraudRulesProfilingLoading ? (
+                <div className='d-flex h-100 justify-content-center align-items-center'>
+                  <Spinner animation="border" role="status" variant="primary">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                </div>
+              ) : (
+                <div className="p-0 w-100 h-100">
+                  <TopFraudRulesProfiling
+                    topFraudRulesProfilingData={topFraudRulesProfilingData}
+                    handleTopFraudFilterChange={handleTopFraudFilterChange}
+                    selectedTaxType={selectedTaxType}
+                    selectedSegmentation={selectedSegmentation}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+
       </div>
-    </Layout>
+    </Layout >
   );
 }
 

@@ -4,10 +4,8 @@ import api from "../../services/axios.config";
 // Accept parameters for dynamic end_date and tin
 export const fetchTopFraudRulesProfiling = createAsyncThunk(
   "fetchTopFraudRulesProfiling/fetch",
-  async ({ start_date, end_date, tin, taxType, segmentation }) => {
-    console.log("start_date", start_date);
-    console.log("end_date", end_date);
-    console.log("tin", tin);
+  async ({ start_date, end_date, taxType, segmentation }) => {
+    
     const response = await api.get(
       `/analytics/compliance/table?tax_type=${taxType}&segmentation=${segmentation}&start_date=${start_date}&end_date=${end_date}`
     );
