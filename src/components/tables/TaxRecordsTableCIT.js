@@ -113,28 +113,40 @@ const CITTaxRecordsTable = ({ startDate, endDate }) => {
       header: 'Segmentation'
     },
     {
-      accessorKey: 'employees_on_payroll',
-      header: 'Employees on Payroll'
+        accessorKey: "taxpayer_type",
+        header: "Taxpayer Type",
+        cell: ({ getValue }) => getValue() || 'N/A'
     },
     {
-      accessorKey: 'employees_paid_cit',
-      header: 'Employees Paid cit'
-    },
-    {
-      accessorKey: 'total_salary_wages_paid',
-      header: 'Total Salary Wages Paid',
+      accessorKey: 'total_gross_income',
+      header: 'Total Gross Income',
       cell: ({ getValue }) => formatCurrency(getValue())
     },
     {
-      accessorKey: 'sw_paid_for_cit_deduction',
-      header: 'Salary Wages Paid for cit Deduction',
+      accessorKey: 'total_operating_expenses',
+      header: 'Total Operating Expenses',
       cell: ({ getValue }) => formatCurrency(getValue())
     },
     {
-      accessorKey: 'total_cit_tax_deducted',
-      header: 'Total cit Tax Deducted',
+      accessorKey: 'current_year_profit_loss_710',
+      header: 'Current Year Profit Loss',
       cell: ({ getValue }) => formatCurrency(getValue())
     },
+    {
+      accessorKey: 'total_sales_income',
+      header: 'Total Sales Income',
+      cell: ({ getValue }) => formatCurrency(getValue())
+    },
+    // {
+    //   accessorKey: 'gst_payable',
+    //   header: 'GST Payable',
+    //   cell: ({ getValue }) => formatCurrency(getValue())
+    // },
+    // {
+    //     accessorKey: 'gst_refundable',
+    //     header: 'GST Refundable',
+    //     cell: ({ getValue }) => formatCurrency(getValue())
+    //   },
     {
       accessorKey: 'is_fraud',
       header: 'Is Fraud',

@@ -134,7 +134,7 @@ const TotalAmountByIncomeType = ({ startDate, endDate }) => {
         );
       }
   return (
-    <Card className="mb-4 box-background">
+    <Card className="mb-4">
       <Card.Body>
         <Row className="mb-4">
           <Col>

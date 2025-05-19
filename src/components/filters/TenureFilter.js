@@ -58,7 +58,7 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
     if (!options || options.length === 0) return;
 
     // Only run if not custom
-    if (selectedTenure === 'custom') {
+    if (selectedTenureDefault === 'custom') {
       setShowDatePickers(true);
       return;
     } else {
@@ -70,7 +70,7 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
 
     if (!tenureOptions) {
 
-        switch (selectedTenure) {
+        switch (selectedTenureDefault) {
           case '1m':
             start.setMonth(today.getMonth() - 1);
             break;
@@ -119,11 +119,11 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
       }
     }
     // eslint-disable-next-line
-  }, [selectedTenure, options]); // intentionally not including startDate/endDate to avoid infinite loop
+  }, [selectedTenure,selectedTenureDefault, options]); // intentionally not including startDate/endDate to avoid infinite loop
 
   // Effect for custom date range
   useEffect(() => {
-    if (selectedTenure === 'custom' && startDate && endDate) {
+    if (selectedTenureDefault === 'custom' && startDate && endDate) {
       if (onFilterChange) {
         onFilterChange({
           start_date: formatDate(startDate),
@@ -132,7 +132,7 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
       }
     }
     // eslint-disable-next-line
-  }, [startDate, endDate, selectedTenure]);
+  }, [startDate, endDate, selectedTenureDefault]);
 
   const handleTenureChange = (e) => {
     const value = e.target.value;

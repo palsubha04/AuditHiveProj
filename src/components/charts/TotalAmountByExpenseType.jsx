@@ -114,7 +114,7 @@ const TotalAmountByExpenseType = ({ startDate, endDate }) => {
 
       if (loading) {
         return (
-          <Card className="mb-4 box-background">
+          <Card className="mb-4">
             <Card.Body className="d-flex align-items-center justify-content-center" style={{ height: '400px' }}>
               <Spinner animation="border" role="status" variant="primary">
                 <span className="visually-hidden">Loading...</span>
@@ -126,7 +126,7 @@ const TotalAmountByExpenseType = ({ startDate, endDate }) => {
     
       if (error) {
         return (
-          <Card className="mb-4 box-background">
+          <Card className="mb-4">
             <Card.Body className="text-center text-danger" style={{ height: '400px' }}>
               {error}
             </Card.Body>
@@ -136,7 +136,7 @@ const TotalAmountByExpenseType = ({ startDate, endDate }) => {
       
 
   return (
-    <Card className="mb-4 box-background">
+    <Card className="mb-4">
       <Card.Body>
         <Row className="mb-4">
           <Col>
