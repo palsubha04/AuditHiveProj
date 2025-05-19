@@ -1,20 +1,20 @@
-import { Tally1 } from "lucide-react";
-import React from "react";
-import Chart from "react-apexcharts";
+import { Tally1 } from 'lucide-react';
+import React from 'react';
+import Chart from 'react-apexcharts';
 
 const GSTBenchmarkCreditsProfilingChart = ({
   gstBenchmarkCreditsProfilingData,
 }) => {
   const series = [
     {
-      name: "Input Credits",
+      name: 'Input Credits',
       data: [
         gstBenchmarkCreditsProfilingData?.input_credits || 0,
         gstBenchmarkCreditsProfilingData?.average_input_credits || 0,
       ],
     },
     {
-      name: "Output Debits",
+      name: 'Output Debits',
       data: [
         gstBenchmarkCreditsProfilingData?.output_debits || 0,
         gstBenchmarkCreditsProfilingData?.average_output_debits || 0,
@@ -24,15 +24,15 @@ const GSTBenchmarkCreditsProfilingChart = ({
 
   const options = {
     chart: {
-      type: "bar",
+      type: 'bar',
       height: 350,
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "55%",
+        columnWidth: '55%',
         borderRadius: 5,
-        borderRadiusApplication: "end",
+        borderRadiusApplication: 'end',
       },
     },
     dataLabels: {
@@ -41,14 +41,14 @@ const GSTBenchmarkCreditsProfilingChart = ({
     stroke: {
       show: true,
       width: 2,
-      colors: ["transparent"],
+      colors: ['transparent'],
     },
     xaxis: {
-      categories: ["Overall", "Average"],
+      categories: ['Overall', 'Average'],
     },
     yaxis: {
       title: {
-        text: "Credits",
+        text: 'Credits',
       },
     },
     fill: {
@@ -58,25 +58,27 @@ const GSTBenchmarkCreditsProfilingChart = ({
       custom: function ({ series, seriesIndex, dataPointIndex, w }) {
         const isOverall = dataPointIndex === 0;
 
-        
-
         const ratio = isOverall
-          ? gstBenchmarkCreditsProfilingData["output_debits"] != 0
-            ? (gstBenchmarkCreditsProfilingData["input_credits"] /
-              gstBenchmarkCreditsProfilingData["output_debits"]).toFixed(3)
-            : "N/A"
-          : gstBenchmarkCreditsProfilingData["average_output_debits"] != 0
-          ? (gstBenchmarkCreditsProfilingData["average_input_credits"] /
-            gstBenchmarkCreditsProfilingData["average_output_debits"]).toFixed(3)
-          : "N/A";
+          ? gstBenchmarkCreditsProfilingData['output_debits'] != 0
+            ? (
+                gstBenchmarkCreditsProfilingData['input_credits'] /
+                gstBenchmarkCreditsProfilingData['output_debits']
+              ).toFixed(3)
+            : 'N/A'
+          : gstBenchmarkCreditsProfilingData['average_output_debits'] != 0
+          ? (
+              gstBenchmarkCreditsProfilingData['average_input_credits'] /
+              gstBenchmarkCreditsProfilingData['average_output_debits']
+            ).toFixed(3)
+          : 'N/A';
 
         const ratioLabel = isOverall
-          ? "Input vs Output"
-          : "Average Input vs Average Output";
+          ? 'Input vs Output'
+          : 'Average Input vs Average Output';
 
         const value = series[seriesIndex][dataPointIndex];
 
-        const barLabel = seriesIndex === 0 ? "Input Credits" : "Output Debits";
+        const barLabel = seriesIndex === 0 ? 'Input Credits' : 'Output Debits';
 
         return `
           <div style="padding: 8px; font-size: 14px;">
@@ -87,15 +89,15 @@ const GSTBenchmarkCreditsProfilingChart = ({
       },
     },
     noData: {
-      text: "No Data Found",
-      align: "center",
-      verticalAlign: "middle",
+      text: 'No Data Found',
+      align: 'center',
+      verticalAlign: 'middle',
       offsetX: 0,
       offsetY: 0,
       style: {
-        color: "#6c757d",
-        fontSize: "16px",
-        fontFamily: "inherit",
+        color: '#6c757d',
+        fontSize: '16px',
+        fontFamily: 'inherit',
       },
     },
   };
@@ -104,15 +106,21 @@ const GSTBenchmarkCreditsProfilingChart = ({
     <div>
       <div
         style={{
-          display: "flex",
+          display: 'flex',
           // justifyContent: 'space-between',
-          alignItems: "center",
+          alignItems: 'center',
           marginBottom: 16,
         }}
       >
         <h4
           className="mb-0 me-3 fw-bold"
-          style={{ color: "#6366F1", fontSize: "22px" }}
+          style={{
+            color: '#05004E',
+            fontSize: '20px',
+            fontWeight: 600,
+            letterSpacing: '0px',
+            lineHeight: '32px',
+          }}
         >
           GST Benchmark - Input Credits vs Output Debits
         </h4>

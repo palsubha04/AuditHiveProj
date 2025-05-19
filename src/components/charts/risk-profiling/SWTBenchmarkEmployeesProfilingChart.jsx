@@ -1,20 +1,20 @@
-import { Tally1 } from "lucide-react";
-import React from "react";
-import Chart from "react-apexcharts";
+import { Tally1 } from 'lucide-react';
+import React from 'react';
+import Chart from 'react-apexcharts';
 
 const SWTBenchmarkEmployeesProfilingChart = ({
   swtBenchmarkEmployeesProfilingData,
 }) => {
   const series = [
     {
-      name: "Payroll Employees",
+      name: 'Payroll Employees',
       data: [
         swtBenchmarkEmployeesProfilingData?.employees_on_payroll || 0,
         swtBenchmarkEmployeesProfilingData?.average_employees_on_payroll || 0,
       ],
     },
     {
-      name: "SWT Employees",
+      name: 'SWT Employees',
       data: [
         swtBenchmarkEmployeesProfilingData?.swt_employees || 0,
         swtBenchmarkEmployeesProfilingData?.average_swt_employees || 0,
@@ -24,15 +24,15 @@ const SWTBenchmarkEmployeesProfilingChart = ({
 
   const options = {
     chart: {
-      type: "bar",
+      type: 'bar',
       height: 350,
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "55%",
+        columnWidth: '55%',
         borderRadius: 5,
-        borderRadiusApplication: "end",
+        borderRadiusApplication: 'end',
       },
     },
     dataLabels: {
@@ -41,14 +41,14 @@ const SWTBenchmarkEmployeesProfilingChart = ({
     stroke: {
       show: true,
       width: 2,
-      colors: ["transparent"],
+      colors: ['transparent'],
     },
     xaxis: {
-      categories: ["Overall", "Average"],
+      categories: ['Overall', 'Average'],
     },
     yaxis: {
       title: {
-        text: "Employee Count",
+        text: 'Employee Count',
       },
     },
     fill: {
@@ -59,28 +59,28 @@ const SWTBenchmarkEmployeesProfilingChart = ({
         const isOverall = dataPointIndex === 0;
 
         const ratio = isOverall
-          ? swtBenchmarkEmployeesProfilingData["swt_employees"] != 0
+          ? swtBenchmarkEmployeesProfilingData['swt_employees'] != 0
             ? (
-                swtBenchmarkEmployeesProfilingData["employees_on_payroll"] /
-                swtBenchmarkEmployeesProfilingData["swt_employees"]
+                swtBenchmarkEmployeesProfilingData['employees_on_payroll'] /
+                swtBenchmarkEmployeesProfilingData['swt_employees']
               ).toFixed(3)
-            : "N/A"
-          : swtBenchmarkEmployeesProfilingData["average_swt_employees"] != 0
+            : 'N/A'
+          : swtBenchmarkEmployeesProfilingData['average_swt_employees'] != 0
           ? (
               swtBenchmarkEmployeesProfilingData[
-                "average_employees_on_payroll"
-              ] / swtBenchmarkEmployeesProfilingData["average_swt_employees"]
+                'average_employees_on_payroll'
+              ] / swtBenchmarkEmployeesProfilingData['average_swt_employees']
             ).toFixed(3)
-          : "N/A";
+          : 'N/A';
 
         const ratioLabel = isOverall
-          ? "Payroll vs SWT"
-          : "Average Payroll vs Average SWT";
+          ? 'Payroll vs SWT'
+          : 'Average Payroll vs Average SWT';
 
         const value = series[seriesIndex][dataPointIndex];
 
         const barLabel =
-          seriesIndex === 0 ? "Payroll Employees" : "SWT Employees";
+          seriesIndex === 0 ? 'Payroll Employees' : 'SWT Employees';
 
         return `
           <div style="padding: 8px; font-size: 14px;">
@@ -91,15 +91,15 @@ const SWTBenchmarkEmployeesProfilingChart = ({
       },
     },
     noData: {
-      text: "No Data Found",
-      align: "center",
-      verticalAlign: "middle",
+      text: 'No Data Found',
+      align: 'center',
+      verticalAlign: 'middle',
       offsetX: 0,
       offsetY: 0,
       style: {
-        color: "#6c757d",
-        fontSize: "16px",
-        fontFamily: "inherit",
+        color: '#6c757d',
+        fontSize: '16px',
+        fontFamily: 'inherit',
       },
     },
   };
@@ -108,15 +108,21 @@ const SWTBenchmarkEmployeesProfilingChart = ({
     <div>
       <div
         style={{
-          display: "flex",
+          display: 'flex',
           // justifyContent: 'space-between',
-          alignItems: "center",
+          alignItems: 'center',
           marginBottom: 16,
         }}
       >
         <h4
           className="mb-0 me-3 fw-bold"
-          style={{ color: "#6366F1", fontSize: "22px" }}
+          style={{
+            color: '#05004E',
+            fontSize: '20px',
+            fontWeight: 600,
+            letterSpacing: '0px',
+            lineHeight: '32px',
+          }}
         >
           SWT Benchmark - Employees On Payroll Vs SWT Employees
         </h4>
