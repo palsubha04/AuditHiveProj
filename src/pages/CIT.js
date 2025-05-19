@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 import TenureFilter from '../components/filters/TenureFilter';
 import CITSummaryCards from '../components/summary/CITSummaryCards';
 import './Dashboard.css';
+import TotalAmountByIncomeType from '../components/charts/TotalAmountByIncomeType';
 
 function CIT() {
   const [dateRange, setDateRange] = useState({
@@ -29,7 +30,7 @@ function CIT() {
         
         <div className="row">
           <div className="col-12 mb-4">
-            Chart 1
+            <TotalAmountByIncomeType/>
             {/* <SalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
           <div className="col-12 mb-4">
