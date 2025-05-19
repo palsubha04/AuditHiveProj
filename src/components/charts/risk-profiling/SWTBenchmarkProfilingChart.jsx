@@ -1,18 +1,18 @@
-import { Tally1 } from "lucide-react";
-import React from "react";
-import Chart from "react-apexcharts";
+import { Tally1 } from 'lucide-react';
+import React from 'react';
+import Chart from 'react-apexcharts';
 
 const SWTBenchmarkProfilingChart = ({ swtBenchmarkProfilingData }) => {
   const series = [
     {
-      name: "Salary Wage",
+      name: 'Salary Wage',
       data: [
         swtBenchmarkProfilingData?.total_salary_wages_paid || 0,
         swtBenchmarkProfilingData?.average_salary_wages_paid || 0,
       ],
     },
     {
-      name: "SWT Tax",
+      name: 'SWT Tax',
       data: [
         swtBenchmarkProfilingData?.total_swt_tax_deducted || 0,
         swtBenchmarkProfilingData?.average_swt_tax_deducted || 0,
@@ -22,15 +22,15 @@ const SWTBenchmarkProfilingChart = ({ swtBenchmarkProfilingData }) => {
 
   const options = {
     chart: {
-      type: "bar",
+      type: 'bar',
       height: 350,
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "55%",
+        columnWidth: '55%',
         borderRadius: 5,
-        borderRadiusApplication: "end",
+        borderRadiusApplication: 'end',
       },
     },
     dataLabels: {
@@ -39,14 +39,14 @@ const SWTBenchmarkProfilingChart = ({ swtBenchmarkProfilingData }) => {
     stroke: {
       show: true,
       width: 2,
-      colors: ["transparent"],
+      colors: ['transparent'],
     },
     xaxis: {
-      categories: ["Overall", "Average"],
+      categories: ['Overall', 'Average'],
     },
     yaxis: {
       title: {
-        text: "Amount",
+        text: 'Amount',
       },
     },
     fill: {
@@ -57,26 +57,26 @@ const SWTBenchmarkProfilingChart = ({ swtBenchmarkProfilingData }) => {
         const isOverall = dataPointIndex === 0;
 
         const ratio = isOverall
-          ? swtBenchmarkProfilingData["total_swt_tax_deducted"] != 0
+          ? swtBenchmarkProfilingData['total_swt_tax_deducted'] != 0
             ? (
-                swtBenchmarkProfilingData["total_salary_wages_paid"] /
-                swtBenchmarkProfilingData["total_swt_tax_deducted"]
+                swtBenchmarkProfilingData['total_salary_wages_paid'] /
+                swtBenchmarkProfilingData['total_swt_tax_deducted']
               ).toFixed(3)
-            : "N/A"
-          : swtBenchmarkProfilingData["average_swt_tax_deducted"] != 0
+            : 'N/A'
+          : swtBenchmarkProfilingData['average_swt_tax_deducted'] != 0
           ? (
-              swtBenchmarkProfilingData["average_salary_wages_paid"] /
-              swtBenchmarkProfilingData["average_swt_tax_deducted"]
+              swtBenchmarkProfilingData['average_salary_wages_paid'] /
+              swtBenchmarkProfilingData['average_swt_tax_deducted']
             ).toFixed(3)
-          : "N/A";
+          : 'N/A';
 
         const ratioLabel = isOverall
-          ? "Salary vs Tax"
-          : "Average Salary vs Average Tax";
+          ? 'Salary vs Tax'
+          : 'Average Salary vs Average Tax';
 
         const value = series[seriesIndex][dataPointIndex];
 
-        const barLabel = seriesIndex === 0 ? "Salary Wage" : "SWT Tax";
+        const barLabel = seriesIndex === 0 ? 'Salary Wage' : 'SWT Tax';
 
         return `
           <div style="padding: 8px; font-size: 14px;">
@@ -87,15 +87,15 @@ const SWTBenchmarkProfilingChart = ({ swtBenchmarkProfilingData }) => {
       },
     },
     noData: {
-      text: "No Data Found",
-      align: "center",
-      verticalAlign: "middle",
+      text: 'No Data Found',
+      align: 'center',
+      verticalAlign: 'middle',
       offsetX: 0,
       offsetY: 0,
       style: {
-        color: "#6c757d",
-        fontSize: "16px",
-        fontFamily: "inherit",
+        color: '#6c757d',
+        fontSize: '16px',
+        fontFamily: 'inherit',
       },
     },
   };
@@ -104,15 +104,21 @@ const SWTBenchmarkProfilingChart = ({ swtBenchmarkProfilingData }) => {
     <div>
       <div
         style={{
-          display: "flex",
+          display: 'flex',
           // justifyContent: 'space-between',
-          alignItems: "center",
+          alignItems: 'center',
           marginBottom: 16,
         }}
       >
         <h4
           className="mb-0 me-3 fw-bold"
-          style={{ color: "#6366F1", fontSize: "22px" }}
+          style={{
+            color: '#05004E',
+            fontSize: '20px',
+            fontWeight: 600,
+            letterSpacing: '0px',
+            lineHeight: '32px',
+          }}
         >
           SWT Benchmark - Salary Wages Paid Vs SWT Tax Deducted
         </h4>

@@ -1,9 +1,11 @@
 .chart-headers{
     font-size: 20px;
     color: #05004E;
-    font-weight: 500;
-    padding-right: 10px
-}
+    font-weight: 600;
+    padding-right: 10px;
+    letter-spacing: 0px;
+    line-height: 32px
+;}
 
 .chart-filter{
     border: solid 0.6px #e6edff;

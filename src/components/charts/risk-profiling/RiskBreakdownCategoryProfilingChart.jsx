@@ -29,37 +29,14 @@ var riskData = {
 const RiskBreakdownCategoryProfilingChart = ({
   riskBreakdownByCategoryDataProfiling,
 }) => {
-  // const [selectedTaxType, setSelectedTaxType] = useState("gst");
-  //const [selectedRiskLevel, setSelectedRiskLevel] = useState("Critical");
-
-  // var riskData = {
-  //   "gst": {
-  //     "High": {
-  //       "count": 2,
-  //       "assessments": [1, 2]
-  //     },
-  //     "Moderate": {
-  //       "count": 1,
-  //       "assessments": [3]
-  //     }
-  //   },
-  //   "swt": {
-  //     "High": {
-  //       "count": 1,
-  //       "assessments": [5]
-  //     },
-  //     "Low": {
-  //       "count": 2,
-  //       "assessments": [7, 8]
-  //     }
-  //   }
-  // }
-
   //const [filterData, setFilterData] = useState(riskData ? riskData["gst"] ?? {} : {});
   const [selectedCategory, setSelectedCategory] = useState('gst');
   const [filteredData, setFilteredData] = useState([]);
 
-  console.log("riskBreakdownByCategoryDataProfiling", riskBreakdownByCategoryDataProfiling);
+  console.log(
+    'riskBreakdownByCategoryDataProfiling',
+    riskBreakdownByCategoryDataProfiling
+  );
 
   const riskLevels = [
     'Critical Risk',
@@ -71,16 +48,6 @@ const RiskBreakdownCategoryProfilingChart = ({
     'No Risk',
   ];
 
-  // const series = []
-  // const labels = []
-
-  // for(let i = 0; i < riskLevels.length; i++) {
-  //   const riskLevel = riskLevels[i];
-  //   if (filterData[riskLevel]) {
-  //     series.push(filterData[riskLevel]["count"]);
-  //     labels.push(riskLevel);
-  //   }
-  // }
   useEffect(() => {
     if (riskBreakdownByCategoryDataProfiling && selectedCategory) {
       const rules =
@@ -97,10 +64,6 @@ const RiskBreakdownCategoryProfilingChart = ({
 
     for (let i = 0; i < riskLevels.length; i++) {
       const riskLevel = riskLevels[i];
-      // if(riskLevel === "Unknown") {
-      //   series.push(filteredData[riskLevel]["count"]);
-      //   labels.push("High");
-      // }
       if (filteredData[riskLevel]) {
         series.push(filteredData[riskLevel]['count']);
         if (riskLevel === 'Unknown') {
@@ -158,17 +121,19 @@ const RiskBreakdownCategoryProfilingChart = ({
       },
     },
   };
-  // const changeFilterData = (taxType) => {
-  //   console.log("Selected Tax Type:", taxType);
-  //   setFilterData(riskData ? riskData[taxType] ?? {} : {});
-  // }
 
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
         <h4
           className="mb-0 me-3 fw-bold"
-          style={{ color: '#6366F1', fontSize: '22px' }}
+          style={{
+            color: '#05004E',
+            fontSize: '20px',
+            fontWeight: 600,
+            letterSpacing: '0px',
+            lineHeight: '32px',
+          }}
         >
           Risk Breakdown Category
         </h4>
