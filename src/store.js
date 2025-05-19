@@ -17,6 +17,10 @@ import citBenchmarkProfilingReducer from './slice/risk-profiling/citBenchmarkPro
 import swtBenchmarkProfilingReducer from './slice/risk-profiling/swtBenchmarkProfilingSlice';
 import gstBenchmarkCreditsProfilingReducer from "./slice/risk-profiling/gstBenchmarkCreditsProfilingSlice";
 import swtBenchmarkEmployeesProfilingReducer from "./slice/risk-profiling/swtBenchmarkEmployeesProfilingSlice";
+import taxFilingComplianceReducer from './slice/compliance/taxFilingComplianceSlice'
+import taxDelayComplianceReducer from "./slice/compliance/taxDelayComplianceSlice";
+import profitLossComplianceReducer from "./slice/compliance/profitLossComplianceSlice";
+
 
 const store = configureStore({
   reducer: {
@@ -38,6 +42,9 @@ const store = configureStore({
     citBenchmarkProfiling: citBenchmarkProfilingReducer,
     swtBenchmarkProfiling: swtBenchmarkProfilingReducer,
     swtBenchmarkEmployeesProfiling: swtBenchmarkEmployeesProfilingReducer,
+    taxFilingCompliance: taxFilingComplianceReducer,
+    taxDelayCompliance: taxDelayComplianceReducer,
+    profitLossCompliance: profitLossComplianceReducer
   },
 });
 
