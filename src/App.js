@@ -75,7 +75,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/consolidated-profile"
             element={
               <ProtectedRoute>
@@ -90,15 +90,15 @@ function App() {
                 <PendingReturns />
               </ProtectedRoute>
             }
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="/fraud-detections"
             element={
               <ProtectedRoute>
                 <FraudDetections />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/risk-assessment"
             element={

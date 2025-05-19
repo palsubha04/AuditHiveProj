@@ -108,7 +108,7 @@ function Sidenav() {
           </Nav.Link>
 
           <div className={`submenu ${isAnalyticsOpen ? 'open' : ''}`}>
-            <Nav.Link
+            {/* <Nav.Link
               as={Link}
               to="/consolidated-profile"
               active={location.pathname === '/consolidated-profile'}
@@ -123,15 +123,15 @@ function Sidenav() {
               className="nav-item submenu-item"
             >
               <span>Pending Returns</span>
-            </Nav.Link>
-            <Nav.Link
+            </Nav.Link> */}
+            {/* <Nav.Link
               as={Link}
               to="/fraud-detections"
               active={location.pathname === '/fraud-detections'}
               className="nav-item submenu-item"
             >
               <span>Fraud Detections</span>
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link
               as={Link}
               to="/risk-assessment"
