@@ -12,7 +12,6 @@ import RiskAnomalyFrequencyChart from '../components/charts/RiskAnomalyFrequency
 import RiskBreakdownCategoryProfilingChart from '../components/charts/risk-profiling/RiskBreakdownCategoryProfilingChart';
 import GSTBenchmarkProfilingChart from '../components/charts/risk-profiling/GSTBenchmarkProfilingChart';
 import SWTBenchmarkProfilingChart from '../components/charts/risk-profiling/SWTBenchmarkProfilingChart';
-import CITBenchmarkProfilingChart from '../components/charts/risk-profiling/CITBenchmarkProfilingChart';
 import { fetchGstBenchmarkProfiling } from '../slice/risk-profiling/gstBenchmarkProfilingSlice';
 import { fetchSwtBenchmarkProfiling } from '../slice/risk-profiling/swtBenchmarkProfilingSlice';
 import { fetchCitBenchmarkProfiling } from '../slice/risk-profiling/citBenchmarkProfilingSlice';
@@ -28,14 +27,11 @@ import { fetchSalesComparison } from '../slice/salesComparisonSlice';
 import { fetchEmployeeOnPayroll } from '../slice/employeeOnPayrollSlice';
 import { fetchGstPayableVsRefundable } from '../slice/gstPayableVsRefundableSlice';
 import { fetchswtSalariesComparison } from '../slice/swtSalariesComparisonSlice';
-import { fetchtaxPayersDetails } from '../slice/taxPayersDetailsSlice';
-import TaxPayersGrid from '../components/TaxPayersGrid';
-import './Compliance.css';
 
 function RiskProfiling() {
   const [dateRange, setDateRange] = useState({
-    start_date: "01-01-2022",
-    end_date: "31-12-2022",
+    start_date: '01-01-2022',
+    end_date: '31-12-2022',
   });
   const dispatch = useDispatch();
   const [selectedTIN, setSelectedTIN] = useState('');
@@ -90,34 +86,26 @@ function RiskProfiling() {
     swtBenchmarkEmployeesProfilingError,
   } = useSelector((state) => state?.swtBenchmarkEmployeesProfiling);
 
-  const {
-    monthlySalesData,
-    monthlySalesLoading,
-    monthlySalesError
-  } = useSelector((state) => state?.salesComparison);
+  // GST Sales Comparison
+  const { monthlySalesData, monthlySalesLoading, monthlySalesError } =
+    useSelector((state) => state?.salesComparison);
 
-  const {
-    payrollData,
-    payrollLoading,
-    payrollError
-  } = useSelector((state) => state?.employeeOnPayroll);
+  // GST Payable vs Refundable
+  const { payrollData, payrollLoading, payrollError } = useSelector(
+    (state) => state?.employeeOnPayroll
+  );
 
-  const {
-    gstData,
-    gstLoading,
-    gstError
-  } = useSelector((state) => state?.gstPayableVsRefundable);
+  // Employee on Payroll Vs Paid SWT
+  const { gstData, gstLoading, gstError } = useSelector(
+    (state) => state?.gstPayableVsRefundable
+  );
 
+  // SWT Salaries Comparison
   const {
     swtSalariesComparisonData,
     swtSalariesComparisonLoading,
     swtSalariesComparisonError,
   } = useSelector((state) => state?.swtSalariesComparison);
-
-  const {
-    taxPayersData,
-    taxPayersLoading,
-    taxPayersError } = useSelector((state) => state?.taxPayersDetails);
 
   useEffect(() => {
     if (!data) {
@@ -152,21 +140,20 @@ function RiskProfiling() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-
   useEffect(() => {
     if (data?.tins && data.tins.length > 0 && !selectedTIN) {
       // Ensure selectedTIN is set only once initially
-      setSelectedTIN(data.tins[0]);
+      setSelectedTIN(data.tins[data.tins.length - 1]);
     }
-  }, [data?.tins, selectedTIN]); // Added selectedTIN to dependency array
+  }, [data?.tins, selectedTIN]);
+
+  // Added selectedTIN to dependency array
 
   const filteredTins = tins.filter((tin) =>
     tin.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
   useEffect(() => {
-
     if (!gstBenchmarkCreditsProfilingData) {
       dispatch(
         fetchGstBenchmarkCreditsProfiling({
@@ -236,45 +223,36 @@ function RiskProfiling() {
     if (!monthlySalesData) {
       dispatch(
         fetchSalesComparison({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
+          start_date: dateRange.start_date,
+          end_date: dateRange.end_date,
+          tin: selectedTIN,
         })
       );
     }
     if (!payrollData) {
       dispatch(
         fetchEmployeeOnPayroll({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
+          start_date: dateRange.start_date,
+          end_date: dateRange.end_date,
+          tin: selectedTIN,
         })
       );
     }
     if (!gstData) {
       dispatch(
         fetchGstPayableVsRefundable({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
+          start_date: dateRange.start_date,
+          end_date: dateRange.end_date,
+          tin: selectedTIN,
         })
       );
     }
     if (!swtSalariesComparisonData) {
       dispatch(
         fetchswtSalariesComparison({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
-        })
-      );
-    }
-    if (!taxPayersData) {
-      dispatch(
-        fetchtaxPayersDetails({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
+          start_date: dateRange.start_date,
+          end_date: dateRange.end_date,
+          tin: selectedTIN,
         })
       );
     }
@@ -310,7 +288,6 @@ function RiskProfiling() {
         tin: selectedTIN,
       })
     );
-
 
     dispatch(
       fetchGstBenchmarkProfiling({
@@ -363,18 +340,7 @@ function RiskProfiling() {
         tin: selectedTIN,
       })
     );
-    dispatch(
-      fetchtaxPayersDetails({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-        tin: selectedTIN,
-      })
-    );
   };
-  console.log(
-    'riskBreakdownByCategoryProfilingData',
-    riskBreakdownByCategoryProfilingData
-  );
 
   return (
     <Layout>
@@ -573,27 +539,27 @@ function RiskProfiling() {
         {/*gst Benchmark */}
         <div
           style={{
-            display: "flex",
-            gap: "30px",
-            justifyContent: "space-between",
+            display: 'flex',
+            gap: '30px',
+            justifyContent: 'space-between',
             width: '98%',
           }}
         >
           <div
             style={{
               marginTop: 32,
-              border: "1px solid #e6edff",
+              border: '1px solid #e6edff',
               borderRadius: 16,
-              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
-              boxShadow: "0 2px 16px 0 #e0e7ef55",
-              padding: "24px 24px 8px 24px",
-              maxWidth: "50%",
-              minWidth: "50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "500px",
-              maxHeight: "500px",
+              background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
+              boxShadow: '0 2px 16px 0 #e0e7ef55',
+              padding: '24px 24px 8px 24px',
+              maxWidth: '50%',
+              minWidth: '50%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: '500px',
+              maxHeight: '500px',
             }}
           >
             {gstBenchmarkProfilingLoading ? (
@@ -612,18 +578,18 @@ function RiskProfiling() {
           <div
             style={{
               marginTop: 32,
-              border: "1px solid #e6edff",
+              border: '1px solid #e6edff',
               borderRadius: 16,
-              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
-              boxShadow: "0 2px 16px 0 #e0e7ef55",
-              padding: "24px 24px 8px 24px",
-              maxWidth: "50%",
-              minWidth: "50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "500px",
-              maxHeight: "500px",
+              background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
+              boxShadow: '0 2px 16px 0 #e0e7ef55',
+              padding: '24px 24px 8px 24px',
+              maxWidth: '50%',
+              minWidth: '50%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: '500px',
+              maxHeight: '500px',
             }}
           >
             {gstBenchmarkCreditsProfilingLoading ? (
@@ -645,27 +611,27 @@ function RiskProfiling() {
         {/*swt Benchmark */}
         <div
           style={{
-            display: "flex",
-            gap: "30px",
-            justifyContent: "space-between",
+            display: 'flex',
+            gap: '30px',
+            justifyContent: 'space-between',
             width: '98%',
           }}
         >
           <div
             style={{
               marginTop: 32,
-              border: "1px solid #e6edff",
+              border: '1px solid #e6edff',
               borderRadius: 16,
-              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
-              boxShadow: "0 2px 16px 0 #e0e7ef55",
-              padding: "24px 24px 8px 24px",
-              maxWidth: "50%",
-              minWidth: "50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "500px",
-              maxHeight: "500px",
+              background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
+              boxShadow: '0 2px 16px 0 #e0e7ef55',
+              padding: '24px 24px 8px 24px',
+              maxWidth: '50%',
+              minWidth: '50%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: '500px',
+              maxHeight: '500px',
             }}
           >
             {swtBenchmarkProfilingLoading ? (
@@ -684,18 +650,18 @@ function RiskProfiling() {
           <div
             style={{
               marginTop: 32,
-              border: "1px solid #e6edff",
+              border: '1px solid #e6edff',
               borderRadius: 16,
-              background: "linear-gradient(135deg, #f1f5ff 80%, #fff 100%)",
-              boxShadow: "0 2px 16px 0 #e0e7ef55",
-              padding: "24px 24px 8px 24px",
-              maxWidth: "50%",
-              minWidth: "50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "500px",
-              maxHeight: "500px",
+              background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
+              boxShadow: '0 2px 16px 0 #e0e7ef55',
+              padding: '24px 24px 8px 24px',
+              maxWidth: '50%',
+              minWidth: '50%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: '500px',
+              maxHeight: '500px',
             }}
           >
             {swtBenchmarkProfilingLoading ? (
@@ -705,13 +671,16 @@ function RiskProfiling() {
             ) : (
               <div className="p-0 w-100">
                 <SWTBenchmarkEmployeesProfilingChart
-                  swtBenchmarkEmployeesProfilingData={swtBenchmarkEmployeesProfilingData}
+                  swtBenchmarkEmployeesProfilingData={
+                    swtBenchmarkEmployeesProfilingData
+                  }
                 />
               </div>
             )}
           </div>
         </div>
 
+        {/* GST Sales Comparison Line Chart */}
         <div
           style={{
             marginTop: 32,
@@ -757,6 +726,7 @@ function RiskProfiling() {
           )}
         </div>
 
+        {/* GST Payable Vs Refundable Bar Chart */}
         <div
           style={{
             marginTop: 32,
@@ -767,7 +737,7 @@ function RiskProfiling() {
             padding: '24px 24px 8px 24px',
             minWidth: 900,
             maxWidth: 1200,
-            minHeight: 350, // <-- Add this line to keep the div height intact
+            minHeight: 350,
           }}
         >
           <div
@@ -802,6 +772,7 @@ function RiskProfiling() {
           )}
         </div>
 
+        {/* Employee on Pqayroll Line Chart */}
         <div
           style={{
             marginTop: 32,
@@ -892,46 +863,6 @@ function RiskProfiling() {
             <SwtSalariesChart data={swtSalariesComparisonData} />
           )}
         </div>
-
-        {/*cit Benchmark */}
-        {/* <div
-          style={{
-            display: 'flex',
-            gap: '30px',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div
-            style={{
-              marginTop: 32,
-              border: '1px solid #e6edff',
-              borderRadius: 16,
-              background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
-              boxShadow: '0 2px 16px 0 #e0e7ef55',
-              padding: '24px 24px 8px 24px',
-              maxWidth: '100%',
-              minWidth: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              minHeight: '500px',
-              maxHeight: '500px',
-            }}
-          >
-            {citBenchmarkProfilingLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100">
-                <CITBenchmarkProfilingChart
-                  citBenchmarkProfilingData={citBenchmarkProfilingData}
-                />
-              </div>
-            )}
-          </div>
-        </div> */}
-
       </div>
     </Layout>
   );
