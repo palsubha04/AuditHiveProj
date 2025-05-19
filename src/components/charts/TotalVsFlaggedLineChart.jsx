@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import EmployeeLineChart from './EmployeeLineChart';
+import { useState, useEffect } from 'react';
 import { Tally1 } from 'lucide-react';
 import ReactApexChart from 'react-apexcharts';
+import './charts.css'
 
 const entityTypes = ['large', 'medium', 'small', 'micro'];
 
@@ -99,27 +99,11 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
   return (
     <>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
-        <h4
-          className="mb-0 me-3 fw-bold"
-          style={{ color: "#6366F1", fontSize: "22px" }}
-        >
-         Total Taxpayers vs Risk-Flagged
-        </h4>
-        <Tally1 style={{ color: "#7c879d" }} />
-        <span
-          style={{ color: "#7c879d", fontSize: "16px", marginRight: "10px" }}
-        >
-          Filter By :{" "}
-        </span>
-
+        <span className='chart-headers'>Total Taxpayers vs Risk-Flagged</span>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          style={{
-            padding: "4px 8px",
-            borderRadius: 4,
-            border: "1px solid #ccc",
-          }}
+          className='chart-filter'
         >
           <option value="gst">GST</option>
           <option value="swt">SWT</option>

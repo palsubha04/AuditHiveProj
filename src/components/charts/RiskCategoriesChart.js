@@ -3,6 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import analyticsService from '../../services/analytics.service';
 import '../../pages/Dashboard.css';
+import './charts.css'
 
 const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
   const [loading, setLoading] = useState(false);

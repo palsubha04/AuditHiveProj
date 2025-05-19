@@ -1,6 +1,7 @@
 import { Tally1 } from 'lucide-react';
 import React, { useEffect, useState, useMemo } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import './charts.css';
 
 const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
   const [selectedCategory, setSelectedCategory] = useState('gst');
@@ -54,32 +55,10 @@ const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
     <div>
       {/* Heading and dropdown */}
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
-        <h4
-          className="mb-0 me-3 fw-bold"
-          style={{
-            color: '#05004E',
-            fontSize: '20px',
-            fontWeight: 600,
-            letterSpacing: '0px',
-            lineHeight: '32px',
-          }}
-        >
-          Frequency Of Risk Anomalies
-        </h4>
-        <Tally1 style={{ color: '#7c879d' }} />
-        <span
-          style={{ color: '#7c879d', fontSize: '16px', marginRight: '10px' }}
-        >
-          Filter By:
-        </span>
+        <span className="chart-headers">Frequency Of Risk Anomalies</span>
         <div>
           <select
-            style={{
-              marginRight: 8,
-              padding: '4px 8px',
-              borderRadius: 4,
-              border: '1px solid #ccc',
-            }}
+            className="chart-filter"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >

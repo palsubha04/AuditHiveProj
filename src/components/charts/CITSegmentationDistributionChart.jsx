@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col, Spinner } from 'react-bootstrap';
-import swtService from '../../services/swt.service';
+import citService from '../../services/cit.service';
 import "../../pages/Dashboard.css";
 
-import './charts.css'
-
-const SWTSegmentationDistributionChart = ({ startDate, endDate }) => {
+const CITSegmentationDistributionChart = ({ startDate, endDate }) => {
   const [chartData, setChartData] = useState({
     series: [],
     options: {
@@ -60,7 +58,7 @@ const SWTSegmentationDistributionChart = ({ startDate, endDate }) => {
       try {
         setLoading(true);
         setError(null);
-        const response = await swtService.getSegmentationDistribution(startDate, endDate);
+        const response = await citService.getSegmentationDistribution(startDate, endDate);
         
         // Process the response data
         const series = [
@@ -137,4 +135,4 @@ const SWTSegmentationDistributionChart = ({ startDate, endDate }) => {
   );
 };
 
-export default SWTSegmentationDistributionChart; 
+export default CITSegmentationDistributionChart; 

@@ -16,8 +16,9 @@ import { ToastContainer } from 'react-toastify';
 import { fetchDatasets } from '../slice/datasetsSlice';
 import RiskAnomalyFrequencyChart from '../components/charts/RiskAnomalyFrequencyChart';
 import { fetchRiskAnomaly } from '../slice/riskAnomalyFrequencySlice';
-import { Spinner } from 'react-bootstrap';
+import { Card, CardBody, CardHeader, Spinner } from 'react-bootstrap';
 import TopFraudRulesProfiling from '../components/charts/risk-profiling/TopFraudRulesProfiling';
+import './RiskAssessment.css'
 //import { set } from "react-datepicker/dist/date_utils";
 
 // Added by Soham - Total Tax Payer vs Risk Flagged
@@ -136,178 +137,111 @@ function RiskAssessment() {
   return (
     <Layout>
       <div className="page-container">
-        <TenureFilter
-          onFilterChange={handleFilterChange}
-          tenureOptions={yearOptions}
-        />
-        {/* <h2 className="page-title">Risk Assessment</h2> */}
-        <div className="content">
-          {/* <div style={{display: 'flex', gap: "5px"}}> */}
+        <div className='top-filter-class'>
+          <TenureFilter
+            onFilterChange={handleFilterChange}
+            tenureOptions={yearOptions}
+          />
+        </div>
 
-          <div
-            style={{
-              display: 'flex',
-              gap: '30px',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div
-              style={{
-                marginTop: 32,
-                border: '1px solid #e6edff',
-                borderRadius: 16,
-                background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
-                boxShadow: '0 2px 16px 0 #e0e7ef55',
-                padding: '24px 24px 8px 24px',
-                maxWidth: '50%',
-                minWidth: '50%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '500px',
-                maxHeight: '500px',
-              }}
-            >
-              {totalVsFlaggedTaxpayersLoading ? (
-                <Spinner animation="border" role="status" variant="primary">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              ) : (
-                <div className="p-0 w-100">
-                  <TotalVsFlaggedLineChart
-                    totalTaxPayerVsRiskFlagged={totalVsFlaggedTaxpayersData}
-                  />
-                </div>
-              )}
+        <div className='content'>
+          <div className='d-flex flex-column' style={{gap: '32px'}}>
+            <div className='d-flex' style={{gap: '32px'}}>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  {totalVsFlaggedTaxpayersLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <TotalVsFlaggedLineChart
+                        totalTaxPayerVsRiskFlagged={totalVsFlaggedTaxpayersData}
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  {riskAnomalyFrequencyLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <RiskAnomalyFrequencyChart
+                        riskAnomalyFrequencyData={riskAnomalyFrequencyData}
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
             </div>
-            <div
-              style={{
-                marginTop: 32,
-                border: '1px solid #e6edff',
-                borderRadius: 16,
-                background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
-                boxShadow: '0 2px 16px 0 #e0e7ef55',
-                padding: '24px 24px 8px 24px',
-                // maxWidth: "50%",
-                // minWidth: "50%",
-                flex: 'auto',
-                minHeight: '500px',
-                maxHeight: '500px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              {riskAnomalyFrequencyLoading ? (
-                <Spinner animation="border" role="status" variant="primary">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              ) : (
-                <div className="p-0 w-100">
-                  <RiskAnomalyFrequencyChart
-                    riskAnomalyFrequencyData={riskAnomalyFrequencyData}
-                  />
-                </div>
-              )}
+            <div className='d-flex'>
+              <Card className='chart-cards-full'>
+                <CardBody>
+                  {riskBreakdownByCategoryLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <RiskBreakdownByCategoryChart
+                        riskBreakdownByCategoryData={riskBreakdownByCategoryData}
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
             </div>
-          </div>
-          <div
-            style={{
-              marginTop: 32,
-              border: '1px solid #e6edff',
-              borderRadius: 16,
-              background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
-              boxShadow: '0 2px 16px 0 #e0e7ef55',
-              padding: '24px 24px 8px 24px',
-              minWidth: '100%',
-              maxWidth: '100%',
-              minHeight: '500px',
-              maxHeight: '500px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            {riskBreakdownByCategoryLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100">
-                <RiskBreakdownByCategoryChart
-                  riskBreakdownByCategoryData={riskBreakdownByCategoryData}
-                />
-              </div>
-            )}
-          </div>
-          <div
-            style={{
-              marginTop: 32,
-              border: '1px solid #e6edff',
-              borderRadius: 16,
-              background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
-              boxShadow: '0 2px 16px 0 #e0e7ef55',
-              padding: '24px 24px 8px 24px',
-              minWidth: '100%',
-              maxWidth: '100%',
-              minHeight: '500px',
-              maxHeight: '500px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            {riskAnalysisLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100">
-                <RiskAnalysisByIndustryChart riskData={riskAnalysisData} />
-              </div>
-            )}
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              gap: '30px',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div
-              style={{
-                marginTop: 32,
-                border: '1px solid #e6edff',
-                borderRadius: 16,
-                background: 'linear-gradient(135deg, #f1f5ff 80%, #fff 100%)',
-                boxShadow: '0 2px 16px 0 #e0e7ef55',
-                padding: '24px 24px 24px 24px',
-                maxWidth: '100%',
-                minWidth: '100%',
-                maxHeight: '530px',
-                minHeight: '530px',
-              }}
-            >
-              {topFraudRulesProfilingLoading ? (
-                <div className='d-flex h-100 justify-content-center align-items-center'>
-                  <Spinner animation="border" role="status" variant="primary">
-                    <span className="visually-hidden">Loading...</span>
-                  </Spinner>
-                </div>
-              ) : (
-                <div className="p-0 w-100 h-100">
-                  <TopFraudRulesProfiling
-                    topFraudRulesProfilingData={topFraudRulesProfilingData}
-                    handleTopFraudFilterChange={handleTopFraudFilterChange}
-                    selectedTaxType={selectedTaxType}
-                    selectedSegmentation={selectedSegmentation}
-                  />
-                </div>
-              )}
+            <div className='d-flex'>
+              <Card className='chart-cards-full'>
+                <CardBody>
+                  {riskAnalysisLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <RiskAnalysisByIndustryChart riskData={riskAnalysisData} />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            </div>
+            <div className='d-flex'>
+              <Card className='chart-cards-table'>
+                <CardBody>
+                  {topFraudRulesProfilingLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100 h-100">
+                      <TopFraudRulesProfiling
+                        topFraudRulesProfilingData={topFraudRulesProfilingData}
+                        handleTopFraudFilterChange={handleTopFraudFilterChange}
+                        selectedTaxType={selectedTaxType}
+                        selectedSegmentation={selectedSegmentation}
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
             </div>
           </div>
         </div>
-
       </div>
     </Layout >
   );
