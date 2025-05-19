@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
+import './charts.css'
 
 const TaxpayersRiskChart = ({ data }) => {
   // Prepare data for the chart from the new data structure

@@ -155,6 +155,7 @@ import { Card, Spinner } from 'react-bootstrap';
 import ReactApexChart from 'react-apexcharts';
 import gstService from '../../services/gst.service';
 import "../../pages/Dashboard.css";
+import './charts.css'
 
 const COLORS = {
   micro: '#FFD12CB2',

@@ -1,10 +1,12 @@
 .header {
   position: fixed;
   top: 0;
-  left: 20.357rem; /* 285px */
+  left: 20.357rem;
+  /* 285px */
   right: 0;
-  background: white;
-  padding: 2.143rem 2.857rem; /* 30px 40px */
+  background: #fff;
+  padding: 50px 50px 20px 50px;
+  /* 30px 40px */
   z-index: 1000;
 }
 
@@ -19,15 +21,18 @@
 }
 
 .header-titles h1 {
-  margin: 0;
-  font-size: 2rem; /* 28px */
-  color: black;
-  font-weight: 600;
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 150%;
+  letter-spacing: 0%;
+color: #05004E;
 }
 
 .header-titles p {
   margin: 0;
-  font-size: 1.143rem; /* 16px */
+  font-size: 1.143rem;
+  /* 16px */
   color: #7C8DB5;
 }
 
@@ -61,8 +66,10 @@
 }
 
 .dropdown-arrow {
-  font-size: 1rem; /* 14px */
-  margin-left: 0.286rem; /* 4px */
+  font-size: 1rem;
+  /* 14px */
+  margin-left: 0.286rem;
+  /* 4px */
 }
 
 .user-dropdown::after {
@@ -74,4 +81,4 @@
   display: flex;
   align-items: center;
   color: var(--color-primary);
-} 
+}

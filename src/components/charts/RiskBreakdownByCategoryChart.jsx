@@ -1,6 +1,7 @@
 import { Tally1 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import './charts.css'
 
 const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
   //console.log("data received in RiskBreakdownByCategoryChart", riskBreakdownByCategoryData);
@@ -87,18 +88,11 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
         alignItems: 'center',
         marginBottom: 16
       }}>
-        <h4 className="mb-0 me-3 fw-bold" style={{ color: '#6366F1', fontSize: '22px'}}>
-          Risk Breakdown By Category
-        </h4>
-        <Tally1 style={{color : '#7c879d'}}/>
-        <span style={{color: "#7c879d", fontSize:'16px', marginRight : "10px"}}>Filter By : </span>
+        <span className='chart-headers'>Risk Breakdown By Category</span>
         <div>
-          <select style={{
-            marginRight: 8,
-            padding: '4px 8px',
-            borderRadius: 4,
-            border: '1px solid #ccc'
-          }} onChange={(e) => changeCategoryData(e.target.value)}>
+          <select 
+            className='chart-filter'
+            onChange={(e) => changeCategoryData(e.target.value)}>
             <option value="gst">GST</option>
             <option value="swt">SWT</option>
             <option value="cit">CIT</option>
