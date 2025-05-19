@@ -3,6 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col } from 'react-bootstrap';
 import gstService from '../../services/gst.service';
 import '../../pages/Dashboard.css';
+import './charts.css'
 
 const SalesComparison = ({ startDate, endDate }) => {
   const [chartData, setChartData] = useState({

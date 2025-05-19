@@ -1,5 +1,6 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
+import './charts.css'
 
 // Risk Breakdown Data
 const riskData = {

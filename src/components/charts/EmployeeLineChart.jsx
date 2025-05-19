@@ -1,5 +1,6 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
+import './charts.css'
 
 const EmployeeLineChart = ({ data }) => {
   // let employeeData = {};
