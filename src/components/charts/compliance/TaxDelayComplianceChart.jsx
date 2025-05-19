@@ -81,23 +81,26 @@ const TaxDelayComplianceChart = ({ riskData }) => {
   
     const series = [filterData?.delayed || 0, filterData?.non_delayed || 0];
     const options = {
-        chart: {
-          width: 380,
-          type: 'pie',
-        },
-        labels: ['Delayed', 'Non Delayed'],
-        responsive: [{
+      chart: {
+        width: 380,
+        type: "pie",
+        toolbar: { show: true },
+      },
+      labels: ["Delayed", "Non Delayed"],
+      responsive: [
+        {
           breakpoint: 480,
           options: {
             chart: {
-              width: 200
+              width: 200,
             },
             legend: {
-              position: 'bottom'
-            }
-          }
-        }]
-      }
+              position: "bottom",
+            },
+          },
+        },
+      ],
+    };
 
   return (
     <Card className="mb-4 box-background">

@@ -50,7 +50,7 @@ function Header() {
   let headerTitle = `Welcome Back, ${getFirstName()}`;
   let headerSubtitle = 'Here is the information about all your orders';
   if (location.pathname === '/compliance') {
-    headerTitle = 'Consolidated Profile';
+    headerTitle = 'Compliance';
     headerSubtitle = '';
   } else if (location.pathname === '/risk-assessment') {
     headerTitle = 'Risk Assessment';

@@ -1,4 +1,4 @@
-import { Tally1 } from "lucide-react";
+import { Download, Tally1 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { Button, Card, Col, Row } from "react-bootstrap";
@@ -102,6 +102,7 @@ const TaxFillingComplianceChart = () => {
     chart: {
       type: "bar",
       height: 350,
+      toolbar: { show: true },
     },
     plotOptions: {
       bar: {
@@ -215,8 +216,15 @@ const TaxFillingComplianceChart = () => {
                 <option value="swt">SWT</option>
                 <option value="cit">CIT</option>
               </select>
-              <Button onClick={handleDownload} className="mx-2">
-                Download Non Filing CSV
+              <Button
+                onClick={handleDownload}
+                className="mx-2"
+                tooltip="Download Non-Filing CSV"
+                variant="outline-primary"
+                size="sm"
+                title="Download Non-Filing CSV"
+              >
+                <Download />
               </Button>
             </div>
           </Col>
