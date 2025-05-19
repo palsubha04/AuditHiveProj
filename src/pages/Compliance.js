@@ -2,17 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import { FixedSizeList as List } from 'react-window';
-import EmployeeLineChart from '../components/charts/EmployeeLineChart';
-import MonthlySalesTaxSummaryChart from '../components/charts/MonthlySalesTaxSummaryChart';
-import SwtSalariesChart from '../components/charts/SwtSalariesChart';
-import TaxpayersRiskChart from '../components/charts/TaxpayersRiskChart';
 import TenureFilter from '../components/filters/TenureFilter';
 import Layout from '../components/Layout';
 import { fetchDatasets } from '../slice/datasetsSlice';
-import { fetchSalesComparison } from '../slice/salesComparisonSlice';
-import { fetchEmployeeOnPayroll } from '../slice/employeeOnPayrollSlice';
-import { fetchGstPayableVsRefundable } from '../slice/gstPayableVsRefundableSlice';
-import { fetchswtSalariesComparison } from '../slice/swtSalariesComparisonSlice';
 import { fetchtaxPayersDetails } from '../slice/taxPayersDetailsSlice';
 import { ChevronDown } from 'lucide-react';
 import TaxPayersGrid from '../components/TaxPayersGrid';
@@ -30,19 +22,6 @@ const Compliance = () => {
     end_date: null,
   });
   const { data, loading, error } = useSelector((state) => state?.datasets);
-  const { monthlySalesData, monthlySalesLoading, monthlySalesError } =
-    useSelector((state) => state?.salesComparison);
-  const { payrollData, payrollLoading, payrollError } = useSelector(
-    (state) => state?.employeeOnPayroll
-  );
-  const { gstData, gstLoading, gstError } = useSelector(
-    (state) => state?.gstPayableVsRefundable
-  );
-  const {
-    swtSalariesComparisonData,
-    swtSalariesComparisonLoading,
-    swtSalariesComparisonError,
-  } = useSelector((state) => state?.swtSalariesComparison);
   const { taxPayersData, taxPayersLoading, taxPayersError } = useSelector(
     (state) => state?.taxPayersDetails
   );
@@ -55,65 +34,17 @@ const Compliance = () => {
     }
   }, [data, dispatch]);
 
-  useEffect(() => {
-    if (!monthlySalesData) {
-      dispatch(
-        fetchSalesComparison({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
-        })
-      );
-    }
-  }, [monthlySalesData, dispatch]);
-
-  useEffect(() => {
-    if (!payrollData) {
-      dispatch(
-        fetchEmployeeOnPayroll({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
-        })
-      );
-    }
-  }, [payrollData, dispatch]);
-
-  useEffect(() => {
-    if (!gstData) {
-      dispatch(
-        fetchGstPayableVsRefundable({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
-        })
-      );
-    }
-  }, [gstData, dispatch]);
-
-  useEffect(() => {
-    if (!swtSalariesComparisonData) {
-      dispatch(
-        fetchswtSalariesComparison({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
-        })
-      );
-    }
-  }, [swtSalariesComparisonData, dispatch]);
-
-  useEffect(() => {
-    if (!taxPayersData) {
-      dispatch(
-        fetchtaxPayersDetails({
-          start_date: '01-01-2020',
-          end_date: '31-12-2020',
-          tin: '500000009',
-        })
-      );
-    }
-  }, [taxPayersData, dispatch]);
+  // useEffect(() => {
+  //   if (!taxPayersData) {
+  //     dispatch(
+  //       fetchtaxPayersDetails({
+  //         start_date: '01-01-2020',
+  //         end_date: '31-12-2020',
+  //         tin: '500000009',
+  //       })
+  //     );
+  //   }
+  // }, [taxPayersData, dispatch]);
 
   const tins = data?.tins || [];
   const yearOptions =
@@ -133,41 +64,6 @@ const Compliance = () => {
 
   const handleSearch = () => {
     // Implement search logic here
-    dispatch(
-      fetchSalesComparison({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-        tin: selectedTIN,
-      })
-    );
-    dispatch(
-      fetchEmployeeOnPayroll({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-        tin: selectedTIN,
-      })
-    );
-    dispatch(
-      fetchGstPayableVsRefundable({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-        tin: selectedTIN,
-      })
-    );
-    dispatch(
-      fetchswtSalariesComparison({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-        tin: selectedTIN,
-      })
-    );
-    dispatch(
-      fetchtaxPayersDetails({
-        start_date: dateRange.start_date,
-        end_date: dateRange.end_date,
-        tin: selectedTIN,
-      })
-    );
   };
 
   useEffect(() => {
@@ -189,7 +85,7 @@ const Compliance = () => {
   useEffect(() => {
     if (data?.tins && data.tins.length > 0 && !selectedTIN) {
       // Ensure selectedTIN is set only once initially
-      setSelectedTIN(data.tins[0]);
+      setSelectedTIN(data.tins[data.tins.length - 1]);
     }
   }, [data?.tins, selectedTIN]); // Added selectedTIN to dependency array
 
@@ -314,188 +210,24 @@ const Compliance = () => {
               Search
             </button>
           </div>
-        </div>
-
-        {/* Chart Card Section */}
-        <div
-          style={{
-            marginTop: 32,
-            border: '1px solid #f1f5f9',
-            borderRadius: 18,
-            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #e0e7ef55',
-            padding: '24px 24px 8px 24px',
-            minWidth: 900,
-            maxWidth: 1200,
-            minHeight: 350, // <-- Add this line to keep the div height intact
-          }}
-        >
           <div
             style={{
-              fontWeight: 700,
-              fontSize: 20,
-              color: '#6366f1',
-              letterSpacing: 1,
-              minHeight: 28,
-              marginBottom: 18,
-              display: 'flex',
-              alignItems: 'flex-start',
+              marginTop: 24,
+              padding: '20px',
+              background: '#f1f5ff',
+              borderRadius: '12px',
+              textAlign: 'center',
+              fontWeight: 600,
+              color: '#2563eb',
+              fontSize: '1.2rem',
+              boxShadow: '0 2px 8px 0 #e0e7ef55',
+              maxWidth: 400,
+              marginLeft: 'auto',
+              marginRight: 'auto',
             }}
           >
-            GST Sales Comparison
+            New Page View Will Be coming soon
           </div>
-          {monthlySalesLoading ? (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 250,
-              }}
-            >
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
-            <MonthlySalesTaxSummaryChart salesData={monthlySalesData} />
-          )}
-        </div>
-
-        <div
-          style={{
-            marginTop: 32,
-            border: '1px solid #f1f5f9',
-            borderRadius: 16,
-            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #e0e7ef55',
-            padding: '24px 24px 8px 24px',
-            minWidth: 900,
-            maxWidth: 1200,
-            minHeight: 350, // <-- Add this line to keep the div height intact
-          }}
-        >
-          <div
-            style={{
-              fontWeight: 700,
-              fontSize: 20,
-              color: '#6366f1',
-              letterSpacing: 1,
-              minHeight: 28,
-              marginBottom: 18,
-              display: 'flex',
-              alignItems: 'flex-start',
-            }}
-          >
-            GST Payable vs GST refundable
-          </div>
-          {gstLoading ? (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 250,
-              }}
-            >
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
-            <TaxpayersRiskChart data={gstData} />
-          )}
-        </div>
-
-        <div
-          style={{
-            marginTop: 32,
-            border: '1px solid #f1f5f9',
-            borderRadius: 16,
-            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #e0e7ef55',
-            padding: '24px 24px 8px 24px',
-            minWidth: 900,
-            maxWidth: 1200,
-            minHeight: 350, // <-- Add this line to keep the div height intact
-          }}
-        >
-          <div
-            style={{
-              fontWeight: 700,
-              fontSize: 20,
-              color: '#6366f1',
-              letterSpacing: 1,
-              minHeight: 28,
-              marginBottom: 18,
-              display: 'flex',
-              alignItems: 'flex-start',
-            }}
-          >
-            Employees on Payroll vs Paid SWT
-          </div>
-          {payrollLoading ? (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 250,
-              }}
-            >
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
-            <EmployeeLineChart data={payrollData} />
-          )}
-        </div>
-
-        {/* --- Line & SWT Chart Row --- */}
-        <div
-          style={{
-            marginTop: 32,
-            border: '1px solid #f1f5f9',
-            borderRadius: 16,
-            background: 'linear-gradient(135deg, #f1f5ff 0%, #fff 100%)',
-            boxShadow: '0 2px 16px 0 #e0e7ef55',
-            padding: '24px 24px 8px 24px',
-            minWidth: 900,
-            maxWidth: 1200,
-            minHeight: 350, // <-- Add this line to keep the div height intact
-          }}
-        >
-          <div
-            style={{
-              fontWeight: 700,
-              fontSize: 20,
-              color: '#6366f1',
-              letterSpacing: 1,
-              minHeight: 28,
-              marginBottom: 18,
-              display: 'flex',
-              alignItems: 'flex-start',
-            }}
-          >
-            SWT Salaries Comparison
-          </div>
-          {swtSalariesComparisonLoading ? (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 250,
-              }}
-            >
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
-            <SwtSalariesChart data={swtSalariesComparisonData} />
-          )}
         </div>
 
         {/* --- Dat Grid Row --- */}
