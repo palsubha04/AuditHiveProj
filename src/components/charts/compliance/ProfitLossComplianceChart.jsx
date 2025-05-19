@@ -76,7 +76,7 @@ const sampleData = {
 
 const entityTypes = ["large", "medium", "small", "micro"];
 
-const ProfitLossComplianceChart = ({ totalTaxPayerVsRiskFlagged }) => {
+const ProfitLossComplianceChart = ({ x }) => {
   console.log("TotalVsFlaggedLineChart from chart", sampleData);
   const [selectedCategory, setSelectedCategory] = useState("gst");
   const [chartSeries, setChartSeries] = useState([]);

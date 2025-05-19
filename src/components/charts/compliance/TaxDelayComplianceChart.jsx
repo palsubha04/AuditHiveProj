@@ -23,84 +23,84 @@ const sampleData = {
       total: 500,
     },
     micro: {
-      filing: 4000,
-      non_filing: 6000,
+      delayed: 400,
+      non_delayed: 50,
     },
   },
   swt: {
     large: {
-      filing: 420,
-      non_filing: 80,
+      delayed: 400,
+      non_delayed: 150,
     },
     medium: {
-      filing: 870,
-      non_filing: 330,
+      delayed: 400,
+      non_delayed: 120,
     },
     small: {
-      filing: 2000,
-      non_filing: 1500,
+      delayed: 400,
+      non_delayed: 70,
     },
     micro: {
-      filing: 3700,
-      non_filing: 6300,
+      delayed: 400,
+      non_delayed: 53,
     },
   },
   cit: {
     large: {
-      filing: 440,
-      non_filing: 60,
+      delayed: 420,
+      non_delayed: 50,
     },
     medium: {
-      filing: 880,
-      non_filing: 320,
+      delayed: 400,
+      non_delayed: 150,
     },
     small: {
-      filing: 2050,
-      non_filing: 1450,
+      delayed: 400,
+      non_delayed: 520,
     },
     micro: {
-      filing: 3900,
-      non_filing: 6100,
+      delayed: 400,
+      non_delayed: 150,
     },
   },
 };
 
-const TaxDelayComplianceChart = ({ riskData }) => {
+const TaxDelayComplianceChart = ({ x }) => {
   const [selectedCategory, setSelectedCategory] = useState("gst");
   const [selectedSegment, setSelectedSegment] = useState("large");
   const [filterData, setFilterData] = useState({});
 
-   useEffect(() => {
-      if (sampleData && selectedCategory && selectedSegment) {
-        const data = sampleData[selectedCategory]?.[selectedSegment];
-        setFilterData(data || {});
-      } else {
-        setFilterData({});
-      }
-    }, [sampleData, selectedCategory, selectedSegment]);
-  
-    const series = [filterData?.delayed || 0, filterData?.non_delayed || 0];
-    const options = {
-      chart: {
-        width: 380,
-        type: "pie",
-        toolbar: { show: true },
-      },
-      labels: ["Delayed", "Non Delayed"],
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-            },
-            legend: {
-              position: "bottom",
-            },
+  useEffect(() => {
+    if (sampleData && selectedCategory && selectedSegment) {
+      const data = sampleData[selectedCategory]?.[selectedSegment];
+      setFilterData(data || {});
+    } else {
+      setFilterData({});
+    }
+  }, [sampleData, selectedCategory, selectedSegment]);
+
+  const series = [filterData?.delayed || 0, filterData?.non_delayed || 0];
+  const options = {
+    chart: {
+      width: 380,
+      type: "pie",
+      toolbar: { show: true },
+    },
+    labels: ["Delayed", "Non Delayed"],
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+          },
+          legend: {
+            position: "bottom",
           },
         },
-      ],
-    };
+      },
+    ],
+  };
 
   return (
     <Card className="mb-4 box-background">
@@ -146,14 +146,14 @@ const TaxDelayComplianceChart = ({ riskData }) => {
                   padding: "4px 8px",
                   borderRadius: 4,
                   border: "1px solid #ccc",
-                  marginRight:"5px"
+                  marginRight: "5px",
                 }}
               >
                 <option value="gst">GST</option>
                 <option value="swt">SWT</option>
                 <option value="cit">CIT</option>
               </select>
-            
+
               <select
                 style={{
                   padding: "4px 8px",

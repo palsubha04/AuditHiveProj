@@ -25,6 +25,7 @@ const sampleData = {
     micro: {
       filing: 4000,
       non_filing: 6000,
+      taxpayers: ["M007", "M008", "M009"],
     },
   },
   swt: {
@@ -36,37 +37,44 @@ const sampleData = {
     medium: {
       filing: 870,
       non_filing: 330,
+      taxpayers: ["M007", "M008", "M009"],
     },
     small: {
       filing: 2000,
       non_filing: 1500,
+      taxpayers: ["M007", "M008", "M009"],
     },
     micro: {
       filing: 3700,
       non_filing: 6300,
+      taxpayers: ["M007", "M008", "M009"],
     },
   },
   cit: {
     large: {
       filing: 440,
       non_filing: 60,
+      taxpayers: ["M007", "M008", "M009"],
     },
     medium: {
       filing: 880,
       non_filing: 320,
+      taxpayers: ["M007", "M008", "M009"],
     },
     small: {
       filing: 2050,
       non_filing: 1450,
+      taxpayers: ["M007", "M008", "M009"],
     },
     micro: {
       filing: 3900,
       non_filing: 6100,
+      taxpayers: ["M007", "M008", "M009"],
     },
   },
 };
 
-const TaxFillingComplianceChart = () => {
+const TaxFillingComplianceChart = ({ x }) => {
   const [filterData, setFilterData] = useState(
     sampleData ? sampleData["gst"] ?? {} : {}
   );
@@ -121,7 +129,9 @@ const TaxFillingComplianceChart = () => {
       colors: ["transparent"],
     },
     xaxis: {
-      categories: categories,
+      categories: categories.map(
+        (cat) => cat.charAt(0).toUpperCase() + cat.slice(1)
+      ),
     },
     yaxis: {
       title: {

@@ -99,13 +99,13 @@ const Compliance = () => {
 
           <div className="row">
             <div className="col-12 mb-2">
-              <TaxFillingComplianceChart />
+              <TaxFillingComplianceChart sampleData={taxFilingComplianceData}/>
             </div>
             <div className="col-6 mb-2">
-              <TaxDelayComplianceChart />
+              <TaxDelayComplianceChart sampleData={taxDelayComplianceData}/>
             </div>
             <div className="col-6 mb-2">
-              <ProfitLossComplianceChart />
+              <ProfitLossComplianceChart sampleData={profitLossComplianceData}/>
             </div>
           </div>
         </Container>

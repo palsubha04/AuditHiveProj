@@ -57,44 +57,28 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
     let today = new Date();
     let start = new Date();
 
-    if (options === DEFAULT_TENURE_OPTIONS) {
-      if (location.pathname === "/compliance" || location.pathname === "/cit") {
-        switch (selectedTenure) {
-          case "1y":
-            start.setFullYear(today.getFullYear() - 1);
-            break;
-          case "3y":
-            start.setFullYear(today.getFullYear() - 3);
-            break;
-          case "6y":
-            start.setFullYear(today.getFullYear() - 6);
-            break;
-          default:
-            start.setMonth(today.getMonth() - 1);
-        }
-      } else {
-        switch (selectedTenure) {
-          case "1m":
-            start.setMonth(today.getMonth() - 1);
-            break;
-          case "3m":
-            start.setMonth(today.getMonth() - 3);
-            break;
-          case "6m":
-            start.setMonth(today.getMonth() - 6);
-            break;
-          case "1y":
-            start.setFullYear(today.getFullYear() - 1);
-            break;
-          case "3y":
-            start.setFullYear(today.getFullYear() - 3);
-            break;
-          case "6y":
-            start.setFullYear(today.getFullYear() - 6);
-            break;
-          default:
-            start.setMonth(today.getMonth() - 1);
-        }
+    if (!tenureOptions) {
+      switch (selectedTenure) {
+        case "1m":
+          start.setMonth(today.getMonth() - 1);
+          break;
+        case "3m":
+          start.setMonth(today.getMonth() - 3);
+          break;
+        case "6m":
+          start.setMonth(today.getMonth() - 6);
+          break;
+        case "1y":
+          start.setFullYear(today.getFullYear() - 1);
+          break;
+        case "3y":
+          start.setFullYear(today.getFullYear() - 3);
+          break;
+        case "6y":
+          start.setFullYear(today.getFullYear() - 6);
+          break;
+        default:
+          start.setMonth(today.getMonth() - 1);
       }
     } else {
       // Year-based options
