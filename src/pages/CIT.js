@@ -5,6 +5,10 @@ import TenureFilter from '../components/filters/TenureFilter';
 import CITSummaryCards from '../components/summary/CITSummaryCards';
 import './Dashboard.css';
 import TotalAmountByIncomeType from '../components/charts/TotalAmountByIncomeType';
+import TotalAmountByExpenseType from '../components/charts/TotalAmountByExpenseType';
+import RiskCategoriesChart from '../components/charts/RiskCategoriesChart';
+import CITSegmentationDistributionChart from '../components/charts/CITSegmentationDistributionChart';
+import CITTaxRecordsTable from '../components/tables/TaxRecordsTableCIT';
 
 function CIT() {
   const [dateRange, setDateRange] = useState({
@@ -30,33 +34,35 @@ function CIT() {
         
         <div className="row">
           <div className="col-12 mb-4">
-            <TotalAmountByIncomeType/>
+            <TotalAmountByIncomeType startDate={dateRange.start_date}
+                endDate={dateRange.end_date}/>
             {/* <SalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
           <div className="col-12 mb-4">
-            Chart 2
+            <TotalAmountByExpenseType startDate={dateRange.start_date}
+                endDate={dateRange.end_date}/>
             {/* <CITPayableVsRefundable startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
           <div className="row mb-4">
             <div className="col-md-6">
-              Chart 3
-              {/* <SegmentationDistributionChart 
+              
+              <CITSegmentationDistributionChart
                 startDate={dateRange.start_date} 
                 endDate={dateRange.end_date} 
-              /> */}
+              /> 
             </div>
             <div className="col-md-6">
-              Chart 4
-              {/* <RiskCategoriesChart
+              
+          <RiskCategoriesChart
                 startDate={dateRange.start_date}
                 endDate={dateRange.end_date}
                 taxType="cit"
-              /> */}
+              /> 
             </div>
           </div>
           <div className="col-12">
-            CIT Table
-            {/* <TaxRecordsTable startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
+            
+            <CITTaxRecordsTable startDate={dateRange.start_date} endDate={dateRange.end_date} /> 
           </div>
         </div>
       </Container>

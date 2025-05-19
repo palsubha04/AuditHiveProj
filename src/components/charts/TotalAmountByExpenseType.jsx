@@ -3,6 +3,7 @@ import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import Chart from 'react-apexcharts';
 import citService from '../../services/cit.service';
 
+
 var data = [
     { source: "718.TAXABLE INCOME", total_amount: 1589320000.0 },
     { source: "710.Current Year Profit / Loss", total_amount: 1457600000.0 },
@@ -21,7 +22,7 @@ var data = [
     { source: "750.Plus Additional Profits Ta", total_amount: 1200000.0 }
   ];
 
-const TotalAmountByIncomeType = ({ startDate, endDate }) => {
+const TotalAmountByExpenseType = ({ startDate, endDate }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
     const chartOptions = {
@@ -40,14 +41,14 @@ const TotalAmountByIncomeType = ({ startDate, endDate }) => {
           enabled: false
         },
         xaxis: {
-          title: {
-            text: 'Amount (in Billion)',
-          },
-          labels: {
-            formatter: (val) => `${(val / 1e9).toFixed(0)}B`
-            //formatter: (val) => `${val.toLocaleString()}`
-            
-          }
+            title: {
+                text: 'Amount (in Billion)',
+              },
+              labels: {
+                formatter: (val) => `${(val / 1e9).toFixed(0)}B`
+                //formatter: (val) => `${val.toLocaleString()}`
+                
+              }
         },
         yaxis: {
           labels: {
@@ -59,11 +60,10 @@ const TotalAmountByIncomeType = ({ startDate, endDate }) => {
         tooltip: {
           y: {
             formatter: (val) => `${val.toLocaleString()}`
-            
           }
         },
         title: {
-          text: 'Income Types Breakdown',
+          text: 'Expense Types Breakdown',
           align: 'center'
         }
       };
@@ -79,12 +79,12 @@ const TotalAmountByIncomeType = ({ startDate, endDate }) => {
           try {
             setLoading(true);
             setError(null);
-            const response = await citService.getTotalAmountByIncomeType(startDate, endDate);
+            const response = await citService.getTotalAmountByExpenseType(startDate, endDate);
             var chart_Data = response.records
             var chartSeries = [{
                 name: 'Total Amount',
                 data: chart_Data.map(item => ({
-                  x: item.source,
+                  x: item.expense_type,
                   y: item.total_amount
                 }))
               }]
@@ -133,12 +133,14 @@ const TotalAmountByIncomeType = ({ startDate, endDate }) => {
           </Card>
         );
       }
+      
+
   return (
     <Card className="mb-4 box-background">
       <Card.Body>
         <Row className="mb-4">
           <Col>
-            <h5 className="card-title">Total Amount By Income Type</h5>
+            <h5 className="card-title">Total Amount By Expense Type</h5>
           </Col>
         </Row>
         <Chart options={chartData.options} series={chartData.series} type="bar" height={600} />
@@ -147,4 +149,4 @@ const TotalAmountByIncomeType = ({ startDate, endDate }) => {
   )
 }
 
-export default TotalAmountByIncomeType
+export default TotalAmountByExpenseType

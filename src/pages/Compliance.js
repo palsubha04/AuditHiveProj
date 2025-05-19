@@ -6,10 +6,11 @@ import TenureFilter from '../components/filters/TenureFilter';
 import Layout from '../components/Layout';
 import { fetchDatasets } from '../slice/datasetsSlice';
 import { fetchtaxPayersDetails } from '../slice/taxPayersDetailsSlice';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Download } from 'lucide-react';
 import TaxPayersGrid from '../components/TaxPayersGrid';
 import { Spinner } from 'react-bootstrap';
 import './Compliance.css';
+import DownloadCSV from '../components/test';
 
 const Compliance = () => {
   const dispatch = useDispatch();
@@ -227,6 +228,7 @@ const Compliance = () => {
             }}
           >
             New Page View Will Be coming soon
+            <DownloadCSV />
           </div>
         </div>
 
