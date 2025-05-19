@@ -1,6 +1,7 @@
 import { Tally1 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
+import './charts.css'
 
 const riskLevels = [
   "Critical Risk",
@@ -146,26 +147,11 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
-        <h4
-          className="mb-0 me-3 fw-bold"
-          style={{ color: "#6366F1", fontSize: "22px" }}
-        >
-          Risk Analysis By Industry
-        </h4>
-        <Tally1 style={{ color: "#7c879d" }} />
-        <span
-          style={{ color: "#7c879d", fontSize: "16px", marginRight: "10px" }}
-        >
-          Filter By :{" "}
-        </span>
+        <span className='chart-headers'>Risk Analysis By Industry</span>
+        
         <div>
           <select
-            style={{
-              marginRight: 8,
-              padding: "4px 8px",
-              borderRadius: 4,
-              border: "1px solid #ccc",
-            }}
+            className='chart-filter'
             value={selectedCategory}
             onChange={(e) => {
               const newCategory = e.target.value;
@@ -182,18 +168,9 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
                 </option>
               ))}
           </select>
-          <span
-            style={{ color: "#7c879d", fontSize: "16px", marginRight: "5px" }}
-          >
-            and
-          </span>
+          <span className='mx-2' style={{ color: '#7c879d', fontSize: '16px'}}>and</span>
           <select
-            style={{
-              padding: "4px 8px",
-              borderRadius: 4,
-              border: "1px solid #ccc",
-              width: "20rem",
-            }}
+            className='chart-filter'
             value={selectedIndustry}
             onChange={(e) => setSelectedIndustry(e.target.value)}
             disabled={!selectedCategory}

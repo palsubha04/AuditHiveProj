@@ -4,6 +4,8 @@ import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import swtService from '../../services/swt.service';
 import "../../pages/Dashboard.css";
 
+import './charts.css'
+
 const SWTSegmentationDistributionChart = ({ startDate, endDate }) => {
   const [chartData, setChartData] = useState({
     series: [],
