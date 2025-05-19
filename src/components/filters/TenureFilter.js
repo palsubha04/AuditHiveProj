@@ -4,19 +4,27 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { useLocation } from 'react-router-dom';
 
-const DEFAULT_TENURE_OPTIONS = [
-  { label: 'Past 1 Month', value: '1m' },
-  { label: 'Past 3 Months', value: '3m' },
-  { label: 'Past 6 Months', value: '6m' },
-  { label: 'Past 1 Year', value: '1y' },
-  { label: 'Past 3 Years', value: '3y' },
-  { label: 'Past 6 Years', value: '6y' },
-  { label: 'Custom Range', value: 'custom' }
-];
+
 
 function TenureFilter({ onFilterChange, tenureOptions }) {
   // Memoize options to avoid unnecessary re-renders
+  var DEFAULT_TENURE_OPTIONS = [
+    { label: "Past 1 Month", value: "1m" },
+    { label: "Past 3 Months", value: "3m" },
+    { label: "Past 6 Months", value: "6m" },
+    { label: "Past 1 Year", value: "1y" },
+    { label: "Past 3 Years", value: "3y" },
+    { label: "Past 6 Years", value: "6y" },
+    { label: "Custom Range", value: "custom" },
+  ];
+  const location = useLocation();
+  console.log("Location:", location.pathname);
+  if (location.pathname === "/compliance" || location.pathname === "/cit") {
+    DEFAULT_TENURE_OPTIONS.splice(0, 3);
+  }
+
   const options = useMemo(
     () => tenureOptions || DEFAULT_TENURE_OPTIONS,
     [tenureOptions]
@@ -49,24 +57,24 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
     let today = new Date();
     let start = new Date();
 
-    if (options === DEFAULT_TENURE_OPTIONS) {
+    if (!tenureOptions) {
       switch (selectedTenure) {
-        case '1m':
+        case "1m":
           start.setMonth(today.getMonth() - 1);
           break;
-        case '3m':
+        case "3m":
           start.setMonth(today.getMonth() - 3);
           break;
-        case '6m':
+        case "6m":
           start.setMonth(today.getMonth() - 6);
           break;
-        case '1y':
+        case "1y":
           start.setFullYear(today.getFullYear() - 1);
           break;
-        case '3y':
+        case "3y":
           start.setFullYear(today.getFullYear() - 3);
           break;
-        case '6y':
+        case "6y":
           start.setFullYear(today.getFullYear() - 6);
           break;
         default:
