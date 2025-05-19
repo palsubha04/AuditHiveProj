@@ -133,9 +133,8 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-      <label style={{ fontWeight: 500, marginRight: 8, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-        <FontAwesomeIcon icon={faCalendarAlt} style={{ marginRight: 6 }} />
+    <div className='border-end pe-2' style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <label style={{ fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
         Select Tenure
       </label>
       <Form.Select

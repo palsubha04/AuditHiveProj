@@ -3,6 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import swtService from '../../services/swt.service';
 import "../../pages/Dashboard.css";
+import './charts.css'
 
 const SWTSalesComparison = ({ startDate, endDate }) => {
   const [chartData, setChartData] = useState({

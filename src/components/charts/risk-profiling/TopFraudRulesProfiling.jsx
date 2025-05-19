@@ -66,26 +66,11 @@ const TopFraudRulesProfiling = ({
   return (
     <div className="d-flex h-100 flex-column">
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
-        <h4
-          className="mb-0 me-3 fw-bold"
-          style={{ color: '#6366F1', fontSize: '22px' }}
-        >
-          Top 10 Fraud Rules
-        </h4>
-        <Tally1 style={{ color: '#7c879d' }} />
-        <span
-          style={{ color: '#7c879d', fontSize: '16px', marginRight: '10px' }}
-        >
-          Filter By :{' '}
-        </span>
+        <span className='chart-headers'>Top 10 Fraud Rules</span>
+        
         <div>
           <select
-            style={{
-              marginRight: 8,
-              padding: '4px 8px',
-              borderRadius: 4,
-              border: '1px solid #ccc',
-            }}
+            className='chart-filter'
             value={selectedTaxType}
             onChange={(e) => {
               const newCategory = e.target.value;
@@ -100,18 +85,9 @@ const TopFraudRulesProfiling = ({
                 </option>
               ))}
           </select>
-          <span
-            style={{ color: '#7c879d', fontSize: '16px', marginRight: '5px' }}
-          >
-            and
-          </span>
+          <span className='mx-2' style={{ color: '#7c879d', fontSize: '16px'}}>and</span>
           <select
-            style={{
-              padding: '4px 8px',
-              borderRadius: 4,
-              border: '1px solid #ccc',
-              width: '10rem',
-            }}
+            className='chart-filter'
             value={selectedSegmentation}
             onChange={(e) => {
               //setSelectedSegmentation(e.target.value);
