@@ -6,7 +6,7 @@ import TenureFilter from '../components/filters/TenureFilter';
 import Layout from '../components/Layout';
 import { fetchDatasets } from '../slice/datasetsSlice';
 import { fetchtaxPayersDetails } from '../slice/taxPayersDetailsSlice';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Download } from 'lucide-react';
 import TaxPayersGrid from '../components/TaxPayersGrid';
 import { Container, Spinner } from 'react-bootstrap';
 import './Compliance.css';
