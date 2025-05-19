@@ -23,13 +23,13 @@
 //     <Layout>
 //       <Container fluid>
 //         <h1 className="mb-4">GST Analytics</h1>
-        
+
 //         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
 //           <TenureFilter onFilterChange={handleFilterChange} />
 //         </div>
-        
+
 //         <GSTSummaryCards startDate={dateRange.start_date} endDate={dateRange.end_date} />
-        
+
 //         <div className="row">
 //           <div className="col-12 mb-4">
 //             <SalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} />
@@ -78,15 +78,20 @@ function GST() {
   return (
     <Layout>
       <Container fluid>
-        <h1 className="mb-4">GST Analytics</h1>
-        
-        {/* <TenureFilter onFilterChange={handleFilterChange} /> */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
-          <TenureFilter onFilterChange={handleFilterChange} />
-         </div>
-        
+        {/* <h1 className="mb-4">GST Analytics</h1> */}
+        <div className='top-filter-class'>
+          <TenureFilter
+            onFilterChange={handleFilterChange}
+          />
+          <div className='d-flex ps-2 gap-2 justify-center align-items-center'>
+            <span>{dateRange.start_date}</span>
+            <span>to</span>
+            <span>{dateRange.end_date}</span>
+          </div>
+        </div>
+
         <GSTSummaryCards startDate={dateRange.start_date} endDate={dateRange.end_date} />
-        
+
         <div className="row">
           <div className="col-12 mb-4">
             <SalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} />
@@ -96,9 +101,9 @@ function GST() {
           </div>
           <div className="row mb-4">
             <div className="col-md-6">
-              <SegmentationDistributionChart 
-                startDate={dateRange.start_date} 
-                endDate={dateRange.end_date} 
+              <SegmentationDistributionChart
+                startDate={dateRange.start_date}
+                endDate={dateRange.end_date}
               />
             </div>
             <div className="col-md-6">
