@@ -25,7 +25,6 @@ const GSTBenchmarkCreditsProfilingChart = ({
   const options = {
     chart: {
       type: 'bar',
-      height: 350,
     },
     plotOptions: {
       bar: {
@@ -126,7 +125,7 @@ const GSTBenchmarkCreditsProfilingChart = ({
         </h4>
         {/* <Tally1 style={{ color: "#7c879d" }} /> */}
       </div>
-      <Chart options={options} series={series} type="bar" height={350} />
+      <Chart options={options} series={series} type="bar" height={430} />
       {/* Only render chart if series data exists */}
       {/* {riskBreakdownByCategoryData ? (series.length > 0 && (
             <Chart options={options} series={series} type="bar" height={350} />

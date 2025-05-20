@@ -37,7 +37,6 @@ const EmployeeLineChart = ({ data }) => {
   const employeeLineOptions = {
     chart: {
       type: 'line',
-      height: 320,
       toolbar: { show: false },
     },
     stroke: {
@@ -92,7 +91,7 @@ const EmployeeLineChart = ({ data }) => {
       options={employeeLineOptions}
       series={employeeLineSeries}
       type="line"
-      height={320}
+      height={430}
     />
   );
 };

@@ -5,10 +5,7 @@ import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useLocation } from 'react-router-dom';
-
-
-
-
+import './TenureFilter.css';
 
 function TenureFilter({ onFilterChange, tenureOptions }) {
   // Memoize options to avoid unnecessary re-renders
@@ -151,7 +148,7 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
   };
 
   return (
-    <div className='border-end pe-2' style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+    <div className='tenure-filter-div'>
       <label style={{ fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
         Select Tenure
       </label>

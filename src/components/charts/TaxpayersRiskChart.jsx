@@ -46,7 +46,6 @@ const TaxpayersRiskChart = ({ data }) => {
   const options = {
     chart: {
       type: 'bar',
-      height: 320,
       toolbar: { show: false },
       background: 'transparent',
     },
@@ -146,7 +145,7 @@ const TaxpayersRiskChart = ({ data }) => {
   };
 
   return (
-    <ReactApexChart options={options} series={series} type="bar" height={320} />
+    <ReactApexChart options={options} series={series} type="bar" height={430} />
   );
 };
 
