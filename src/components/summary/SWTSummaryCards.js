@@ -103,7 +103,7 @@ const SWTSummaryCards = ({ startDate, endDate }) => {
   if (!summary) return null;
 
   return (
-    <Row className="mb-4 g-3">
+    <Row style={{marginBottom: '32px',}}>
       <Col>
         <SummaryCard
           title="Employees on Payroll"

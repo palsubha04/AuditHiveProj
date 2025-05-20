@@ -305,8 +305,8 @@ function SegmentationDistributionChart({ startDate, endDate }) {
   return (
     <Card className="chart-card box-background">
       <Card.Body>
-        <Card.Title>Segmentation Distribution</Card.Title>
-        <div style={{ width: '100%', height: 390 }}>
+        <Card.Title><span className='chart-headers'>Segmentation Distribution</span></Card.Title>
+        <div style={{ width: '100%', height: 380 }}>
           <ReactApexChart
             options={options}
             series={series}

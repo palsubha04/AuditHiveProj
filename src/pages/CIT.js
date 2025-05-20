@@ -33,40 +33,40 @@ function CIT() {
             <span>{dateRange.end_date}</span>
           </div>
         </div>
-        
+
         <CITSummaryCards startDate={dateRange.start_date} endDate={dateRange.end_date} />
-        
+
         <div className="row">
-          <div className="col-12 mb-4">
+          <div className="col-12 chart-columns-div">
             <TotalAmountByIncomeType startDate={dateRange.start_date}
-                endDate={dateRange.end_date}/>
+              endDate={dateRange.end_date} />
             {/* <SalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
-          <div className="col-12 mb-4">
+          <div className="col-12 chart-columns-div">
             <TotalAmountByExpenseType startDate={dateRange.start_date}
-                endDate={dateRange.end_date}/>
+              endDate={dateRange.end_date} />
             {/* <CITPayableVsRefundable startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
-          <div className="row mb-4">
+          <div className="row chart-columns-div pe-0">
             <div className="col-md-6">
-              
+
               <CITSegmentationDistributionChart
-                startDate={dateRange.start_date} 
-                endDate={dateRange.end_date} 
-              /> 
+                startDate={dateRange.start_date}
+                endDate={dateRange.end_date}
+              />
             </div>
-            <div className="col-md-6">
-              
-          <RiskCategoriesChart
+            <div className="col-md-6 pe-0">
+
+              <RiskCategoriesChart
                 startDate={dateRange.start_date}
                 endDate={dateRange.end_date}
                 taxType="cit"
-              /> 
+              />
             </div>
           </div>
           <div className="col-12">
-            
-            <CITTaxRecordsTable startDate={dateRange.start_date} endDate={dateRange.end_date} /> 
+
+            <CITTaxRecordsTable startDate={dateRange.start_date} endDate={dateRange.end_date} />
           </div>
         </div>
       </Container>

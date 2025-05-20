@@ -6,7 +6,7 @@ import { fetchDatasets } from '../slice/datasetsSlice';
 import { ChevronDown } from 'lucide-react';
 import { FixedSizeList as List } from 'react-window';
 import { fetchRiskBreakdownByCategoryProfiling } from '../slice/risk-profiling/riskBreakdownCategoryProfilingSlice';
-import { Spinner } from 'react-bootstrap';
+import { Card, CardBody, Spinner } from 'react-bootstrap';
 import { fetchFrequencyOfAnomalyProfiling } from '../slice/risk-profiling/frequencyOfAnomalyProfilingSlice';
 import RiskAnomalyFrequencyChart from '../components/charts/RiskAnomalyFrequencyChart';
 import RiskBreakdownCategoryProfilingChart from '../components/charts/risk-profiling/RiskBreakdownCategoryProfilingChart';
@@ -346,9 +346,9 @@ function RiskProfiling() {
   return (
     <Layout>
       <div className="page-container">
-        <div className="filter-conatiner">
-          <label>TIN</label>
-          <div ref={dropdownRef} className="tin-container">
+        <div className="top-filter-class">
+          <div ref={dropdownRef} className="tin-container pe-3 me-3" >
+            <label style={{ fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>TIN</label>
             <div
               className="tin-dropdown"
               onClick={() => setIsDropdownOpen((open) => !open)}
@@ -395,170 +395,204 @@ function RiskProfiling() {
               </div>
             )}
           </div>
-          <div className="date-dropdown">
-            <TenureFilter
-              onFilterChange={handleFilterChange}
-              tenureOptions={yearOptions}
-            />
-          </div>
-          <button onClick={handleSearch} className="search-button">
-            Search
-          </button>
-        </div>
-
-        <div className="content">{/* Content will be added later */}</div>
-        <div className="chart-container-small">
-          <div className="chart-small">
-            {frequencyOfAnomalyProfilingLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100">
-                <RiskAnomalyFrequencyChart
-                  riskAnomalyFrequencyData={frequencyOfAnomalyProfilingData}
-                />
-              </div>
-            )}
-          </div>
-          <div className="chart-small">
-            {riskBreakdownByCategoryProfilingLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100">
-                <RiskBreakdownCategoryProfilingChart
-                  riskBreakdownByCategoryDataProfiling={
-                    riskBreakdownByCategoryProfilingData
-                  }
-                />
-              </div>
-            )}
-          </div>
-        </div>
-        {/*gst Benchmark */}
-        <div className="chart-container-small">
-          <div className="chart-small">
-            {gstBenchmarkProfilingLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100">
-                <GSTBenchmarkProfilingChart
-                  gstBenchmarkProfilingData={gstBenchmarkProfilingData}
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="chart-small">
-            {gstBenchmarkCreditsProfilingLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100">
-                <GSTBenchmarkCreditsProfilingChart
-                  gstBenchmarkCreditsProfilingData={
-                    gstBenchmarkCreditsProfilingData
-                  }
-                />
-              </div>
-            )}
+          <TenureFilter
+            onFilterChange={handleFilterChange}
+            tenureOptions={yearOptions}
+          />
+          <div className='search-container'>
+            <button onClick={handleSearch} className="search-button">
+              Search
+            </button>
           </div>
         </div>
 
-        {/*swt Benchmark */}
-        <div className="chart-container-small">
-          <div className="chart-small">
-            {swtBenchmarkProfilingLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100">
-                <SWTBenchmarkProfilingChart
-                  swtBenchmarkProfilingData={swtBenchmarkProfilingData}
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="chart-small">
-            {swtBenchmarkProfilingLoading ? (
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              <div className="p-0 w-100">
-                <SWTBenchmarkEmployeesProfilingChart
-                  swtBenchmarkEmployeesProfilingData={
-                    swtBenchmarkEmployeesProfilingData
-                  }
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* GST Sales Comparison Line Chart */}
-        <div className="chart-container-big">
-          <div className="chart-big-heading">GST Sales Comparison</div>
-          {monthlySalesLoading ? (
-            <div className="chart-big">
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
+        <div className="content">
+          <div className='d-flex flex-column' style={{ gap: '32px' }}>
+            <div className='d-flex' style={{ gap: '32px' }}>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  {frequencyOfAnomalyProfilingLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <RiskAnomalyFrequencyChart
+                        riskAnomalyFrequencyData={frequencyOfAnomalyProfilingData}
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  {riskBreakdownByCategoryProfilingLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <RiskBreakdownCategoryProfilingChart
+                        riskBreakdownByCategoryDataProfiling={
+                          riskBreakdownByCategoryProfilingData
+                        }
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
             </div>
-          ) : (
-            <MonthlySalesTaxSummaryChart salesData={monthlySalesData} />
-          )}
-        </div>
-
-        {/* GST Payable Vs Refundable Bar Chart */}
-        <div className="chart-container-big">
-          <div className="chart-big-heading">GST Payable vs GST refundable</div>
-          {gstLoading ? (
-            <div className="chart-big">
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
+            <div className='d-flex' style={{ gap: '32px' }}>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  {gstBenchmarkProfilingLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <GSTBenchmarkProfilingChart
+                        gstBenchmarkProfilingData={gstBenchmarkProfilingData}
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  {gstBenchmarkCreditsProfilingLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <GSTBenchmarkCreditsProfilingChart
+                        gstBenchmarkCreditsProfilingData={
+                          gstBenchmarkCreditsProfilingData
+                        }
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
             </div>
-          ) : (
-            <TaxpayersRiskChart data={gstData} />
-          )}
-        </div>
-
-        {/* Employee on Pqayroll Line Chart */}
-        <div className="chart-container-big">
-          <div className="chart-big-heading">
-            Employees on Payroll vs Paid SWT
+            <div className='d-flex' style={{ gap: '32px' }}>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  {swtBenchmarkProfilingLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <SWTBenchmarkProfilingChart
+                        swtBenchmarkProfilingData={swtBenchmarkProfilingData}
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  {swtBenchmarkProfilingLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <SWTBenchmarkEmployeesProfilingChart
+                        swtBenchmarkEmployeesProfilingData={
+                          swtBenchmarkEmployeesProfilingData
+                        }
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            </div>
+            <div className='d-flex' style={{ gap: '32px' }}>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  <div className="chart-big-heading">GST Sales Comparison</div>
+                  {monthlySalesLoading ? (
+                    <div className="chart-big">
+                      <div className='spinner-div'>
+                        <Spinner animation="border" role="status" variant="primary">
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      </div>
+                    </div>
+                  ) : (
+                    <MonthlySalesTaxSummaryChart salesData={monthlySalesData} />
+                  )}
+                </CardBody>
+              </Card>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  <div className="chart-big-heading">GST Payable vs GST refundable</div>
+                  {gstLoading ? (
+                    <div className="chart-big">
+                      <div className='spinner-div'>
+                        <Spinner animation="border" role="status" variant="primary">
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      </div>
+                    </div>
+                  ) : (
+                    <TaxpayersRiskChart data={gstData} />
+                  )}
+                </CardBody>
+              </Card>
+            </div>
+            <div className='d-flex' style={{ gap: '32px' }}>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  <div className="chart-big-heading">
+                    Employees on Payroll vs Paid SWT
+                  </div>
+                  {payrollLoading ? (
+                    <div className="chart-big">
+                      <div className='spinner-div'>
+                        <Spinner animation="border" role="status" variant="primary">
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      </div>
+                    </div>
+                  ) : (
+                    <EmployeeLineChart data={payrollData} />
+                  )}
+                </CardBody>
+              </Card>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  <div className="chart-big-heading">SWT Salaries Comparison</div>
+                  {swtSalariesComparisonLoading ? (
+                    <div className="chart-big">
+                      <div className='spinner-div'>
+                        <Spinner animation="border" role="status" variant="primary">
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      </div>
+                    </div>
+                  ) : (
+                    <SwtSalariesChart data={swtSalariesComparisonData} />
+                  )}
+                </CardBody>
+              </Card>
+            </div>
           </div>
-          {payrollLoading ? (
-            <div className="chart-big">
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
-            <EmployeeLineChart data={payrollData} />
-          )}
-        </div>
-
-        {/* --- Line & SWT Chart Row --- */}
-        <div className="chart-container-big">
-          <div className="chart-big-heading">SWT Salaries Comparison</div>
-          {swtSalariesComparisonLoading ? (
-            <div className="chart-big">
-              <Spinner animation="border" role="status" variant="primary">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
-            <SwtSalariesChart data={swtSalariesComparisonData} />
-          )}
         </div>
       </div>
     </Layout>

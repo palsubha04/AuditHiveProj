@@ -144,7 +144,7 @@ const SalesComparison = ({ startDate, endDate }) => {
       <Card.Body>
         <Row className="mb-4">
           <Col>
-            <h5 className="card-title">Sales Comparison</h5>
+            <span className='chart-headers'>Sales Comparison</span>
           </Col>
         </Row>
         <ReactApexChart

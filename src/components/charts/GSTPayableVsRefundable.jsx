@@ -156,7 +156,7 @@ const GSTPayableVsRefundable = ({ startDate, endDate }) => {
       <Card.Body>
         <Row className="mb-4">
           <Col>
-            <h5 className="card-title">GST Payable vs Refundable</h5>
+            <span className='chart-headers'>GST Payable vs Refundable</span>
           </Col>
         </Row>
         <div id="chart">

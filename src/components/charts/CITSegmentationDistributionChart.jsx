@@ -121,14 +121,14 @@ const CITSegmentationDistributionChart = ({ startDate, endDate }) => {
       <Card.Body>
         <Row className="mb-4">
           <Col>
-            <h5 className="card-title">Segmentation Distribution</h5>
+            <span className='chart-headers'>Segmentation Distribution</span>
           </Col>
         </Row>
         <ReactApexChart
           options={chartData.options}
           series={chartData.series}
           type="pie"
-          height={350}
+          height={380}
         />
       </Card.Body>
     </Card>

@@ -45,7 +45,6 @@ const MonthlySalesTaxSummaryChart = ({ salesData }) => {
   const chartOptions = {
     chart: {
       type: 'line',
-      height: 320,
       toolbar: { show: false },
     },
     stroke: {
@@ -85,7 +84,7 @@ const MonthlySalesTaxSummaryChart = ({ salesData }) => {
         options={chartOptions}
         series={chartSeries}
         type="line"
-        height={320}
+        height={430}
       />
     </div>
   );

@@ -99,7 +99,7 @@ const SWTSegmentationDistributionChart = ({ startDate, endDate }) => {
   if (loading) {
     return (
       <Card className="mb-4 box-background">
-        <Card.Body className="d-flex align-items-center justify-content-center" style={{ height: '400px' }}>
+        <Card.Body className="d-flex align-items-center justify-content-center" style={{ height: '468px' }}>
           <Spinner animation="border" role="status" variant="primary">
             <span className="visually-hidden">Loading...</span>
           </Spinner>
@@ -130,7 +130,7 @@ const SWTSegmentationDistributionChart = ({ startDate, endDate }) => {
           options={chartData.options}
           series={chartData.series}
           type="pie"
-          height={350}
+          height={380}
         />
       </Card.Body>
     </Card>

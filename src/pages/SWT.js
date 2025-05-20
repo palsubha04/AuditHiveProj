@@ -61,20 +61,20 @@ function SWT() {
         <SWTSummaryCards startDate={dateRange.start_date} endDate={dateRange.end_date} />
         
         <div className="row">
-          <div className="col-12 mb-4">
+          <div className="col-12 chart-columns-div">
             <SWTSalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} />
           </div>
-          <div className="col-12 mb-4">
+          <div className="col-12 chart-columns-div">
             <SWTPayableVsRefundable startDate={dateRange.start_date} endDate={dateRange.end_date} />
           </div>
-          <div className="row mb-4">
+          <div className="row chart-columns-div pe-0">
             <div className="col-md-6">
               <SWTSegmentationDistributionChart 
                 startDate={dateRange.start_date} 
                 endDate={dateRange.end_date} 
               />
             </div>
-            <div className="col-md-6">
+            <div className="col-md-6 pe-0">
               <RiskCategoriesChart
                 startDate={dateRange.start_date}
                 endDate={dateRange.end_date}

@@ -24,7 +24,6 @@ const SwtSalariesChart = ({ data }) => {
   const swtSalariesChartOptions = {
     chart: {
       type: 'area',
-      height: 320,
       toolbar: { show: false },
       // background: '#fff' // Remove this line to eliminate white background
     },
@@ -115,7 +114,7 @@ const SwtSalariesChart = ({ data }) => {
       options={swtSalariesChartOptions}
       series={swtSalariesChartSeries}
       type="area"
-      height={320}
+      height={430}
     />
   );
 };

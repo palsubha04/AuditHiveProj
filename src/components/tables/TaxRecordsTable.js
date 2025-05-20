@@ -154,7 +154,7 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
         ) : (
           <>
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <Card.Title>Tax Records</Card.Title>
+              <Card.Title><span className='chart-headers'>Tax Records</span></Card.Title>
               <Form.Group className="mb-0" style={{ width: '300px' }}>
                 <Form.Control
                   type="text"
