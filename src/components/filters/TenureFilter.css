@@ -5,3 +5,10 @@
     border-right: solid 1px #e6edff;
     padding-right: 12px;
 }
+
+.tenure-select-box {
+    min-width: 180px; 
+    max-width: 220px; 
+    margin-right: 8px;
+    border-color: #e6edff;
+}

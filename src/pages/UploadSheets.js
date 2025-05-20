@@ -117,14 +117,14 @@
 //     try {
 //       setError('');
 //       setSuccess('');
-      
+
 //       // Parse CSV file
 //       Papa.parse(selectedFile, {
 //         complete: (results) => {
 //           if (results.data && results.data.length > 0) {
 //             // Get headers from first row
 //             const headers = results.data[0];
-            
+
 //             // Create columns configuration
 //             const tableColumns = headers.map(header => ({
 //               header: header,
@@ -167,12 +167,12 @@
 //       const url = cursor 
 //         ? `/tax/jobs/${jobId}/valid-records?cursor=${cursor}`
 //         : `/tax/jobs/${jobId}/valid-records`;
-      
+
 //       console.log('Loading valid records from:', url);
 //       const response = await api.get(url);
 //       console.log('Valid records response:', response.data);
 //       const { results, next_cursor, has_more } = response.data;
-      
+
 //       if (cursor) {
 //         // Append new data to existing data
 //         setValidRecords(prev => {
@@ -208,7 +208,7 @@
 //       const response = await api.get(`/tax/jobs/${jobId}/invalid-records`, {
 //         responseType: 'blob'
 //       });
-      
+
 //       const url = window.URL.createObjectURL(new Blob([response.data]));
 //       const link = document.createElement('a');
 //       link.href = url;
@@ -230,7 +230,7 @@
 //       setUploading(true);
 //       setError('');
 //       setSuccess('');
-      
+
 //       const formPayload = new FormData();
 //       formPayload.append('file', selectedFile);
 //       formPayload.append('tax_type', formData.type);
@@ -275,7 +275,7 @@
 //     e.preventDefault();
 //     e.stopPropagation();
 //     e.currentTarget.classList.remove('dragging');
-    
+
 //     const file = e.dataTransfer.files[0];
 //     handleFileUpload(file);
 //   };
@@ -317,7 +317,7 @@
 //             : 'Upload Document'
 //           }
 //         </h2>
-        
+
 //         {error && <Alert variant="danger">{error}</Alert>}
 //         {success && jobStatus?.status !== 'finished' && (
 //           <Alert variant="success">
@@ -359,7 +359,7 @@
 //                 The following data has been submitted for upload, please review and submit.
 //               </Alert>
 //             )}
-            
+
 //             <div className="preview-info">
 //               <div className="preview-info-left">
 //                 {auditHistory ? (
@@ -386,7 +386,7 @@
 
 //             {console.log('Current jobStatus:', jobStatus)}
 //             {console.log('Current validRecords:', validRecords)}
-            
+
 //             {jobStatus?.status === 'finished' && validRecords.length > 0 ? (
 //               <>
 //                 {console.log('Rendering valid records table')}
@@ -656,19 +656,27 @@ function UploadSheets() {
     try {
       setError('');
       setSuccess('');
-      
+
       // Parse CSV file
       Papa.parse(selectedFile, {
         complete: (results) => {
           if (results.data && results.data.length > 0) {
             // Get headers from first row
             const headers = results.data[0];
-            
+
             // Create columns configuration
             const tableColumns = headers.map(header => ({
               header: header,
               accessorKey: header,
-              size: 150
+              size: 150,
+              cell: ({ getValue }) => (
+                <span
+                  style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                  title={getValue() || 'N/A'}
+                >
+                  {getValue() || 'N/A'}
+                </span>
+              ),
             }));
 
             // Create data rows (skip header row)
@@ -703,15 +711,15 @@ function UploadSheets() {
   const loadValidRecords = async (jobId, cursor = null) => {
     try {
       setLoadingMore(true);
-      const url = cursor 
+      const url = cursor
         ? `/tax/jobs/${jobId}/valid-records?cursor=${cursor}&tax_type=${formData.type}`
         : `/tax/jobs/${jobId}/valid-records?tax_type=${formData.type}`;
-      
+
       console.log('Loading valid records from:', url);
       const response = await api.get(url);
       console.log('Valid records response:', response.data);
       const { results, next_cursor, has_more } = response.data;
-      
+
       if (cursor) {
         // Append new data to existing data
         setValidRecords(prev => {
@@ -747,7 +755,7 @@ function UploadSheets() {
       const response = await api.get(`/tax/jobs/${jobId}/invalid-records`, {
         responseType: 'blob'
       });
-      
+
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -769,7 +777,7 @@ function UploadSheets() {
       setUploading(true);
       setError('');
       setSuccess('');
-      
+
       const formPayload = new FormData();
       formPayload.append('file', selectedFile);
       formPayload.append('tax_type', formData.type);
@@ -814,7 +822,7 @@ function UploadSheets() {
     e.preventDefault();
     e.stopPropagation();
     e.currentTarget.classList.remove('dragging');
-    
+
     const file = e.dataTransfer.files[0];
     handleFileUpload(file);
   };
@@ -829,7 +837,7 @@ function UploadSheets() {
   };
 
   const formatDate = (date) => {
-    return date.toLocaleString('default', { 
+    return date.toLocaleString('default', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
@@ -837,7 +845,7 @@ function UploadSheets() {
   };
 
   const formatDateTime = (date) => {
-    return date.toLocaleString('default', { 
+    return date.toLocaleString('default', {
       month: 'long',
       day: 'numeric',
       year: 'numeric',
@@ -851,21 +859,21 @@ function UploadSheets() {
     <Layout>
       <div className="upload-container">
         <h2 className="upload-title">
-          {showPreview 
+          {showPreview
             ? `${formData.type.toUpperCase()} data for ${formatDate(formData.startDate)} to ${formatDate(formData.endDate)}`
             : 'Upload Document'
           }
         </h2>
-        
+
         {error && <Alert variant="danger">{error}</Alert>}
         {success && jobStatus?.status !== 'finished' && (
           <Alert variant="success">
             {success}
             {jobId && progress > 0 && progress < 100 && (
-              <ProgressBar 
-                now={progress} 
-                label={`${progress}%`} 
-                className="mt-2" 
+              <ProgressBar
+                now={progress}
+                label={`${progress}%`}
+                className="mt-2"
                 variant="success"
               />
             )}
@@ -878,9 +886,9 @@ function UploadSheets() {
                 {jobStatus.valid_records} data passed validations and {jobStatus.invalid_records} data failed in validation and available to download.
               </p>
               {jobStatus.invalid_records > 0 && (
-                <Button 
-                  variant="outline-primary" 
-                  size="sm" 
+                <Button
+                  variant="outline-primary"
+                  size="sm"
                   onClick={handleDownloadInvalidRecords}
                 >
                   <FontAwesomeIcon icon={faDownload} className="me-2" />
@@ -898,7 +906,7 @@ function UploadSheets() {
                 The following data has been submitted for upload, please review and submit.
               </Alert>
             )}
-            
+
             <div className="preview-info">
               <div className="preview-info-left">
                 {auditHistory ? (
@@ -925,12 +933,12 @@ function UploadSheets() {
 
             {console.log('Current jobStatus:', jobStatus)}
             {console.log('Current validRecords:', validRecords)}
-            
+
             {jobStatus?.status === 'finished' && validRecords.length > 0 ? (
               <>
                 {console.log('Rendering valid records table')}
-                <Table 
-                  data={validRecords} 
+                <Table
+                  data={validRecords}
                   columns={[
                     { header: 'Tin', accessorKey: 'tin' },
                     { header: 'Taxpayer Name', accessorKey: 'taxpayer_name' },
@@ -948,8 +956,8 @@ function UploadSheets() {
             ) : previewData && (
               <div className="preview-table-container">
                 {console.log('Rendering preview table')}
-                <Table 
-                  data={previewData.data} 
+                <Table
+                  data={previewData.data}
                   columns={previewData.columns}
                 />
               </div>
@@ -958,15 +966,15 @@ function UploadSheets() {
             <div className="preview-actions">
               {!jobId && (
                 <>
-                  <Button 
-                    variant="secondary" 
+                  <Button
+                    variant="secondary"
                     onClick={() => setShowPreview(false)}
                     className="me-2"
                   >
                     Back
                   </Button>
-                  <Button 
-                    variant="primary" 
+                  <Button
+                    variant="primary"
                     onClick={handleSubmit}
                     disabled={uploading}
                   >
@@ -979,7 +987,7 @@ function UploadSheets() {
         ) : (
           <Form onSubmit={handlePreview}>
             <div className="form-content">
-              <div 
+              <div
                 className="upload-dropzone"
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -1050,7 +1058,7 @@ function UploadSheets() {
                           const currentYear = new Date().getFullYear();
                           years = Array.from({ length: 20 }, (_, i) => currentYear - 10 + i);
                         }
-                        
+
                         // Generate months array if not provided
                         if (!months.length) {
                           months = [
@@ -1058,7 +1066,7 @@ function UploadSheets() {
                             'July', 'August', 'September', 'October', 'November', 'December'
                           ];
                         }
-                        
+
                         return (
                           <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
                             <select
@@ -1105,7 +1113,7 @@ function UploadSheets() {
                           const currentYear = new Date().getFullYear();
                           years = Array.from({ length: 20 }, (_, i) => currentYear - 10 + i);
                         }
-                        
+
                         // Generate months array if not provided
                         if (!months.length) {
                           months = [
@@ -1113,7 +1121,7 @@ function UploadSheets() {
                             'July', 'August', 'September', 'October', 'November', 'December'
                           ];
                         }
-                        
+
                         return (
                           <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
                             <select
@@ -1141,9 +1149,9 @@ function UploadSheets() {
                 </div>
               </Form.Group>
 
-              <Button 
-                variant="primary" 
-                type="submit" 
+              <Button
+                variant="primary"
+                type="submit"
                 disabled={!selectedFile || !formData.startDate || !formData.endDate}
                 className="submit-button"
               >

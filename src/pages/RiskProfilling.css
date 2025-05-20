@@ -24,10 +24,11 @@
     gap: 12px;
     align-items: center;
     border-right: solid 1px #e6edff;
+    position: relative;
 }
 
 .tin-dropdown {
-    border: 1px solid #ccc;
+    border: 1px solid #e6edff;
     border-radius: 4px;
     padding: 3px;
     cursor: pointer;

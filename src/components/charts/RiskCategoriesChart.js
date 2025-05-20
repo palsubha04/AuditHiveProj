@@ -247,7 +247,7 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
       <Card className="mb-4 box-background">
         <Card.Body
           className="d-flex align-items-center justify-content-center"
-          style={{ height: '400px' }}
+          style={{ height: '470px' }}
         >
           <Spinner animation="border" role="status" variant="primary">
             <span className="visually-hidden">Loading...</span>
@@ -262,7 +262,7 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
       <Card className="mb-4 box-background">
         <Card.Body
           className="text-center text-danger"
-          style={{ height: '400px' }}
+          style={{ height: '430px' }}
         >
           {error}
         </Card.Body>
@@ -275,16 +275,16 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
       <Card.Body>
         <Row className="mb-4">
           <Col>
-            <h5 className="card-title">
+            <span className='chart-headers'>
               Risk Flagged vs Non-Risk Flagged Taxpayers
-            </h5>
+            </span>
           </Col>
         </Row>
         <ReactApexChart
           options={chartData.options}
           series={chartData.series}
           type="bar"
-          height={350}
+          height={365}
         />
       </Card.Body>
     </Card>

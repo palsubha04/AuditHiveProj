@@ -347,7 +347,6 @@ function RiskProfiling() {
     <Layout>
       <div className="page-container">
         <div className="top-filter-class">
-
           <div ref={dropdownRef} className="tin-container pe-3 me-3" >
             <label style={{ fontWeight: 500, fontSize: '14px', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>TIN</label>
             <div

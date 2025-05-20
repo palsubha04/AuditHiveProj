@@ -8,6 +8,13 @@
   width: 100%;
 }
 
+.table-td {
+  padding: 8px 12px;
+  border-bottom: solid 1px #eee;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 table {
   width: 100%;
   border-collapse: separate;
@@ -211,4 +218,4 @@ tr:hover td {
   color: #DADADA;
   cursor: not-allowed;
   background-color: #FAFAFA;
-} 
+}

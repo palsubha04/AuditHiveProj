@@ -78,7 +78,6 @@ function GST() {
   return (
     <Layout>
       <Container fluid>
-        {/* <h1 className="mb-4">GST Analytics</h1> */}
         <div className='top-filter-class'>
           <TenureFilter
             onFilterChange={handleFilterChange}
@@ -93,20 +92,20 @@ function GST() {
         <GSTSummaryCards startDate={dateRange.start_date} endDate={dateRange.end_date} />
 
         <div className="row">
-          <div className="col-12 mb-4">
+          <div className="col-12 chart-columns-div">
             <SalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} />
           </div>
-          <div className="col-12 mb-4">
+          <div className="col-12 chart-columns-div">
             <GSTPayableVsRefundable startDate={dateRange.start_date} endDate={dateRange.end_date} />
           </div>
-          <div className="row mb-4">
+          <div className="row chart-columns-div pe-0">
             <div className="col-md-6">
               <SegmentationDistributionChart
                 startDate={dateRange.start_date}
                 endDate={dateRange.end_date}
               />
             </div>
-            <div className="col-md-6">
+            <div className="col-md-6 pe-0">
               <RiskCategoriesChart
                 startDate={dateRange.start_date}
                 endDate={dateRange.end_date}

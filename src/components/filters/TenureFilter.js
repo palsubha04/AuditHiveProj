@@ -155,7 +155,7 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
       <Form.Select
         value={tenureOptions ? selectedTenure : selectedTenureDefault}
         onChange={handleTenureChange}
-        style={{ minWidth: 180, maxWidth: 220, marginRight: 8 }}
+        className="tenure-select-box"
         size="sm"
       >
         {options.map(option => (

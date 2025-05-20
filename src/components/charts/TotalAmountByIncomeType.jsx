@@ -72,8 +72,6 @@ const TotalAmountByIncomeType = ({ startDate, endDate }) => {
         options: chartOptions
       })
       
-   
-
       useEffect(() => {
         const fetchData = async () => {
           try {
@@ -115,7 +113,7 @@ const TotalAmountByIncomeType = ({ startDate, endDate }) => {
       if (loading) {
         return (
           <Card className="mb-4 box-background">
-            <Card.Body className="d-flex align-items-center justify-content-center" style={{ height: '400px' }}>
+            <Card.Body className="d-flex align-items-center justify-content-center" style={{ height: '600px' }}>
               <Spinner animation="border" role="status" variant="primary">
                 <span className="visually-hidden">Loading...</span>
               </Spinner>
@@ -127,18 +125,18 @@ const TotalAmountByIncomeType = ({ startDate, endDate }) => {
       if (error) {
         return (
           <Card className="mb-4 box-background">
-            <Card.Body className="text-center text-danger" style={{ height: '400px' }}>
+            <Card.Body className="text-center text-danger" style={{ height: '600px' }}>
               {error}
             </Card.Body>
           </Card>
         );
       }
   return (
-    <Card className="mb-4">
+    <Card className="mb-4 box-background">
       <Card.Body>
         <Row className="mb-4">
           <Col>
-            <h5 className="card-title">Total Amount By Income Type</h5>
+            <span className='chart-headers'>Total Amount By Income Type</span>
           </Col>
         </Row>
         <Chart options={chartData.options} series={chartData.series} type="bar" height={600} />
