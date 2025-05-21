@@ -34,17 +34,19 @@ function CIT() {
           </div>
         </div>
 
-        <CITSummaryCards startDate={dateRange.start_date} endDate={dateRange.end_date} />
+        {/* <CITSummaryCards startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
 
         <div className="row">
           <div className="col-12 chart-columns-div">
-            <TotalAmountByIncomeType startDate={dateRange.start_date}
-              endDate={dateRange.end_date} />
+          Top 50 Net profit TaxPayers
+            {/* <TotalAmountByIncomeType startDate={dateRange.start_date}
+              endDate={dateRange.end_date} /> */}
             {/* <SalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
           <div className="col-12 chart-columns-div">
-            <TotalAmountByExpenseType startDate={dateRange.start_date}
-              endDate={dateRange.end_date} />
+          Top 50 Net loss TaxPayers
+            {/* <TotalAmountByExpenseType startDate={dateRange.start_date}
+              endDate={dateRange.end_date} /> */}
             {/* <CITPayableVsRefundable startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
           <div className="row chart-columns-div pe-0">
@@ -64,10 +66,16 @@ function CIT() {
               />
             </div>
           </div>
-          <div className="col-12">
-
-            <CITTaxRecordsTable startDate={dateRange.start_date} endDate={dateRange.end_date} />
+          <div className="col-6">
+          superneution png vs superneution foreign 
+            {/* <CITTaxRecordsTable startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
+          <div className='col-6'>
+          interest expense png vs interest expense foreign
+            </div>
+            <div className='col-12'>
+            cost sales comparison
+            </div>
         </div>
       </Container>
     </Layout>
