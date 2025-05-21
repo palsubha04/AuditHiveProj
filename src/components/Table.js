@@ -178,7 +178,8 @@ function Table({
                   style={{
                     padding: '12px',
                     borderBottom: '2px solid #eee',
-                    textAlign: 'left'
+                    textAlign: 'left',
+                    width: '200px',
                   }}
                 >
                   {flexRender(header.column.columnDef.header, header.getContext())}
@@ -187,33 +188,24 @@ function Table({
             </tr>
           ))}
         </thead>
-        <tbody
-          style={{
-            
-            height: `${rowVirtualizer.getTotalSize()}px`,
-            position: 'relative',
-          }}
-        >
+        <tbody>
+          <tr style={{ height: `${(rowVirtualizer.getVirtualItems()[0]?.start ?? 0)}px` }} />
           {rowVirtualizer.getVirtualItems().map(virtualRow => {
             const row = rows[virtualRow.index];
             return (
               <tr
                 key={row.id}
-                ref={(node) => rowVirtualizer.measureElement(node)}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  transform: `translateY(${virtualRow.start}px)`,
-                  display: 'table',
-                  width: '100%',
-                  tableLayout: 'fixed'
-                }}
+                ref={rowVirtualizer.measureElement}
+                style={{ height: '35px' }} // You may adjust based on actual row height
               >
                 {row.getVisibleCells().map(cell => (
                   <td
-                    title={cell.getValue()}
                     key={cell.id}
+                    title={cell.getValue()}
                     className='table-td'
+                    style={{
+                      width: '200px',
+                    }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
@@ -221,7 +213,9 @@ function Table({
               </tr>
             );
           })}
+          <tr style={{ height: `${rowVirtualizer.getTotalSize() - (rowVirtualizer.getVirtualItems()[0]?.start ?? 0) - (rowVirtualizer.getVirtualItems().length * 35)}px` }} />
         </tbody>
+
 
       </table>
       {loadingMore && (
