@@ -8,6 +8,7 @@ import './Sidenav.css';
 function Sidenav() {
   const location = useLocation();
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+  const [isReportsOpen, setIsReportsOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
 
   // Check if any analytics child route is active
@@ -22,6 +23,10 @@ function Sidenav() {
     ].includes(location.pathname);
   };
 
+  const isReportsChildActive = () => {
+    return ['/recent-uploads'].includes(location.pathname);
+  };
+
   // Check if any dashboard child route is active
   const isDashboardChildActive = () => {
     return ['/gst', '/cit', '/swt'].includes(location.pathname);
@@ -34,9 +39,16 @@ function Sidenav() {
   if (isDashboardChildActive() && !isDashboardOpen) {
     setIsDashboardOpen(true);
   }
+  if (isReportsChildActive() && !isReportsOpen) {
+    setIsReportsOpen(true);
+  }
 
   const toggleAnalytics = () => {
     setIsAnalyticsOpen(!isAnalyticsOpen);
+  };
+
+  const toggleReports = () => {
+    setIsReportsOpen(!isReportsOpen);
   };
 
   const toggleDashboard = () => {
@@ -155,6 +167,27 @@ function Sidenav() {
               className="nav-item submenu-item"
             >
               <span>Compliance</span>
+            </Nav.Link>
+          </div>
+        </div>
+
+        <div className="nav-group">
+          <Nav.Link onClick={toggleReports} className="nav-item">
+            <img src="/case.svg" alt="Reports" className="nav-icon" />
+            <span>Reports</span>
+            <span className={`arrow ${isReportsOpen ? 'open' : ''}`}>
+              <FontAwesomeIcon icon={faChevronDown} />
+            </span>
+          </Nav.Link>
+
+          <div className={`submenu ${isReportsOpen ? 'open' : ''}`}>
+            <Nav.Link
+              as={Link}
+              to="/recent-uploads"
+              active={location.pathname === '/recent-uploads'}
+              className="nav-item submenu-item"
+            >
+              <span>Recent Uploads</span>
             </Nav.Link>
           </div>
         </div>
