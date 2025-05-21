@@ -30,6 +30,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import UploadHistory from './pages/UploadHistory';
 import Compliance from './pages/Compliance';
+import RecentUploads from './pages/RecentUploads';
 
 function App() {
   return (
@@ -120,6 +121,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Compliance />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recent-uploads"
+            element={
+              <ProtectedRoute>
+                <RecentUploads />
               </ProtectedRoute>
             }
           />
