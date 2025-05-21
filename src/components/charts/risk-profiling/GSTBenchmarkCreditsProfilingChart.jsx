@@ -121,7 +121,7 @@ const GSTBenchmarkCreditsProfilingChart = ({
             lineHeight: '32px',
           }}
         >
-          GST Benchmark - Input Credits vs Output Debits
+          GST Comparison - Input Credits vs Output Debits
         </h4>
         {/* <Tally1 style={{ color: "#7c879d" }} /> */}
       </div>

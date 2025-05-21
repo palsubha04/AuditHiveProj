@@ -1,0 +1,122 @@
+import React, { useEffect, useState } from 'react'
+import { Card, Col, Row, Spinner } from 'react-bootstrap';
+import Chart from "react-apexcharts";
+import citService from '../../../services/cit.service';
+
+const sample = {
+    png: 450,
+    foreign: 50,
+  };
+
+const SuperneutionCitChart = ({ startDate, endDate }) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const chartOptions = {
+    chart: {
+      width: 380,
+      type: "pie",
+      toolbar: { show: true },
+    },
+    labels: ["PNG", "Foreign"],
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+          },
+          legend: {
+            position: "bottom",
+          },
+        },
+      },
+    ],
+  };
+  const [chartData, setChartData] = useState({
+    series: [sample.png, sample.foreign],
+    options: chartOptions,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await citService.getPngvsForeignData(
+          startDate,
+          endDate
+        );
+       //var chart_Data = response;
+       var chartSeries = [response.superannuation_png, response.superannuation_foreign];
+
+       setChartData((prevData) => ({
+         ...prevData,
+         series: chartSeries,
+       }));
+      } catch (err) {
+        console.error("Error fetching Total Amount By Expense Type:", err);
+        setError("Failed to load Total Amount By Expense Type data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (startDate && endDate) {
+      fetchData();
+    } else {
+      setLoading(false);
+      setChartData((prevData) => ({
+        ...prevData,
+        series: [],
+      }));
+    }
+  }, [startDate, endDate]);
+
+  if (loading) {
+    return (
+      <Card className="mb-4 box-background">
+        <Card.Body
+          className="d-flex align-items-center justify-content-center"
+          style={{ height: "400px" }}
+        >
+          <Spinner animation="border" role="status" variant="primary">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </Card.Body>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="mb-4 box-background">
+        <Card.Body
+          className="text-center text-danger"
+          style={{ height: "400px" }}
+        >
+          {error}
+        </Card.Body>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="mb-4 box-background">
+      <Card.Body>
+        <Row className="mb-4">
+          <Col>
+            <span className="chart-headers">Superneution PNG vs Foreign</span>
+          </Col>
+        </Row>
+        <Chart
+          options={chartData.options}
+          series={chartData.series}
+          type="pie"
+          height={350}
+        />
+      </Card.Body>
+    </Card>
+  );
+};
+
+export default SuperneutionCitChart

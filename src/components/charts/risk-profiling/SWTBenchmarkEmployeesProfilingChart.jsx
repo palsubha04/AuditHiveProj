@@ -123,7 +123,7 @@ const SWTBenchmarkEmployeesProfilingChart = ({
             lineHeight: '32px',
           }}
         >
-          SWT Benchmark - Employees On Payroll Vs SWT Employees
+          SWT Comparison - Employees On Payroll Vs SWT Employees
         </h4>
         {/* <Tally1 style={{ color: "#7c879d" }} /> */}
       </div>

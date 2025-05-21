@@ -119,7 +119,7 @@ const SWTBenchmarkProfilingChart = ({ swtBenchmarkProfilingData }) => {
             lineHeight: '32px',
           }}
         >
-          SWT Benchmark - Salary Wages Paid Vs SWT Tax Deducted
+          SWT Comparison - Salary Wages Paid Vs SWT Tax Deducted
         </h4>
         {/* <Tally1 style={{ color: "#7c879d" }} /> */}
       </div>
