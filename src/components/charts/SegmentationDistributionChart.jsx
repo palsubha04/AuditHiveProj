@@ -177,6 +177,7 @@ function SegmentationDistributionChart({ startDate, endDate }) {
         setLoading(true);
         setError(null);
         const response = await gstService.getSegmentationDistribution(startDate, endDate);
+        console.log("response",response);
         
         // Transform the data for the pie chart, only including valid segments
         const chartData = Object.entries(response)
@@ -205,61 +206,79 @@ function SegmentationDistributionChart({ startDate, endDate }) {
 
   const options = {
     chart: {
-      type: 'pie',
+      type: "pie",
       height: 350,
       animations: {
-        enabled: true
+        enabled: true,
       },
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     stroke: {
       show: true,
       width: 0,
-      colors: ['transparent']
+      colors: ["transparent"],
     },
-    labels: data.length > 0 ? data.map(item => item.name) : [],
-    colors: data.length > 0 ? data.map(item => COLORS[item.name.toLowerCase()]) : [],
+    labels: data.length > 0 ? data.map((item) => item.name) : [],
+    colors:
+      data.length > 0
+        ? data.map((item) => COLORS[item.name.toLowerCase()])
+        : [],
     legend: {
-      position: 'bottom'
+      position: "bottom",
     },
+    // tooltip: {
+    //   y: {
+    //     formatter: (value) => value.toLocaleString()
+    //   }
+    // },
     tooltip: {
-      y: {
-        formatter: (value) => value.toLocaleString()
-      }
+      custom: function ({ series, seriesIndex, w }) {
+        const value = series[seriesIndex];
+        const total = series.reduce((acc, val) => acc + val, 0);
+        const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
+        const label = w.globals.labels[seriesIndex];
+
+        return `
+          <div class="arrow_box" style="padding: 8px; line-height: 1.4">
+            <span> ${label}</span><br/>
+            <span><strong>Value:</strong> ${value.toLocaleString()}</span><br/>
+            <span><strong>Percentage:</strong> ${percentage}%</span>
+          </div>
+        `;
+      },
     },
-        
-    
+
     plotOptions: {
       pie: {
         donut: {
-          size: '0%'
+          size: "0%",
         },
         dataLabels: {
-          offset: -30
-        }
-      }
+          offset: -30,
+        },
+      },
     },
     dataLabels: {
       formatter: (val, opts) => {
         const name = opts.w.globals.labels[opts.seriesIndex];
         const value = opts.w.globals.series[opts.seriesIndex];
         return `${val.toFixed(0)}%`;
-      }
+      },
     },
     noData: {
-      text: 'No Data Found',
-      align: 'center',
-      verticalAlign: 'middle',
+      text: "No Data Found",
+      align: "center",
+      verticalAlign: "middle",
       offsetX: 0,
       offsetY: 0,
       style: {
-        color: '#6c757d',
-        fontSize: '16px',
-        fontFamily: 'inherit'
-      }
-    }
+        color: "#6c757d",
+        fontSize: "16px",
+        fontFamily: "inherit",
+      },
+    },
   };
 
   const series = data.length > 0 
