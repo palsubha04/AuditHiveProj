@@ -3,6 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import citService from '../../services/cit.service';
 import "../../pages/Dashboard.css";
+import './charts.css';
 
 const CITSegmentationDistributionChart = ({ startDate, endDate }) => {
   const [chartData, setChartData] = useState({

@@ -118,7 +118,7 @@ const TaxDelayComplianceChart = ({ x }) => {
                 className="mb-0 me-3 fw-bold"
                 style={{ color: "#6366F1", fontSize: "22px" }}
               >
-                Tax Delay vs Non Time Delay
+                Delayed vs On-Time Returns
               </h4>
               <Tally1 style={{ color: "#7c879d" }} />
               <span

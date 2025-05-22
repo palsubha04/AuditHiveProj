@@ -41,7 +41,7 @@ const SWTBenchmarkProfilingChart = ({ swtBenchmarkProfilingData }) => {
       colors: ['transparent'],
     },
     xaxis: {
-      categories: ['Overall', 'Average'],
+      categories: ['Overall', 'Industry cum Segment Average'],
     },
     yaxis: {
       title: {

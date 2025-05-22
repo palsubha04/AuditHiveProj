@@ -229,6 +229,8 @@ function SegmentationDistributionChart({ startDate, endDate }) {
         formatter: (value) => value.toLocaleString()
       }
     },
+        
+    
     plotOptions: {
       pie: {
         donut: {

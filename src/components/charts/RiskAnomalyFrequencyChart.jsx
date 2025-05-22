@@ -49,6 +49,8 @@ const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
         toggleDataSeries: true, // explicitly allow toggling
       },
     },
+    
+    
   };
 
   return (

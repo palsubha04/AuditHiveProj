@@ -151,7 +151,7 @@ const CITCostSalesComparison = ({ startDate, endDate }) => {
           <div className="text-center text-danger">{error}</div>
         ) : records.length === 0 ? (
           <>
-            <Card.Title>Gross Sales Vs Cash Credit</Card.Title>
+            <Card.Title>Gross Sales Vs Cost of Goods Sold</Card.Title>
             <div className="text-center text-muted" style={{ padding: '2rem' }}>
               No Data Found
             </div>
@@ -159,7 +159,7 @@ const CITCostSalesComparison = ({ startDate, endDate }) => {
         ) : (
           <>
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <Card.Title>Gross Sales Vs Cash Credit</Card.Title>
+              <Card.Title>Gross Sales Vs Cost of Goods Sold</Card.Title>
               {/* <Form.Group className="mb-0" style={{ width: '300px' }}>
                 <Form.Control
                   type="text"

@@ -68,6 +68,15 @@ function Header() {
     headerTitle = 'Recent Uploads';
     headerSubtitle = '';
   }
+  else if(location.pathname === '/gst') {
+    headerSubtitle = 'GST Dashboard';
+  }
+  else if(location.pathname === '/swt') {
+    headerSubtitle = 'SWT Dashboard';
+  }
+  else if(location.pathname === '/cit') {
+    headerSubtitle = 'CIT Dashboard';
+  }
 
   return (
     <Navbar className="header">
