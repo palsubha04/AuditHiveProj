@@ -13,7 +13,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Header.css';
 
-function Header() {
+function Header({ isOpen }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { logout, user } = useAuth();
@@ -70,7 +70,7 @@ function Header() {
   }
 
   return (
-    <Navbar className="header">
+    <Navbar className={`header ${isOpen ? 'sidenav-open' : 'sidenav-collapsed'}`}>
       <Container fluid>
         <div className="header-left">
           <div className="header-titles">

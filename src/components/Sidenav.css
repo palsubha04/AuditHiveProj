@@ -8,11 +8,41 @@
   padding: 1.5rem;
   border-right: 1px solid #E6EDFF;
   z-index: 1000;
+  transition: width 0.3s ease;
+}
+
+.sidenav.collapsed {
+  width: 60px;
+  overflow: hidden;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 1.5rem;
+  transition: width 0.3s ease;
+  
+}
+
+
+/* Optional: hide text but keep icons */
+.sidenav.collapsed .nav-item span {
+  display: none;
+  transition: width 0.3s ease;
+}
+
+.sidenav.collapsed .logo-container > a{
+  display: none;
+  transition: width 0.3s ease;
+}
+
+.sidenav.open .logo-container > a{
+  display: block;
+  transition: width 0.3s ease;
 }
 
 .logo-container {
   margin-bottom: 2rem;
   text-align: center;
+  display: flex;
+  justify-content: space-between;
 }
 
 .logo {

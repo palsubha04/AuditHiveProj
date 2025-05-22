@@ -4,18 +4,40 @@
 }
 
 .layout-content {
-  margin-left: 20.357rem; /* 285px */
-  width: calc(100% - 20.357rem); /* 285px */
+  margin-left: 20.357rem;
+  /* 285px */
+  width: calc(100% - 20.357rem);
+  /* 285px */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   position: relative;
+  flex: 1;
+  transition: margin-left 0.3s ease;
+}
+
+.layout .sidenav.collapsed+.layout-content {
+  margin-left: 60px;
+}
+
+.layout .sidenav.open+.layout-content {
+  margin-left: 20.357rem;
+  /* 285px */
+  width: calc(100% - 20.357rem);
+  /* 285px */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  flex: 1;
+  transition: margin-left 0.3s ease;
 }
 
 .main-content {
-  padding: 9rem 2.857rem 2rem 2.857rem; /* Increased top padding from 7rem to 8.25rem */
+  padding: 9rem 2.857rem 2rem 2.857rem;
+  /* Increased top padding from 7rem to 8.25rem */
   background: white;
   flex: 1;
   position: relative;
   z-index: 1;
-} 
+}

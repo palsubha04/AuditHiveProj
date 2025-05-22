@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Nav } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { PanelLeft } from 'lucide-react';
 import './Sidenav.css';
 
-function Sidenav() {
+function Sidenav({ isOpen, toggleSidenav }) {
   const location = useLocation();
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [isReportsOpen, setIsReportsOpen] = useState(false);
@@ -33,37 +34,51 @@ function Sidenav() {
   };
 
   // Initialize menu states based on current route
-  if (isAnalyticsChildActive() && !isAnalyticsOpen) {
+  if (isAnalyticsChildActive() && !isAnalyticsOpen && isOpen) {
     setIsAnalyticsOpen(true);
   }
-  if (isDashboardChildActive() && !isDashboardOpen) {
+  if (isDashboardChildActive() && !isDashboardOpen && isOpen) {
     setIsDashboardOpen(true);
   }
-  if (isReportsChildActive() && !isReportsOpen) {
+  if (isReportsChildActive() && !isReportsOpen && isOpen) {
     setIsReportsOpen(true);
   }
 
+  const toggleDashboard = () => {
+    if (!isOpen) return;
+    setIsDashboardOpen(!isDashboardOpen);
+  };
+
   const toggleAnalytics = () => {
+    if (!isOpen) return;
     setIsAnalyticsOpen(!isAnalyticsOpen);
   };
 
   const toggleReports = () => {
+    if (!isOpen) return;
     setIsReportsOpen(!isReportsOpen);
   };
 
-  const toggleDashboard = () => {
-    setIsDashboardOpen(!isDashboardOpen);
-  };
+  useEffect(() => {
+    if (!isOpen) {
+      setIsAnalyticsOpen(false);
+      setIsReportsOpen(false);
+      setIsDashboardOpen(false);
+    }
+  }, [isOpen]);
 
   return (
-    <div className="sidenav">
+    <div className={`sidenav ${isOpen ? 'open' : 'collapsed'}`}>
       <div className="logo-container">
         <Link to="/gst">
           <img src="/Logo.png" alt="Logo" className="logo" />
         </Link>
+        <button className='sidenav-toggle-btn' style={{ paddingLeft: '1rem' }} onClick={toggleSidenav}>
+          <PanelLeft className='sidenav-toggle-icon' style={{color:'#65728c'}}/>
+        </button>
       </div>
       <Nav className="flex-column">
-        <div className="nav-group">
+        <div className="">
           <Nav.Link onClick={toggleDashboard} className="nav-item">
             <img src="/chart.svg" alt="Dashboard" className="nav-icon" />
             <span>Dashboard</span>
@@ -110,7 +125,7 @@ function Sidenav() {
           <span>Upload Sheets</span>
         </Nav.Link>
 
-        <div className="nav-group">
+        <div className="">
           <Nav.Link onClick={toggleAnalytics} className="nav-item">
             <img src="/case.svg" alt="Analytics" className="nav-icon" />
             <span>Analytics</span>
@@ -171,7 +186,7 @@ function Sidenav() {
           </div>
         </div>
 
-        <div className="nav-group">
+        <div className="">
           <Nav.Link onClick={toggleReports} className="nav-item">
             <img src="/case.svg" alt="Reports" className="nav-icon" />
             <span>Reports</span>
