@@ -67,6 +67,12 @@ function Header() {
   } else if (location.pathname === '/recent-uploads') {
     headerTitle = 'Recent Uploads';
     headerSubtitle = '';
+  } else if (location.pathname === '/help-centre') {
+    headerTitle = 'Help Centre';
+    headerSubtitle = '';
+  } else if (location.pathname === '/contact-us') {
+    headerTitle = 'Contact Us';
+    headerSubtitle = '';
   }
 
   return (
