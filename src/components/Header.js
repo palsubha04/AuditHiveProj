@@ -58,11 +58,14 @@ function Header() {
   } else if (location.pathname === '/upload-history') {
     headerTitle = 'Upload History';
     headerSubtitle = '';
-  }else if (location.pathname === '/risk-profiling') {
+  } else if (location.pathname === '/risk-profiling') {
     headerTitle = 'Risk Profiling';
     headerSubtitle = '';
-  }else if (location.pathname === '/upload-sheets') {
+  } else if (location.pathname === '/upload-sheets') {
     headerTitle = 'Upload Sheets';
+    headerSubtitle = '';
+  } else if (location.pathname === '/recent-uploads') {
+    headerTitle = 'Recent Uploads';
     headerSubtitle = '';
   }
 
