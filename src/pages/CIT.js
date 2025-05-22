@@ -9,6 +9,11 @@ import TotalAmountByExpenseType from '../components/charts/TotalAmountByExpenseT
 import RiskCategoriesChart from '../components/charts/RiskCategoriesChart';
 import CITSegmentationDistributionChart from '../components/charts/CITSegmentationDistributionChart';
 import CITTaxRecordsTable from '../components/tables/TaxRecordsTableCIT';
+import CITNetProfitTaxPayers from '../components/tables/CITNetProfitTaxPayers';
+import CITNetLossTaxPayers from '../components/tables/CITNetLossTaxPayers';
+import CITCostSalesComparison from '../components/tables/CITCostSalesComparison';
+import SuperneutionCitChart from '../components/charts/CIT/SuperneutionCitChart';
+import InterestExpenseCitChart from '../components/charts/CIT/InterestExpenseCitChart';
 
 function CIT() {
   const [dateRange, setDateRange] = useState({
@@ -38,13 +43,13 @@ function CIT() {
 
         <div className="row">
           <div className="col-12 chart-columns-div">
-          Top 50 Net profit TaxPayers
+          <CITNetProfitTaxPayers startDate={dateRange.start_date} endDate={dateRange.end_date}/>
             {/* <TotalAmountByIncomeType startDate={dateRange.start_date}
               endDate={dateRange.end_date} /> */}
             {/* <SalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
           <div className="col-12 chart-columns-div">
-          Top 50 Net loss TaxPayers
+          <CITNetLossTaxPayers startDate={dateRange.start_date} endDate={dateRange.end_date}/>
             {/* <TotalAmountByExpenseType startDate={dateRange.start_date}
               endDate={dateRange.end_date} /> */}
             {/* <CITPayableVsRefundable startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
@@ -67,14 +72,20 @@ function CIT() {
             </div>
           </div>
           <div className="col-6">
-          superneution png vs superneution foreign 
+          <SuperneutionCitChart
+              startDate={dateRange.start_date}
+              endDate={dateRange.end_date}
+            />
             {/* <CITTaxRecordsTable startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
           <div className='col-6'>
-          interest expense png vs interest expense foreign
+          <InterestExpenseCitChart
+              startDate={dateRange.start_date}
+              endDate={dateRange.end_date}
+            />
             </div>
             <div className='col-12'>
-            cost sales comparison
+            <CITCostSalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} />
             </div>
         </div>
       </Container>

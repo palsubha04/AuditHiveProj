@@ -43,7 +43,7 @@ const SWTBenchmarkEmployeesProfilingChart = ({
       colors: ['transparent'],
     },
     xaxis: {
-      categories: ['Overall', 'Average'],
+      categories: ['Overall', 'Industry cum Segment Average'],
     },
     yaxis: {
       title: {
@@ -123,7 +123,7 @@ const SWTBenchmarkEmployeesProfilingChart = ({
             lineHeight: '32px',
           }}
         >
-          SWT Benchmark - Employees On Payroll Vs SWT Employees
+          SWT Comparison - Employees On Payroll Vs SWT Employees
         </h4>
         {/* <Tally1 style={{ color: "#7c879d" }} /> */}
       </div>

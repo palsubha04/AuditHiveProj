@@ -74,6 +74,15 @@ function Header() {
     headerTitle = 'Contact Us';
     headerSubtitle = '';
   }
+  else if(location.pathname === '/gst') {
+    headerSubtitle = 'GST Dashboard';
+  }
+  else if(location.pathname === '/swt') {
+    headerSubtitle = 'SWT Dashboard';
+  }
+  else if(location.pathname === '/cit') {
+    headerSubtitle = 'CIT Dashboard';
+  }
 
   return (
     <Navbar className="header">

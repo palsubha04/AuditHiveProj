@@ -41,7 +41,7 @@ const GSTBenchmarkProfilingChart = ({ gstBenchmarkProfilingData }) => {
       colors: ['transparent'],
     },
     xaxis: {
-      categories: ['Overall', 'Average'],
+      categories: ['Overall', 'Industry cum Segment Average'],
     },
     yaxis: {
       title: {
@@ -119,7 +119,7 @@ const GSTBenchmarkProfilingChart = ({ gstBenchmarkProfilingData }) => {
             lineHeight: '32px',
           }}
         >
-          GST Benchmark - Payable Vs Refundable
+          GST Comparison - Payable Vs Refundable
         </h4>
         {/* <Tally1 style={{ color: "#7c879d" }} /> */}
       </div>

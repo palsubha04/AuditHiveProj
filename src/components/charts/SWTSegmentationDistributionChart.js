@@ -4,6 +4,7 @@ import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import swtService from '../../services/swt.service';
 import "../../pages/Dashboard.css";
 
+
 import './charts.css'
 
 const SWTSegmentationDistributionChart = ({ startDate, endDate }) => {
@@ -27,6 +28,8 @@ const SWTSegmentationDistributionChart = ({ startDate, endDate }) => {
       legend: {
         position: 'bottom'
       },
+        
+      
       responsive: [{
         breakpoint: 480,
         options: {
@@ -77,6 +80,7 @@ const SWTSegmentationDistributionChart = ({ startDate, endDate }) => {
           ...prevData,
           series: allZero ? [] : series
         }));
+        
       } catch (err) {
         console.error('Error fetching segmentation distribution:', err);
         setError('Failed to load segmentation distribution data');
