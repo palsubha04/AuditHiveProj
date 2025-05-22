@@ -9,11 +9,11 @@
 }
 
 .header.sidenav-open {
-  left: 21rem
+  left: 20rem
 }
 
 .header.sidenav-collapsed {
-  left: 4.3rem; /* collapsed width (adjust if yours is different) */
+  left: 3.6rem; /* collapsed width (adjust if yours is different) */
 }
 
 /* Override Bootstrap's container-fluid padding */
@@ -67,7 +67,7 @@ color: #05004E;
   display: flex !important;
   align-items: center !important;
   gap: 0.5rem;
-  padding: 0.5rem !important;
+  padding: 0 !important;
   height: auto !important;
 }
 

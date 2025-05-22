@@ -3,7 +3,7 @@ import { Nav } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { PanelLeft } from 'lucide-react';
+import { PanelLeft, PanelRight } from 'lucide-react';
 import './Sidenav.css';
 
 function Sidenav({ isOpen, toggleSidenav }) {
@@ -74,14 +74,18 @@ function Sidenav({ isOpen, toggleSidenav }) {
           <img src="/Logo.png" alt="Logo" className="logo" />
         </Link>
         <button className='sidenav-toggle-btn' style={{ paddingLeft: '1rem' }} onClick={toggleSidenav}>
-          <PanelLeft className='sidenav-toggle-icon' style={{color:'#65728c'}}/>
+          {isOpen ?
+            <PanelLeft className='sidenav-toggle-icon' style={{ color: '#65728c' }} /> :
+            <PanelRight className='sidenav-toggle-icon' style={{ color: '#65728c' }} />
+          }
+
         </button>
       </div>
       <Nav className="flex-column">
         <div className="">
           <Nav.Link onClick={toggleDashboard} className="nav-item">
-            <img src="/chart.svg" alt="Dashboard" className="nav-icon" />
-            <span>Dashboard</span>
+            <img src="/sidebar-icons/dashboard.svg" alt="Dashboard" className="nav-icon" />
+            <span className='sidenav-items'>Dashboard</span>
             <span className={`arrow ${isDashboardOpen ? 'open' : ''}`}>
               <FontAwesomeIcon icon={faChevronDown} />
             </span>
@@ -94,7 +98,7 @@ function Sidenav({ isOpen, toggleSidenav }) {
               active={location.pathname === '/gst'}
               className="nav-item submenu-item"
             >
-              <span>GST</span>
+              <span className='sidenav-items'>GST</span>
             </Nav.Link>
             <Nav.Link
               as={Link}
@@ -102,7 +106,7 @@ function Sidenav({ isOpen, toggleSidenav }) {
               active={location.pathname === '/cit'}
               className="nav-item submenu-item"
             >
-              <span>CIT</span>
+              <span className='sidenav-items'>CIT</span>
             </Nav.Link>
             <Nav.Link
               as={Link}
@@ -110,7 +114,7 @@ function Sidenav({ isOpen, toggleSidenav }) {
               active={location.pathname === '/swt'}
               className="nav-item submenu-item"
             >
-              <span>SWT</span>
+              <span className='sidenav-items'>SWT</span>
             </Nav.Link>
           </div>
         </div>
@@ -121,14 +125,14 @@ function Sidenav({ isOpen, toggleSidenav }) {
           active={location.pathname === '/upload-sheets'}
           className="nav-item"
         >
-          <img src="/Upload.svg" alt="Upload" className="nav-icon" />
-          <span>Upload Sheets</span>
+          <img src="/sidebar-icons/upload.svg" alt="Upload" className="nav-icon" />
+          <span className='sidenav-items'>Upload Sheets</span>
         </Nav.Link>
 
         <div className="">
           <Nav.Link onClick={toggleAnalytics} className="nav-item">
-            <img src="/case.svg" alt="Analytics" className="nav-icon" />
-            <span>Analytics</span>
+            <img src="/sidebar-icons/analytics.svg" alt="Analytics" className="nav-icon" />
+            <span className='sidenav-items'>Analytics</span>
             <span className={`arrow ${isAnalyticsOpen ? 'open' : ''}`}>
               <FontAwesomeIcon icon={faChevronDown} />
             </span>
@@ -165,7 +169,7 @@ function Sidenav({ isOpen, toggleSidenav }) {
               active={location.pathname === '/risk-assessment'}
               className="nav-item submenu-item"
             >
-              <span>Risk Assessment</span>
+              <span className='sidenav-items'>Risk Assessment</span>
             </Nav.Link>
             <Nav.Link
               as={Link}
@@ -173,7 +177,7 @@ function Sidenav({ isOpen, toggleSidenav }) {
               active={location.pathname === '/risk-profiling'}
               className="nav-item submenu-item"
             >
-              <span>Risk Profilling</span>
+              <span className='sidenav-items'>Risk Profilling</span>
             </Nav.Link>
             <Nav.Link
               as={Link}
@@ -181,15 +185,15 @@ function Sidenav({ isOpen, toggleSidenav }) {
               active={location.pathname === '/compliance'}
               className="nav-item submenu-item"
             >
-              <span>Compliance</span>
+              <span className='sidenav-items'>Compliance</span>
             </Nav.Link>
           </div>
         </div>
 
         <div className="">
           <Nav.Link onClick={toggleReports} className="nav-item">
-            <img src="/case.svg" alt="Reports" className="nav-icon" />
-            <span>Reports</span>
+            <img src="/sidebar-icons/reports.svg" alt="Reports" className="nav-icon" />
+            <span className='sidenav-items'>Reports</span>
             <span className={`arrow ${isReportsOpen ? 'open' : ''}`}>
               <FontAwesomeIcon icon={faChevronDown} />
             </span>
@@ -202,7 +206,7 @@ function Sidenav({ isOpen, toggleSidenav }) {
               active={location.pathname === '/recent-uploads'}
               className="nav-item submenu-item"
             >
-              <span>Recent Uploads</span>
+              <span className='sidenav-items'>Recent Uploads</span>
             </Nav.Link>
           </div>
         </div>
@@ -213,8 +217,8 @@ function Sidenav({ isOpen, toggleSidenav }) {
           active={location.pathname === '/upload-history'}
           className="nav-item"
         >
-          <img src="/info.svg" alt="Help" className="nav-icon" />
-          <span>Upload History</span>
+          <img src="/sidebar-icons/history.svg" alt="Help" className="nav-icon" />
+          <span className='sidenav-items'>Upload History</span>
         </Nav.Link>
 
         <Nav.Link
@@ -223,8 +227,8 @@ function Sidenav({ isOpen, toggleSidenav }) {
           active={location.pathname === '/help-centre'}
           className="nav-item"
         >
-          <img src="/info.svg" alt="Help" className="nav-icon" />
-          <span>Help Centre</span>
+          <img src="/sidebar-icons/help.svg" alt="Help" className="nav-icon" />
+          <span className='sidenav-items'>Help Centre</span>
         </Nav.Link>
 
         <Nav.Link
@@ -234,7 +238,7 @@ function Sidenav({ isOpen, toggleSidenav }) {
           className="nav-item"
         >
           <img src="/chat.svg" alt="Contact" className="nav-icon" />
-          <span>Contact us</span>
+          <span className='sidenav-items'>Contact us</span>
         </Nav.Link>
       </Nav>
     </div>

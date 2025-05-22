@@ -12,6 +12,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Header.css';
+import { CircleUserRound } from 'lucide-react';
 
 function Header({ isOpen }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -80,10 +81,10 @@ function Header({ isOpen }) {
         </div>
         <div className="header-right">
           <button className="icon-button">
-            <FontAwesomeIcon icon={faSearch} />
+            <img src="/header-icons/search.svg" alt="Help"/>
           </button>
           <button className="icon-button">
-            <FontAwesomeIcon icon={faBell} />
+            <img src="/header-icons/bell.svg" alt="Help"/>
           </button>
           <Dropdown
             align="end"
@@ -91,7 +92,7 @@ function Header({ isOpen }) {
             onToggle={(isOpen) => setIsDropdownOpen(isOpen)}
           >
             <Dropdown.Toggle className="user-dropdown">
-              <FontAwesomeIcon icon={faUser} className="avatar" />
+              <CircleUserRound/>
               <span>{getFullName()}</span>
               <FontAwesomeIcon
                 icon={isDropdownOpen ? faChevronUp : faChevronDown}

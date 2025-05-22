@@ -1,5 +1,6 @@
 .sidenav {
-  width: 20.357rem; /* 285px */
+  width: 20.357rem;
+  /* 285px */
   background: white;
   height: 100vh;
   position: fixed;
@@ -7,7 +8,7 @@
   top: 0;
   padding: 1.5rem;
   border-right: 1px solid #E6EDFF;
-  z-index: 1000;
+  z-index: 10000;
   transition: width 0.3s ease;
 }
 
@@ -18,7 +19,7 @@
   padding-right: 0;
   padding-top: 1.5rem;
   transition: width 0.3s ease;
-  
+
 }
 
 
@@ -28,12 +29,12 @@
   transition: width 0.3s ease;
 }
 
-.sidenav.collapsed .logo-container > a{
+.sidenav.collapsed .logo-container>a {
   display: none;
   transition: width 0.3s ease;
 }
 
-.sidenav.open .logo-container > a{
+.sidenav.open .logo-container>a {
   display: block;
   transition: width 0.3s ease;
 }
@@ -46,7 +47,8 @@
 }
 
 .logo {
-  max-width: 8rem; /* 128px */
+  max-width: 8rem;
+  /* 128px */
   height: auto;
 }
 
@@ -128,7 +130,8 @@
 }
 
 .submenu.open {
-  max-height: 500px; /* Adjust this value based on your content */
+  max-height: 500px;
+  /* Adjust this value based on your content */
   opacity: 1;
   transform: translateY(0);
 }
@@ -138,13 +141,23 @@
   font-size: 0.875rem;
 }
 
+.sidenav-items {
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0%;
+  
+}
+
 @keyframes slideDown {
   from {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
-} 
+}
