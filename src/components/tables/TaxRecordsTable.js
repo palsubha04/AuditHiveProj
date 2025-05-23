@@ -3,7 +3,7 @@ import { Card, Row, Col, Form, Badge } from 'react-bootstrap';
 import Table from '../Table';
 import gstService from '../../services/gst.service';
 import debounce from 'lodash/debounce';
-import "../../pages/Dashboard.css";
+import '../../pages/Dashboard.css';
 
 const TaxRecordsTable = ({ startDate, endDate }) => {
   const [records, setRecords] = useState([]);
@@ -16,13 +16,13 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
 
   const fetchRecords = async (tin = '', page = 1, append = false) => {
     if (loading || isLoadingMore) return;
-    
+
     if (page === 1) {
       setLoading(true);
     } else {
       setIsLoadingMore(true);
     }
-    
+
     setError(null);
     try {
       let response;
@@ -32,7 +32,7 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
       } else {
         response = await gstService.getTaxRecords(startDate, endDate, page);
         if (append) {
-          setRecords(prev => [...prev, ...response.records]);
+          setRecords((prev) => [...prev, ...response.records]);
         } else {
           setRecords(response.records);
         }
@@ -80,61 +80,97 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
       setCurrentPage(nextPage);
       fetchRecords(searchTin, nextPage, true);
     }
-  }, [records.length, totalRecords, loading, isLoadingMore, currentPage, searchTin]);
+  }, [
+    records.length,
+    totalRecords,
+    loading,
+    isLoadingMore,
+    currentPage,
+    searchTin,
+  ]);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(value);
   };
 
   const columns = [
     {
       accessorKey: 'tin',
-      header: 'TIN'
+      header: 'TIN',
     },
     {
       accessorKey: 'taxpayer_name',
       header: 'Taxpayer Name',
-      cell: ({ getValue }) => getValue() || 'N/A'
+      cell: ({ getValue }) => getValue() || 'N/A',
     },
     {
       accessorKey: 'taxpayer_type',
-      header: 'Type'
+      header: 'Type',
     },
     {
       accessorKey: 'segmentation',
-      header: 'Segmentation'
+      header: 'Segmentation',
     },
     {
       accessorKey: 'total_sales_income',
       header: 'Total Sales',
-      cell: ({ getValue }) => formatCurrency(getValue())
+      cell: ({ getValue }) => formatCurrency(getValue()),
     },
     {
       accessorKey: 'gst_payable',
       header: 'GST Payable',
-      cell: ({ getValue }) => formatCurrency(getValue())
+      cell: ({ getValue }) => formatCurrency(getValue()),
     },
     {
       accessorKey: 'gst_refundable',
       header: 'GST Refundable',
-      cell: ({ getValue }) => formatCurrency(getValue())
+      cell: ({ getValue }) => formatCurrency(getValue()),
     },
     {
       accessorKey: 'is_fraud',
       header: 'Is Fraud',
-      cell: ({ getValue }) => (
-        <Badge bg={getValue() ? 'danger' : 'success'}>
-          {getValue() ? 'Fraud' : 'Valid'}
-        </Badge>
-      ),
-      // Override the header to prevent filter functionality
-      header: 'Is Fraud'
-    }
+      cell: ({ getValue }) => {
+        const isFraud = getValue();
+        return (
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '4px 12px',
+              borderRadius: '16px', // Adjust for more or less rounded corners
+              //backgroundColor: isFraud ? '#FEE2E2' : '#D1FAE5', // Light red for Fraud, Light green for Valid
+              //border: isFraud ? '1px solid #FECACA' : '1px solid #A7F3D0',
+              border: '1px solid #D1D5DB', // Light gray border for both Fraud and Valid
+            }}
+          >
+            <span
+              style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: isFraud ? '#FF3535' : '#34C759', // Red for Fraud, Green for Valid
+                marginRight: '8px',
+              }}
+            ></span>
+            <span
+              style={{
+                color: '#000000',
+                fontSize: '14px',
+                fontWeight: '500',
+              }}
+            >
+              {isFraud ? 'Fraud' : 'Valid'}
+            </span>
+          </div>
+        );
+      },
+      header: 'Is Fraud', // Keep this if you want to prevent filtering on this column
+    },
   ];
 
   return (
@@ -154,7 +190,9 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
         ) : (
           <>
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <Card.Title><span className='chart-headers'>Tax Records</span></Card.Title>
+              <Card.Title>
+                <span className="chart-headers">Tax Records</span>
+              </Card.Title>
               <Form.Group className="mb-0" style={{ width: '300px' }}>
                 <Form.Control
                   type="text"
@@ -180,4 +218,4 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
   );
 };
 
-export default TaxRecordsTable; 
+export default TaxRecordsTable;
