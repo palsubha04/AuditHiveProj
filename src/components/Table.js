@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useMemo, useState, useCallback } from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -34,7 +40,7 @@ function Table({
   onLoadMore,
   hasMore = false,
   loadingMore = false,
-  jobId = null
+  jobId = null,
 }) {
   const tableContainerRef = useRef(null);
   const [isFraudFilter, setIsFraudFilter] = useState('all');
@@ -43,7 +49,7 @@ function Table({
   const filteredData = useMemo(() => {
     if (isFraudFilter === 'all') return data;
 
-    return data.filter(row => {
+    return data.filter((row) => {
       const isFraud = String(row.is_fraud).toLowerCase();
       return isFraud === isFraudFilter;
     });
@@ -59,10 +65,12 @@ function Table({
     try {
       console.log('Downloading fraud records for job:', jobId);
       const response = await api.get(`/tax/jobs/${jobId}/fraud-records`, {
-        responseType: 'blob'
+        responseType: 'blob',
       });
 
-      const filename = response.headers['content-disposition']?.split('filename=')[1] || 'fraud-records.csv';
+      const filename =
+        response.headers['content-disposition']?.split('filename=')[1] ||
+        'fraud-records.csv';
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const a = document.createElement('a');
@@ -84,42 +92,48 @@ function Table({
     setIsFraudFilter(value);
   }, []);
 
-  const processedColumns = useMemo(() =>
-    columns.map(col => ({
-      ...col,
-      size: '100%',
-      header: col.accessorKey === 'is_fraud' && jobId
-        ? ({ column }) => (
-          <div className="fraud-filter-header">
-            <div className="header-title">Is Fraud</div>
-            <div className="filter-controls">
-              <select
-                value={isFraudFilter}
-                onChange={(e) => handleFilterChange(e, column)}
-                onClick={e => e.stopPropagation()}
-              >
-                <option value="all">All</option>
-                <option value="true">True</option>
-                <option value="false">False</option>
-              </select>
-              {isFraudFilter === 'true' && (
-                <button
-                  className="download-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    downloadFraudRecords();
-                  }}
-                  disabled={!jobId}
-                  title={!jobId ? "Job ID not available" : "Download fraud records"}
-                >
-                  <DownloadIcon />
-                </button>
-              )}
-            </div>
-          </div>
-        )
-        : col.header,
-    })),
+  const processedColumns = useMemo(
+    () =>
+      columns.map((col) => ({
+        ...col,
+        size: '100%',
+        header:
+          col.accessorKey === 'is_fraud' && jobId
+            ? ({ column }) => (
+                <div className="fraud-filter-header">
+                  <div className="header-title">Is Fraud</div>
+                  <div className="filter-controls">
+                    <select
+                      value={isFraudFilter}
+                      onChange={(e) => handleFilterChange(e, column)}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <option value="all">All</option>
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
+                    {isFraudFilter === 'true' && (
+                      <button
+                        className="download-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          downloadFraudRecords();
+                        }}
+                        disabled={!jobId}
+                        title={
+                          !jobId
+                            ? 'Job ID not available'
+                            : 'Download fraud records'
+                        }
+                      >
+                        <DownloadIcon />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )
+            : col.header,
+      })),
     [columns, isFraudFilter, handleFilterChange, downloadFraudRecords, jobId]
   );
 
@@ -155,7 +169,6 @@ function Table({
     fetchMoreOnBottomReached(tableContainerRef.current);
   }, [fetchMoreOnBottomReached]);
 
-
   return (
     <div
       ref={tableContainerRef}
@@ -163,34 +176,49 @@ function Table({
       style={{ height: '600px', overflowY: 'auto' }}
       onScroll={(e) => fetchMoreOnBottomReached(e.target)}
     >
-      <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
-        <thead style={{
-          position: 'sticky',
-          top: 0,
-          backgroundColor: 'white',
-          zIndex: 1
-        }}>
-          {table.getHeaderGroups().map(headerGroup => (
+      <table
+        style={{
+          width: '100%',
+          tableLayout: 'fixed',
+          borderCollapse: 'collapse',
+        }}
+      >
+        <thead
+          style={{
+            position: 'sticky',
+            top: 0,
+            backgroundColor: 'white',
+            zIndex: 1,
+          }}
+        >
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
+              {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
                   style={{
-                    padding: '12px',
+                    padding: '12px 20px',
                     borderBottom: '2px solid #eee',
-                    textAlign: 'left',
-                    width: '200px',
+                    textAlign: 'center',
+                    // width: '200px', // Ensure this line is removed or commented out
                   }}
                 >
-                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
                 </th>
               ))}
             </tr>
           ))}
         </thead>
         <tbody>
-          <tr style={{ height: `${(rowVirtualizer.getVirtualItems()[0]?.start ?? 0)}px` }} />
-          {rowVirtualizer.getVirtualItems().map(virtualRow => {
+          <tr
+            style={{
+              height: `${rowVirtualizer.getVirtualItems()[0]?.start ?? 0}px`,
+            }}
+          />
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
             const row = rows[virtualRow.index];
             return (
               <tr
@@ -198,13 +226,14 @@ function Table({
                 ref={rowVirtualizer.measureElement}
                 style={{ height: '35px' }} // You may adjust based on actual row height
               >
-                {row.getVisibleCells().map(cell => (
+                {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
                     title={cell.getValue()}
-                    className='table-td'
+                    className="table-td"
                     style={{
-                      width: '200px',
+                      padding: '0 30px',
+                      // width: '200px', // Ensure this line is removed or commented out
                     }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -213,19 +242,20 @@ function Table({
               </tr>
             );
           })}
-          <tr style={{ height: `${rowVirtualizer.getTotalSize() - (rowVirtualizer.getVirtualItems()[0]?.start ?? 0) - (rowVirtualizer.getVirtualItems().length * 35)}px` }} />
+          <tr
+            style={{
+              height: `${
+                rowVirtualizer.getTotalSize() -
+                (rowVirtualizer.getVirtualItems()[0]?.start ?? 0) -
+                rowVirtualizer.getVirtualItems().length * 35
+              }px`,
+            }}
+          />
         </tbody>
-
-
       </table>
-      {loadingMore && (
-        <div className="loading-more">Loading more data...</div>
-      )}
+      {loadingMore && <div className="loading-more">Loading more data...</div>}
     </div>
-
   );
-
-
 }
 
-export default React.memo(Table); 
+export default React.memo(Table);

@@ -20,13 +20,13 @@
 //       try {
 //         setLoading(true);
 //         const response = await gstService.getSegmentationDistribution(startDate, endDate);
-        
+
 //         // Transform the data for the pie chart
 //         const chartData = Object.entries(response).map(([name, value]) => ({
 //           name: name.charAt(0).toUpperCase() + name.slice(1),
 //           value: value
 //         }));
-        
+
 //         setData(chartData);
 //         setError(null);
 //       } catch (err) {
@@ -94,7 +94,7 @@
 //     }
 //   };
 
-//   const series = data.length > 0 
+//   const series = data.length > 0
 //     ? (data.every(item => item.value === 0) ? [] : data.map(item => item.value))
 //     : [];
 
@@ -148,20 +148,20 @@
 //   );
 // }
 
-// export default SegmentationDistributionChart; 
+// export default SegmentationDistributionChart;
 
 import React, { useState, useEffect } from 'react';
 import { Card, Spinner } from 'react-bootstrap';
 import ReactApexChart from 'react-apexcharts';
 import gstService from '../../services/gst.service';
-import "../../pages/Dashboard.css";
-import './charts.css'
+import '../../pages/Dashboard.css';
+import './charts.css';
 
 const COLORS = {
-  micro: '#FFD12CB2',
+  micro: '#FFD12C',
   small: '#4485E5',
   medium: '#FF779D',
-  large: '#00E096'
+  large: '#00E096',
 };
 
 const VALID_SEGMENTS = ['micro', 'small', 'medium', 'large'];
@@ -176,17 +176,19 @@ function SegmentationDistributionChart({ startDate, endDate }) {
       try {
         setLoading(true);
         setError(null);
-        const response = await gstService.getSegmentationDistribution(startDate, endDate);
-        console.log("response",response);
-        
+        const response = await gstService.getSegmentationDistribution(
+          startDate,
+          endDate
+        );
+
         // Transform the data for the pie chart, only including valid segments
         const chartData = Object.entries(response)
           .filter(([name]) => VALID_SEGMENTS.includes(name.toLowerCase()))
           .map(([name, value]) => ({
             name: name.charAt(0).toUpperCase() + name.slice(1),
-            value: value
+            value: value,
           }));
-        
+
         setData(chartData);
       } catch (err) {
         console.error('Error fetching segmentation distribution:', err);
@@ -206,7 +208,7 @@ function SegmentationDistributionChart({ startDate, endDate }) {
 
   const options = {
     chart: {
-      type: "pie",
+      type: 'pie',
       height: 350,
       animations: {
         enabled: true,
@@ -218,7 +220,7 @@ function SegmentationDistributionChart({ startDate, endDate }) {
     stroke: {
       show: true,
       width: 0,
-      colors: ["transparent"],
+      colors: ['transparent'],
     },
     labels: data.length > 0 ? data.map((item) => item.name) : [],
     colors:
@@ -226,7 +228,7 @@ function SegmentationDistributionChart({ startDate, endDate }) {
         ? data.map((item) => COLORS[item.name.toLowerCase()])
         : [],
     legend: {
-      position: "bottom",
+      position: 'bottom',
     },
     // tooltip: {
     //   y: {
@@ -253,7 +255,7 @@ function SegmentationDistributionChart({ startDate, endDate }) {
     plotOptions: {
       pie: {
         donut: {
-          size: "0%",
+          size: '0%',
         },
         dataLabels: {
           offset: -30,
@@ -268,29 +270,40 @@ function SegmentationDistributionChart({ startDate, endDate }) {
       },
     },
     noData: {
-      text: "No Data Found",
-      align: "center",
-      verticalAlign: "middle",
+      text: 'No Data Found',
+      align: 'center',
+      verticalAlign: 'middle',
       offsetX: 0,
       offsetY: 0,
       style: {
-        color: "#6c757d",
-        fontSize: "16px",
-        fontFamily: "inherit",
+        color: '#6c757d',
+        fontSize: '16px',
+        fontFamily: 'inherit',
       },
     },
   };
 
-  const series = data.length > 0 
-    ? (data.every(item => item.value === 0) ? [] : data.map(item => item.value))
-    : [];
+  const series =
+    data.length > 0
+      ? data.every((item) => item.value === 0)
+        ? []
+        : data.map((item) => item.value)
+      : [];
 
   if (loading) {
     return (
       <Card className="chart-card">
         <Card.Body>
           <Card.Title>Segmentation Distribution</Card.Title>
-          <div className="text-center" style={{ height: '350px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            className="text-center"
+            style={{
+              height: '350px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             <Spinner animation="border" role="status" variant="primary">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
@@ -315,7 +328,15 @@ function SegmentationDistributionChart({ startDate, endDate }) {
       <Card className="chart-card">
         <Card.Body>
           <Card.Title>Segmentation Distribution</Card.Title>
-          <div className="text-center text-muted" style={{ height: '350px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            className="text-center text-muted"
+            style={{
+              height: '350px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             No Data Found
           </div>
         </Card.Body>
@@ -326,7 +347,9 @@ function SegmentationDistributionChart({ startDate, endDate }) {
   return (
     <Card className="chart-card box-background">
       <Card.Body>
-        <Card.Title><span className='chart-headers'>Segmentation Distribution</span></Card.Title>
+        <Card.Title>
+          <span className="chart-headers">Segmentation Distribution</span>
+        </Card.Title>
         <div style={{ width: '100%', height: 380 }}>
           <ReactApexChart
             options={options}
@@ -340,4 +363,4 @@ function SegmentationDistributionChart({ startDate, endDate }) {
   );
 }
 
-export default SegmentationDistributionChart; 
+export default SegmentationDistributionChart;
