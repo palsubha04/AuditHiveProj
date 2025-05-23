@@ -98,28 +98,20 @@ const UploadHistory = () => {
 
   return (
     <Layout>
-      <Container
-        className="p-4"
-        style={{
-          background: '#fff',
-          borderRadius: 16,
-          border: '1px solid #e9eaf0',
-        }}
-      >
-        <h4 className="mb-4" style={{ color: '#1a237e', fontWeight: 700 }}>
+      <div className='h-100'>
+        {/* <h4 className="mb-4" style={{ color: '#1a237e', fontWeight: 700 }}>
           Upload Validation
-        </h4>
+        </h4> */}
         <div
           ref={scrollRef}
           style={{
-            maxHeight: 400,
+            height: '100%',
             overflowY: 'auto',
             borderRadius: 8,
-            border: '1px solid #f0f0f0',
           }}
         >
           <Table hover responsive>
-            <thead>
+            <thead style={{ position: 'sticky', top: 0, backgroundColor: '#fafafa' }}>
               <tr>
                 <th>No</th>
                 <th
@@ -165,7 +157,7 @@ const UploadHistory = () => {
             </tbody>
           </Table>
         </div>
-      </Container>
+      </div>
     </Layout>
   );
 };
