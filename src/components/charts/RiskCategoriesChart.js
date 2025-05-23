@@ -178,7 +178,7 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
       records.map(({ tin, taxpayer_name }) => ({
         tin,
         taxpayer_name,
-        category,
+        segmentation: category,
       }))
     );
     for (let i in currentData) {
@@ -306,7 +306,7 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
           <CSVExportButton
           records={records}
           filename="risk_taxpayers.csv"
-          buttonLabel="Download Risk Taxpayer List"
+          buttonLabel="Download Risk Taxpayers List"
         />
             </Col>
          

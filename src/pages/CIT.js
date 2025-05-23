@@ -12,8 +12,10 @@ import CITTaxRecordsTable from '../components/tables/TaxRecordsTableCIT';
 import CITNetProfitTaxPayers from '../components/tables/CITNetProfitTaxPayers';
 import CITNetLossTaxPayers from '../components/tables/CITNetLossTaxPayers';
 import CITCostSalesComparison from '../components/tables/CITCostSalesComparison';
-import InterestExpenseCitChart from "../components/charts/cit/InterestExpenseCitChart";
-import SuperneutionCitChart from '../components/charts/cit/SuperneutionCitChart';
+import InterestExpenseCitChart from '../components/charts/CIT/InterestExpenseCitChart';
+import SuperneutionCitChart from '../components/charts/CIT/SuperneutionCitChart';
+//import InterestExpenseCitChart from "../components/charts/cit/InterestExpenseCitChart";
+//import SuperneutionCitChart from '../components/charts/cit/SuperneutionCitChart';
 
 
 function CIT() {

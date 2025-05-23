@@ -421,6 +421,7 @@ function RiskProfiling() {
                     <div className="p-0 w-100">
                       <RiskAnomalyFrequencyChart
                         riskAnomalyFrequencyData={frequencyOfAnomalyProfilingData}
+                        source="Risk Profiling"
                       />
                     </div>
                   )}

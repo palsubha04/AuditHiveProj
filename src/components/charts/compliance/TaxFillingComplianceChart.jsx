@@ -74,20 +74,21 @@ const sampleData = {
   },
 };
 
-const TaxFillingComplianceChart = ({ x }) => {
+const TaxFillingComplianceChart = ({ taxFilingComplianceData }) => {
+  console.log("taxFilingComplianceData", taxFilingComplianceData);
   const [filterData, setFilterData] = useState(
-    sampleData ? sampleData["gst"] ?? {} : {}
+    taxFilingComplianceData ? sampleData["gst"] ?? {} : {}
   );
 
   const defaultCategory = "gst";
   useEffect(() => {
-    if (sampleData?.[defaultCategory]) {
-      setFilterData(sampleData[defaultCategory]);
+    if (taxFilingComplianceData?.[defaultCategory]) {
+      setFilterData(taxFilingComplianceData[defaultCategory]);
     }
-  }, [sampleData]);
+  }, [taxFilingComplianceData]);
 
   const changeCategoryData = (category) => {
-    const selectedData = sampleData?.[category] ?? {};
+    const selectedData = taxFilingComplianceData?.[category] ?? {};
     setFilterData(selectedData);
   };
 

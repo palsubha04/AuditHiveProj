@@ -2,15 +2,26 @@ import { Tally1 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import './charts.css'
+import CSVExportButton from '../CSVExportButton';
 
 const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
   //console.log("data received in RiskBreakdownByCategoryChart", riskBreakdownByCategoryData);
   const [filterData, setFilterData] = useState(riskBreakdownByCategoryData ? riskBreakdownByCategoryData["gst"] ?? {} : {});
+  const [records, setRecords] = useState([]);
 
   const defaultCategory = "gst";
   useEffect(() => {
     if (riskBreakdownByCategoryData?.[defaultCategory]) {
       setFilterData(riskBreakdownByCategoryData[defaultCategory]);
+      const result = Object.entries(riskBreakdownByCategoryData[defaultCategory]).flatMap(([category, { records }]) =>
+      records.map(({ tin, taxpayer_name }) => ({
+        tin,
+        taxpayer_name,
+        category,
+      }))
+    );
+   
+    setRecords(result);
     }
   }, [riskBreakdownByCategoryData]);
 
@@ -77,6 +88,17 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
   const changeCategoryData = (category) => {
     const selectedData = riskBreakdownByCategoryData?.[category] ?? {};
     setFilterData(selectedData);
+    
+    
+    const result = Object.entries(selectedData).flatMap(([category, { records }]) =>
+      records.map(({ tin, taxpayer_name }) => ({
+        tin,
+        taxpayer_name,
+        segmentation: category,
+      }))
+    );
+   
+    setRecords(result);
   };
 
 
@@ -84,12 +106,13 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
     <div>
       <div style={{
         display: 'flex',
-        // justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 16
+        marginBottom: 16,
+        justifyContent: 'space-between',
       }}>
+        <div className='d-flex'>
         <span className='chart-headers'>Risk Breakdown By Category</span>
-        <div>
+        <div className=''>
           <select 
             className='chart-filter'
             onChange={(e) => changeCategoryData(e.target.value)}>
@@ -97,7 +120,15 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
             <option value="swt">SWT</option>
             <option value="cit">CIT</option>
           </select>
+         
+         
         </div>
+        </div>
+        <CSVExportButton
+          records={records}
+          filename="risk_breakdown_category.csv"
+          buttonLabel="Download Risk Breakdown By Category Taxpayer List"
+        />
       </div>
       <Chart options={options} series={series} type="bar" height={350} />
       {/* Only render chart if series data exists */}

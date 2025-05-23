@@ -53,14 +53,14 @@ const Compliance = () => {
           return;
         }
     
-        if (!taxFilingComplianceData) {
+       // if (!taxFilingComplianceData) {
           dispatch(
             fetchTaxFilingCompliance({
               start_date: dateRange.start_date,
               end_date: dateRange.end_date,
             })
           );
-        }
+     //   }
 
       //  if (!taxDelayComplianceData) {
           dispatch(
@@ -109,7 +109,7 @@ const Compliance = () => {
                     </div>
                   ) : (
                     <div className="p-0 w-100">
-                      <TaxFillingComplianceChart sampleData={taxFilingComplianceData}/>
+                      <TaxFillingComplianceChart taxFilingComplianceData={taxFilingComplianceData}/>
                     </div>
                   )}
                 </CardBody>

@@ -176,6 +176,7 @@ function RiskAssessment() {
                     <div className="p-0 w-100">
                       <RiskAnomalyFrequencyChart
                         riskAnomalyFrequencyData={riskAnomalyFrequencyData}
+                        source="Risk Assessment"
                       />
                     </div>
                   )}
