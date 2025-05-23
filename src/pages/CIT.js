@@ -12,14 +12,13 @@ import CITTaxRecordsTable from '../components/tables/TaxRecordsTableCIT';
 import CITNetProfitTaxPayers from '../components/tables/CITNetProfitTaxPayers';
 import CITNetLossTaxPayers from '../components/tables/CITNetLossTaxPayers';
 import CITCostSalesComparison from '../components/tables/CITCostSalesComparison';
-import InterestExpenseCitChart from "../components/charts/cit/InterestExpenseCitChart";
-import SuperneutionCitChart from '../components/charts/cit/SuperneutionCitChart';
-
+import InterestExpenseCitChart from '../components/charts/CIT/InterestExpenseCitChart';
+import SuperneutionCitChart from '../components/charts/CIT/SuperneutionCitChart';
 
 function CIT() {
   const [dateRange, setDateRange] = useState({
     start_date: '',
-    end_date: ''
+    end_date: '',
   });
 
   const handleFilterChange = (range) => {
@@ -29,11 +28,9 @@ function CIT() {
   return (
     <Layout>
       <Container fluid>
-        <div className='top-filter-class'>
-          <TenureFilter
-            onFilterChange={handleFilterChange}
-          />
-          <div className='d-flex ps-2 gap-2 justify-center align-items-center'>
+        <div className="top-filter-class">
+          <TenureFilter onFilterChange={handleFilterChange} />
+          <div className="d-flex ps-2 gap-2 justify-center align-items-center">
             <span>{dateRange.start_date}</span>
             <span>to</span>
             <span>{dateRange.end_date}</span>
@@ -44,27 +41,31 @@ function CIT() {
 
         <div className="row">
           <div className="col-12 chart-columns-div">
-          <CITNetProfitTaxPayers startDate={dateRange.start_date} endDate={dateRange.end_date}/>
+            <CITNetProfitTaxPayers
+              startDate={dateRange.start_date}
+              endDate={dateRange.end_date}
+            />
             {/* <TotalAmountByIncomeType startDate={dateRange.start_date}
               endDate={dateRange.end_date} /> */}
             {/* <SalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
           <div className="col-12 chart-columns-div">
-          <CITNetLossTaxPayers startDate={dateRange.start_date} endDate={dateRange.end_date}/>
+            <CITNetLossTaxPayers
+              startDate={dateRange.start_date}
+              endDate={dateRange.end_date}
+            />
             {/* <TotalAmountByExpenseType startDate={dateRange.start_date}
               endDate={dateRange.end_date} /> */}
             {/* <CITPayableVsRefundable startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
           <div className="row chart-columns-div pe-0">
             <div className="col-md-6">
-
               <CITSegmentationDistributionChart
                 startDate={dateRange.start_date}
                 endDate={dateRange.end_date}
               />
             </div>
             <div className="col-md-6 pe-0">
-
               <RiskCategoriesChart
                 startDate={dateRange.start_date}
                 endDate={dateRange.end_date}
@@ -73,25 +74,28 @@ function CIT() {
             </div>
           </div>
           <div className="col-6">
-          <SuperneutionCitChart
+            <SuperneutionCitChart
               startDate={dateRange.start_date}
               endDate={dateRange.end_date}
             />
             {/* <CITTaxRecordsTable startDate={dateRange.start_date} endDate={dateRange.end_date} /> */}
           </div>
-          <div className='col-6'>
-          <InterestExpenseCitChart
+          <div className="col-6">
+            <InterestExpenseCitChart
               startDate={dateRange.start_date}
               endDate={dateRange.end_date}
             />
-            </div>
-            <div className='col-12'>
-            <CITCostSalesComparison startDate={dateRange.start_date} endDate={dateRange.end_date} />
-            </div>
+          </div>
+          <div className="col-12">
+            <CITCostSalesComparison
+              startDate={dateRange.start_date}
+              endDate={dateRange.end_date}
+            />
+          </div>
         </div>
       </Container>
     </Layout>
   );
 }
 
-export default CIT; 
+export default CIT;
