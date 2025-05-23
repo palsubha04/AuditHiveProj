@@ -103,6 +103,10 @@
   margin-bottom: 0.5rem;
 }
 
+.sidenav-toggle-icon:hover {
+  color: #347AE2 !important;
+}
+
 .arrow {
   margin-left: auto;
   font-size: 0.75rem;
