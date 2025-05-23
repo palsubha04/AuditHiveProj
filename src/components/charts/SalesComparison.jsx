@@ -3,7 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col } from 'react-bootstrap';
 import gstService from '../../services/gst.service';
 import '../../pages/Dashboard.css';
-import './charts.css'
+import './charts.css';
 
 const SalesComparison = ({ startDate, endDate }) => {
   const [chartData, setChartData] = useState({
@@ -11,30 +11,33 @@ const SalesComparison = ({ startDate, endDate }) => {
     series: [
       {
         name: 'Total Sales Income',
-        data: []
+        data: [],
       },
       {
         name: 'Exempt Sales',
-        data: []
+        data: [],
       },
       {
         name: 'Zero Rated Sales',
-        data: []
+        data: [],
       },
       {
         name: 'GST Taxable Sales',
-        data: []
-      }
-    ]
+        data: [],
+      },
+    ],
   });
 
-  const colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560'];
+  const colors = ['#347AE2', '#FF779D', '#FFD12C', '#20E5F3'];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await gstService.getSalesComparison(startDate, endDate);
-        
+        const response = await gstService.getSalesComparison(
+          startDate,
+          endDate
+        );
+
         // Process the response data
         const categories = [];
         const totalSalesData = [];
@@ -42,10 +45,15 @@ const SalesComparison = ({ startDate, endDate }) => {
         const zeroRatedSalesData = [];
         const gstTaxableSalesData = [];
 
-        response.records.forEach(record => {
-          record.monthly_summary.forEach(summary => {
+        response.records.forEach((record) => {
+          record.monthly_summary.forEach((summary) => {
             const date = new Date(record.year, summary.month - 1);
-            categories.push(date.toLocaleString('default', { month: 'short', year: 'numeric' }));
+            categories.push(
+              date.toLocaleString('default', {
+                month: 'short',
+                year: 'numeric',
+              })
+            );
             totalSalesData.push(summary.total_sales_income);
             exemptSalesData.push(summary.exempt_sales);
             zeroRatedSalesData.push(summary.zero_rated_sales);
@@ -54,31 +62,34 @@ const SalesComparison = ({ startDate, endDate }) => {
         });
 
         // Check if all values are zero
-        const allZero = totalSalesData.every(val => val === 0) &&
-                       exemptSalesData.every(val => val === 0) &&
-                       zeroRatedSalesData.every(val => val === 0) &&
-                       gstTaxableSalesData.every(val => val === 0);
+        const allZero =
+          totalSalesData.every((val) => val === 0) &&
+          exemptSalesData.every((val) => val === 0) &&
+          zeroRatedSalesData.every((val) => val === 0) &&
+          gstTaxableSalesData.every((val) => val === 0);
 
         setChartData({
           xAxis: categories,
-          series: allZero ? [] : [
-            {
-              name: 'Total Sales Income',
-              data: totalSalesData
-            },
-            {
-              name: 'Exempt Sales',
-              data: exemptSalesData
-            },
-            {
-              name: 'Zero Rated Sales',
-              data: zeroRatedSalesData
-            },
-            {
-              name: 'GST Taxable Sales',
-              data: gstTaxableSalesData
-            }
-          ]
+          series: allZero
+            ? []
+            : [
+                {
+                  name: 'Total Sales Income',
+                  data: totalSalesData,
+                },
+                {
+                  name: 'Exempt Sales',
+                  data: exemptSalesData,
+                },
+                {
+                  name: 'Zero Rated Sales',
+                  data: zeroRatedSalesData,
+                },
+                {
+                  name: 'GST Taxable Sales',
+                  data: gstTaxableSalesData,
+                },
+              ],
         });
       } catch (error) {
         console.error('Error fetching sales comparison data:', error);
@@ -95,35 +106,43 @@ const SalesComparison = ({ startDate, endDate }) => {
       type: 'line',
       height: 350,
       toolbar: {
-        show: true
+        show: true,
       },
       zoom: {
-        enabled: true
-      }
+        enabled: true,
+      },
     },
     stroke: {
       curve: 'smooth',
-      width: 2
+      width: 2,
     },
     xaxis: {
-      categories: chartData.xAxis
+      categories: chartData.xAxis,
     },
     yaxis: {
       title: {
-        text: 'Amount ($)'
+        text: 'Amount ($)',
       },
       labels: {
-        formatter: (value) => `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-      }
+        formatter: (value) =>
+          `$${value.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`,
+      },
     },
     tooltip: {
       y: {
-        formatter: (value) => `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-      }
+        formatter: (value) =>
+          `$${value.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`,
+      },
     },
     colors: colors,
     legend: {
-      position: 'top'
+      position: 'bottom',
     },
     noData: {
       text: 'No Data Found',
@@ -134,9 +153,9 @@ const SalesComparison = ({ startDate, endDate }) => {
       style: {
         color: '#6c757d',
         fontSize: '16px',
-        fontFamily: 'inherit'
-      }
-    }
+        fontFamily: 'inherit',
+      },
+    },
   };
 
   return (
@@ -144,7 +163,7 @@ const SalesComparison = ({ startDate, endDate }) => {
       <Card.Body>
         <Row className="mb-4">
           <Col>
-            <span className='chart-headers'>Sales Comparison</span>
+            <span className="chart-headers">Sales Comparison</span>
           </Col>
         </Row>
         <ReactApexChart
@@ -158,4 +177,4 @@ const SalesComparison = ({ startDate, endDate }) => {
   );
 };
 
-export default SalesComparison; 
+export default SalesComparison;

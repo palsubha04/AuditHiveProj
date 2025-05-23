@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import gstService from '../../services/gst.service';
-import "../../pages/Dashboard.css";
+import '../../pages/Dashboard.css';
 
-const SummaryCard = ({ title, value, icon }) => (
-  <Card className="h-100 box-background">
-    <Card.Body>
-      <div className="d-flex justify-content-between align-items-center">
-        <div className="flex-grow-1">
-          <h6 className="text-muted mb-2">{title}</h6>
-          <h4 className="mb-0 text-truncate" style={{ fontSize: 'clamp(0.875rem, 2vw, 1.25rem)' }}>{value}</h4>
-        </div>
-        {icon && <div className="text-primary fs-3 ms-2">{icon}</div>}
-      </div>
-    </Card.Body>
-  </Card>
+const MetricCard = ({ value, label, color }) => (
+  <div style={{ textAlign: 'center', minWidth: 150 }}>
+    <div style={{ fontWeight: 700, fontSize: 24, color }}>{value}</div>
+    <div style={{ fontSize: 15, color: '#222', marginBottom: 4 }}>{label}</div>
+  </div>
 );
 
 const GSTSummaryCards = ({ startDate, endDate }) => {
@@ -23,7 +16,10 @@ const GSTSummaryCards = ({ startDate, endDate }) => {
   useEffect(() => {
     const fetchSummary = async () => {
       try {
-        const response = await gstService.getTaxRecordsSummary(startDate, endDate);
+        const response = await gstService.getTaxRecordsSummary(
+          startDate,
+          endDate
+        );
         setSummary(response);
       } catch (err) {
         console.error('Error fetching summary:', err);
@@ -37,70 +33,77 @@ const GSTSummaryCards = ({ startDate, endDate }) => {
 
   const formatCurrency = (value) => {
     if (value >= 1e9) {
-      return `$${(value / 1e9).toFixed(2)}B`;
+      return (value / 1e9).toFixed(2) + 'B';
     } else if (value >= 1e6) {
-      return `$${(value / 1e6).toFixed(2)}M`;
+      return (value / 1e6).toFixed(2) + 'M';
     } else if (value >= 1e3) {
-      return `$${(value / 1e3).toFixed(2)}K`;
+      return (value / 1e3).toFixed(2) + 'K';
     }
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(value);
+    return value;
   };
 
   const formatNumber = (value) => {
     if (value >= 1e6) {
-      return `${(value / 1e6).toFixed(1)}M`;
+      return (value / 1e6).toFixed(1) + 'M';
     } else if (value >= 1e3) {
-      return `${(value / 1e3).toFixed(1)}K`;
+      return (value / 1e3).toFixed(1) + 'K';
     }
-    return new Intl.NumberFormat('en-US').format(value);
+    return value;
   };
 
   if (!summary) return null;
 
   return (
-    <Row style={{marginBottom: '32px',}}>
-      <Col>
-        <SummaryCard
-          title="Total Taxpayers"
-          value={formatNumber(summary.total_tax_payers)}
-          icon="👥"
-        />
-      </Col>
-      <Col>
-        <SummaryCard
-          title="Total Sales Income"
-          value={formatCurrency(summary.total_sales_income)}
-          icon="💰"
-        />
-      </Col>
-      <Col>
-        <SummaryCard
-          title="Total GST Taxable"
-          value={formatCurrency(summary.total_gst_taxable)}
-          icon="📊"
-        />
-      </Col>
-      <Col>
-        <SummaryCard
-          title="Total GST Payable"
-          value={formatCurrency(summary.total_gst_payable)}
-          icon="📈"
-        />
-      </Col>
-      <Col>
-        <SummaryCard
-          title="Total GST Refundable"
-          value={formatCurrency(summary.total_gst_refundable)}
-          icon="📉"
-        />
-      </Col>
-    </Row>
+    <Card
+      style={{
+        borderRadius: 16,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+        padding: 24,
+        marginBottom: 32,
+      }}
+    >
+      <Row
+        className="justify-content-between"
+        style={{ flexWrap: 'nowrap', overflowX: 'auto' }}
+      >
+        <Col>
+          <MetricCard
+            value={formatNumber(summary.total_tax_payers)}
+            label="Total Tax payers"
+            color="#31303B"
+          />
+        </Col>
+        <Col>
+          <MetricCard
+            value={formatNumber(summary.total_sales_income)}
+            label="Total Sales Income"
+            color="#31303B"
+          />
+        </Col>
+        <Col>
+          <MetricCard
+            value={formatNumber(summary.total_gst_payable)}
+            label="Total GST Payable"
+            color="#F36464"
+          />
+        </Col>
+        <Col>
+          <MetricCard
+            value={formatNumber(summary.total_gst_refundable)}
+            label="Total GST Refundable"
+            color="#31303B"
+          />
+        </Col>
+        <Col>
+          <MetricCard
+            value={formatNumber(238)}
+            label="Average Day Late"
+            color="#31303B"
+          />
+        </Col>
+      </Row>
+    </Card>
   );
 };
 
-export default GSTSummaryCards; 
+export default GSTSummaryCards;

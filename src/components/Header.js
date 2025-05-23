@@ -12,8 +12,9 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Header.css';
+import { CircleUserRound } from 'lucide-react';
 
-function Header() {
+function Header({ isOpen }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { logout, user } = useAuth();
@@ -47,8 +48,10 @@ function Header() {
     return user.email;
   };
 
-  let headerTitle = `Welcome Back, ${getFirstName()}`;
-  let headerSubtitle = 'Here is the information about all your orders';
+  // let headerTitle = `Welcome Back, ${getFirstName()}`;
+  // let headerSubtitle = 'Here is the information about all your orders';
+  let headerTitle;
+  let headerSubtitle;
   if (location.pathname === '/compliance') {
     headerTitle = 'Compliance';
     headerSubtitle = '';
@@ -73,19 +76,19 @@ function Header() {
   } else if (location.pathname === '/contact-us') {
     headerTitle = 'Contact Us';
     headerSubtitle = '';
-  }
-  else if(location.pathname === '/gst') {
-    headerSubtitle = 'GST Dashboard';
-  }
-  else if(location.pathname === '/swt') {
-    headerSubtitle = 'SWT Dashboard';
-  }
-  else if(location.pathname === '/cit') {
-    headerSubtitle = 'CIT Dashboard';
+  } else if (location.pathname === '/gst') {
+    headerTitle = 'GST Dashboard';
+    headerSubtitle = '';
+  } else if (location.pathname === '/swt') {
+    headerTitle = 'SWT Dashboard';
+    headerSubtitle = '';
+  } else if (location.pathname === '/cit') {
+    headerTitle = 'CIT Dashboard';
+    headerSubtitle = '';
   }
 
   return (
-    <Navbar className="header">
+    <Navbar className={`header ${isOpen ? 'sidenav-open' : 'sidenav-collapsed'}`}>
       <Container fluid>
         <div className="header-left">
           <div className="header-titles">
@@ -95,10 +98,10 @@ function Header() {
         </div>
         <div className="header-right">
           <button className="icon-button">
-            <FontAwesomeIcon icon={faSearch} />
+            <img src="/header-icons/search.svg" alt="Help"/>
           </button>
           <button className="icon-button">
-            <FontAwesomeIcon icon={faBell} />
+            <img src="/header-icons/bell.svg" alt="Help"/>
           </button>
           <Dropdown
             align="end"
@@ -106,7 +109,7 @@ function Header() {
             onToggle={(isOpen) => setIsDropdownOpen(isOpen)}
           >
             <Dropdown.Toggle className="user-dropdown">
-              <FontAwesomeIcon icon={faUser} className="avatar" />
+              <CircleUserRound/>
               <span>{getFullName()}</span>
               <FontAwesomeIcon
                 icon={isDropdownOpen ? faChevronUp : faChevronDown}

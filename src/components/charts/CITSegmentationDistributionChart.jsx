@@ -10,46 +10,64 @@ const CITSegmentationDistributionChart = ({ startDate, endDate }) => {
     series: [],
     options: {
       chart: {
-        type: 'pie',
+        type: "pie",
         height: 350,
         toolbar: {
-          show: true
+          show: true,
         },
         stroke: {
           show: true,
           width: 0,
-          colors: ['transparent']
-        }
+          colors: ["transparent"],
+        },
       },
-      labels: ['Micro', 'Small', 'Medium', 'Large'],
-      colors: ['#2E86C1', '#27AE60', '#F39C12', '#E74C3C'],
+      labels: ["Micro", "Small", "Medium", "Large"],
+      colors: ["#2E86C1", "#27AE60", "#F39C12", "#E74C3C"],
       legend: {
-        position: 'bottom'
+        position: "bottom",
       },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200
+      tooltip: {
+        custom: function ({ series, seriesIndex, w }) {
+          const value = series[seriesIndex];
+          const total = series.reduce((acc, val) => acc + val, 0);
+          const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
+          const label = w.globals.labels[seriesIndex];
+
+          return `
+            <div class="arrow_box" style="padding: 8px; line-height: 1.4">
+              <span> ${label}</span><br/>
+              <span><strong>Value:</strong> ${value.toLocaleString()}</span><br/>
+              <span><strong>Percentage:</strong> ${percentage}%</span>
+            </div>
+          `;
+        },
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: "bottom",
+            },
           },
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }],
+        },
+      ],
       noData: {
-        text: 'No Data Found',
-        align: 'center',
-        verticalAlign: 'middle',
+        text: "No Data Found",
+        align: "center",
+        verticalAlign: "middle",
         offsetX: 0,
         offsetY: 0,
         style: {
-          color: '#6c757d',
-          fontSize: '16px',
-          fontFamily: 'inherit'
-        }
-      }
-    }
+          color: "#6c757d",
+          fontSize: "16px",
+          fontFamily: "inherit",
+        },
+      },
+    },
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

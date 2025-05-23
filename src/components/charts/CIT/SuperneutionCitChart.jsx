@@ -18,6 +18,22 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
       toolbar: { show: true },
     },
     labels: ["PNG", "Foreign"],
+    tooltip: {
+      custom: function ({ series, seriesIndex, w }) {
+        const value = series[seriesIndex];
+        const total = series.reduce((acc, val) => acc + val, 0);
+        const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
+        const label = w.globals.labels[seriesIndex];
+
+        return `
+          <div class="arrow_box" style="padding: 8px; line-height: 1.4">
+            <span> ${label}</span><br/>
+            <span><strong>Value:</strong> ${value.toLocaleString()}</span><br/>
+            <span><strong>Percentage:</strong> ${percentage}%</span>
+          </div>
+        `;
+      },
+    },
     responsive: [
       {
         breakpoint: 480,
@@ -122,7 +138,7 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
       <Card.Body>
         <Row className="mb-4">
           <Col>
-            <span className="chart-headers">Superneution PNG vs Foreign</span>
+            <span className="chart-headers">Superannuation PNG vs Foreign</span>
           </Col>
         </Row>
         <Chart

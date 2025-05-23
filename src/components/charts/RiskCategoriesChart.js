@@ -29,6 +29,7 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
           horizontal: false,
           columnWidth: '40%',
           endingShape: 'rounded',
+          borderRadius: 20,
           dataLabels: {
             position: 'center',
           },
@@ -93,7 +94,7 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
       },
       fill: {
         opacity: 1,
-        colors: ['#2ECC71', '#E74C3C'],
+        colors: ['#00E096', '#FF779D'],
         type: 'solid',
       },
       grid: {
@@ -103,7 +104,7 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
         position: 'back',
       },
       legend: {
-        position: 'top',
+        position: 'bottom',
         horizontalAlign: 'center',
         offsetY: 0,
       },
@@ -297,7 +298,7 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
       <Card.Body>
         <Row className="mb-4">
           <Col>
-            <span className='chart-headers'>
+            <span className="chart-headers">
               Risk Flagged vs Non-Risk Flagged Taxpayers
             </span>
           </Col>
