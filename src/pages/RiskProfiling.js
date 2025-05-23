@@ -39,6 +39,7 @@ function RiskProfiling() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [tins, setTins] = useState([]);
 
   const { data, loading, error } = useSelector((state) => state?.datasets);
 
@@ -124,7 +125,17 @@ function RiskProfiling() {
       setDateRange(range);
     }
   };
-  const tins = data?.tins || [];
+
+  useEffect(() => {
+    if (data?.records && data.records.length > 0) {
+      const tinList = data.records.map((e, index) => {
+        return data.records[index].tin;
+      });
+      setTins(tinList);
+      setSelectedTIN(tinList[tinList.length - 1]);
+    }
+  }, [data]);
+
   const yearOptions =
     data?.years?.map((year) => ({
       label: String(year),
@@ -141,12 +152,15 @@ function RiskProfiling() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    if (data?.tins && data.tins.length > 0 && !selectedTIN) {
-      // Ensure selectedTIN is set only once initially
-      setSelectedTIN(data.tins[data.tins.length - 1]);
-    }
-  }, [data?.tins, selectedTIN]);
+  // useEffect(() => {
+
+  //   if (data?.records && data.records.length > 0) {
+  //     const tinList = data.records.map((e, index) => {
+  //       return data.records[index].tin;
+  //     });
+  //     setSelectedTIN(tinList[tinList.length - 1]);
+  //   }
+  // }, [selectedTIN]);
 
   // Added selectedTIN to dependency array
 
@@ -257,9 +271,10 @@ function RiskProfiling() {
         })
       );
     }
-  }, []);
+  }, [data, selectedTIN, dateRange, dispatch]);
 
   const handleSearch = () => {
+    debugger;
     dispatch(
       fetchGstBenchmarkCreditsProfiling({
         start_date: dateRange.start_date,
