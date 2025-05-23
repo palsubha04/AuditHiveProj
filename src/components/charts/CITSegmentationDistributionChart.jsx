@@ -22,7 +22,7 @@ const CITSegmentationDistributionChart = ({ startDate, endDate }) => {
         },
       },
       labels: ["Micro", "Small", "Medium", "Large"],
-      colors: ["#2E86C1", "#27AE60", "#F39C12", "#E74C3C"],
+      colors: ["#6287FF", "#00E096", "#FFD12C", "#FF779D"],
       legend: {
         position: "bottom",
       },

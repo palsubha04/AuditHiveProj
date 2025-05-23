@@ -231,7 +231,7 @@ function Sidenav({ isOpen, toggleSidenav }) {
           <span className='sidenav-items'>Help Centre</span>
         </Nav.Link>
 
-        <Nav.Link
+        {/* <Nav.Link
           as={Link}
           to="/contact-us"
           active={location.pathname === '/contact-us'}
@@ -239,7 +239,7 @@ function Sidenav({ isOpen, toggleSidenav }) {
         >
           <img src="/chat.svg" alt="Contact" className="nav-icon" />
           <span className='sidenav-items'>Contact us</span>
-        </Nav.Link>
+        </Nav.Link> */}
       </Nav>
     </div>
   );
