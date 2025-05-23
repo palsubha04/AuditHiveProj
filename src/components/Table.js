@@ -78,6 +78,40 @@ function Table({
     }
   }, [jobId]);
 
+  const exportToCSV = () => {
+    console.log("received records", data);
+    if (!data || data.length === 0) return;
+
+    const records = data.filter(item => item.is_fraud === true)
+    const headers = Object.keys(records[0]);
+    const csvRows = [
+      headers.join(","), // header row
+      ...records.map((record) =>
+        headers
+          .map((header) => {
+            const cell = record[header];
+            if (cell == null) return ""; // handle null/undefined
+            const escaped = String(cell).replace(/"/g, '""'); // escape quotes
+            return `"${escaped}"`;
+          })
+          .join(",")
+      ),
+    ];
+
+    const blob = new Blob([csvRows.join("\n")], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "Records");
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleFilterChange = useCallback((e, column) => {
     e.stopPropagation();
     const value = e.target.value;
@@ -99,15 +133,16 @@ function Table({
                 onClick={e => e.stopPropagation()}
               >
                 <option value="all">All</option>
-                <option value="true">True</option>
-                <option value="false">False</option>
+                <option value="true">Fraud</option>
+                <option value="false">Valid</option>
               </select>
               {isFraudFilter === 'true' && (
                 <button
                   className="download-button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    downloadFraudRecords();
+                    //downloadFraudRecords();
+                    exportToCSV();
                   }}
                   disabled={!jobId}
                   title={!jobId ? "Job ID not available" : "Download fraud records"}

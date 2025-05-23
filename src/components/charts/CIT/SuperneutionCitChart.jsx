@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, Col, Row, Spinner } from 'react-bootstrap';
 import Chart from "react-apexcharts";
 import citService from '../../../services/cit.service';
+import CSVExportButton from '../../CSVExportButton';
 
 const sample = {
     png: 450,
@@ -11,6 +12,7 @@ const sample = {
 const SuperneutionCitChart = ({ startDate, endDate }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [records, setRecords] = useState([])
   const chartOptions = {
     chart: {
       width: 380,
@@ -62,6 +64,7 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
           startDate,
           endDate
         );
+        setRecords(response?.records || [])
        //var chart_Data = response;
        var chartSeries = [response.superannuation_png, response.superannuation_foreign];
 
@@ -122,6 +125,13 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
         <Row className="mb-4">
           <Col>
             <span className="chart-headers">Superannuation PNG vs Foreign</span>
+          </Col>
+          <Col>
+            <CSVExportButton
+              records={records}
+              filename="risk_taxpayers.csv"
+              buttonLabel="Download Risk Taxpayer List"
+            />
           </Col>
         </Row>
         <Chart

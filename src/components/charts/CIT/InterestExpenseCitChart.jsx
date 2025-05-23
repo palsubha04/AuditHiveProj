@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Col, Row, Spinner } from "react-bootstrap";
 import Chart from "react-apexcharts";
 import citService from "../../../services/cit.service";
+import CSVExportButton from "../../CSVExportButton";
 
 const sample = {
   png: 450,
@@ -11,6 +12,8 @@ const sample = {
 const InterestExpenseCitChart = ({ startDate, endDate }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+    const [records, setRecords] = useState([])
+  
   const chartOptions = {
     chart: {
       width: 380,
@@ -62,6 +65,9 @@ const InterestExpenseCitChart = ({ startDate, endDate }) => {
           startDate,
           endDate
         );
+
+        setRecords(response?.records || []);
+
         //var chart_Data = response;
         var chartSeries = [
           response.interest_expense_png,
@@ -127,6 +133,13 @@ const InterestExpenseCitChart = ({ startDate, endDate }) => {
             <span className="chart-headers">
               Interest Expense PNG vs Foreign
             </span>
+          </Col>
+          <Col>
+            <CSVExportButton
+              records={records}
+              filename="risk_taxpayers.csv"
+              buttonLabel="Download Risk Taxpayer List"
+            />
           </Col>
         </Row>
         <Chart

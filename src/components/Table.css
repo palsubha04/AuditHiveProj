@@ -56,12 +56,21 @@ tr:hover td {
 }
 
 /* Fraud Filter Styles */
-.fraud-filter-header {
+/* .fraud-filter-header {
   display: flex;
   flex-direction: column;
   gap: 4px;
   width: 100%;
+} */
+
+.fraud-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
 }
+
 
 .header-title {
   font-weight: 600;

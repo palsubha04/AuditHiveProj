@@ -20,7 +20,11 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
   ];
   const location = useLocation();
   console.log('Location:', location.pathname);
-  if(location.pathname === '/compliance' || location.pathname === '/cit'){
+  if (
+    location.pathname === "/compliance" ||
+    location.pathname === "/cit" ||
+    location.pathname === "/risk-assessment"
+  ) {
     DEFAULT_TENURE_OPTIONS.splice(0, 3);
   }
  
