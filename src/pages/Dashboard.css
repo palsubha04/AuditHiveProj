@@ -282,7 +282,7 @@
   align-items: center;
   justify-content: center;
   min-height: 12.5rem; /* 200px */
-  background-color: #FAFAFA;
+  background-color: #fff;
 }
 
 .upload-dropzone.dragging {

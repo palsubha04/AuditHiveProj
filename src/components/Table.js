@@ -224,7 +224,7 @@ function Table({
               <tr
                 key={row.id}
                 ref={rowVirtualizer.measureElement}
-                style={{ height: '35px' }} // You may adjust based on actual row height
+                style={{ height: '54px' }} // You may adjust based on actual row height
               >
                 {row.getVisibleCells().map((cell) => (
                   <td

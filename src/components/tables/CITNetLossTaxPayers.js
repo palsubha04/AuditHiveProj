@@ -134,7 +134,7 @@ const CITNetLossTaxPayers = ({ startDate, endDate }) => {
     <Card className="mb-4 box-background">
       <Card.Body>
         {loading ? (
-          <div className="text-center" style={{ height: '350px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="text-center" style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Spinner animation="border" role="status" variant="primary">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
@@ -142,35 +142,24 @@ const CITNetLossTaxPayers = ({ startDate, endDate }) => {
         ) : error ? (
           <div className="text-center text-danger">{error}</div>
         ) : records.length === 0 ? (
-          <>
-            <Card.Title>Top 50 Net Loss TaxPayers</Card.Title>
+          <div className="text-center" style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span className='chart-headers'>Top 50 Net Loss TaxPayers</span>
             <div className="text-center text-muted" style={{ padding: '2rem' }}>
               No Data Found
             </div>
-          </>
+          </div>
         ) : (
-          <>
+          <div style={{ height: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <Card.Title>Top 50 Net Loss TaxPayers</Card.Title>
-              {/* <Form.Group className="mb-0" style={{ width: '300px' }}>
-                <Form.Control
-                  type="text"
-                  placeholder="Search by TIN"
-                  value={searchTin}
-                  onChange={handleSearchChange}
-                />
-              </Form.Group> */}
+              <span className='chart-headers'>Top 50 Net Loss TaxPayers</span>
             </div>
             <Table
               columns={columns}
               data={records}
                loading={loading}
                error={error}
-            //   hasMore={records.length < totalRecords}
-            //   onLoadMore={handleLoadMore}
-            //   loadingMore={isLoadingMore}
             />
-          </>
+          </div>
         )}
       </Card.Body>
     </Card>

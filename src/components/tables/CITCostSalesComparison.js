@@ -142,7 +142,7 @@ const CITCostSalesComparison = ({ startDate, endDate }) => {
     <Card className="mb-4 box-background">
       <Card.Body>
         {loading ? (
-          <div className="text-center" style={{ height: '350px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="text-center" style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Spinner animation="border" role="status" variant="primary">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
@@ -151,15 +151,15 @@ const CITCostSalesComparison = ({ startDate, endDate }) => {
           <div className="text-center text-danger">{error}</div>
         ) : records.length === 0 ? (
           <>
-            <Card.Title>Gross Sales Vs Cost of Goods Sold</Card.Title>
+            <span className='chart-headers'>Gross Sales Vs Cost of Goods Sold</span>
             <div className="text-center text-muted" style={{ padding: '2rem' }}>
               No Data Found
             </div>
           </>
         ) : (
-          <>
+          <div style={{ height: '400px', display: 'flex', flexDirection: 'column' }}>
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <Card.Title>Gross Sales Vs Cost of Goods Sold</Card.Title>
+              <span className='chart-headers'>Gross Sales Vs Cost of Goods Sold</span>
               {/* <Form.Group className="mb-0" style={{ width: '300px' }}>
                 <Form.Control
                   type="text"
@@ -178,7 +178,7 @@ const CITCostSalesComparison = ({ startDate, endDate }) => {
             //   onLoadMore={handleLoadMore}
             //   loadingMore={isLoadingMore}
             />
-          </>
+          </div>
         )}
       </Card.Body>
     </Card>
