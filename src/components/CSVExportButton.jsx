@@ -1,0 +1,55 @@
+import { Download } from "lucide-react";
+import React from "react";
+import { Button } from "react-bootstrap";
+
+const CSVExportButton = ({
+  records,
+  filename = "export.csv",
+  buttonLabel = "Export CSV",
+}) => {
+  const exportToCSV = () => {
+    console.log("received records", records);
+    if (!records || records.length === 0) return;
+
+    const headers = Object.keys(records[0]);
+    const csvRows = [
+      headers.join(","), // header row
+      ...records.map((record) =>
+        headers
+          .map((header) => {
+            const cell = record[header];
+            if (cell == null) return ""; // handle null/undefined
+            const escaped = String(cell).replace(/"/g, '""'); // escape quotes
+            return `"${escaped}"`;
+          })
+          .join(",")
+      ),
+    ];
+
+    const blob = new Blob([csvRows.join("\n")], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return (
+    <Button
+      onClick={exportToCSV}
+      variant="outline-secondary"
+      className="chart-filter"
+      title={buttonLabel}
+    >
+      <Download style={{height : "18px",width:"18px"}}/>
+    </Button>
+  );
+};
+
+export default CSVExportButton;

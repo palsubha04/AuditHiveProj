@@ -8,7 +8,7 @@ import { fetchDatasets } from '../slice/datasetsSlice';
 import { fetchtaxPayersDetails } from '../slice/taxPayersDetailsSlice';
 import { ChevronDown, Download } from 'lucide-react';
 import TaxPayersGrid from '../components/TaxPayersGrid';
-import { Container, Spinner } from 'react-bootstrap';
+import { Card, CardBody, Container, Spinner } from 'react-bootstrap';
 import './Compliance.css';
 import TaxFillingComplianceChart from '../components/charts/compliance/TaxFillingComplianceChart';
 import { fetchTaxFilingCompliance } from '../slice/compliance/taxFilingComplianceSlice';
@@ -62,14 +62,14 @@ const Compliance = () => {
           );
         }
 
-        if (!fetchTaxDelayCompliance) {
+      //  if (!taxDelayComplianceData) {
           dispatch(
-            fetchTaxFilingCompliance({
+            fetchTaxDelayCompliance({
               start_date: dateRange.start_date,
               end_date: dateRange.end_date,
             })
           );
-        }
+      //  }
 
         if (!profitLossComplianceData) {
           dispatch(
@@ -88,9 +88,69 @@ const Compliance = () => {
       setDateRange(range);
     };
 
+    console.log("taxDelayComplianceData", taxDelayComplianceData);
     return (
       <Layout>
-        <Container fluid>
+          <div className="page-container">
+        <div className='top-filter-class'>
+          <TenureFilter
+            onFilterChange={handleFilterChange}/>
+        </div>
+        <div className='content'>
+          <div className='d-flex flex-column' style={{gap: '32px'}}>
+            <div className='d-flex'>
+              <Card className='chart-cards-full'>
+                <CardBody>
+                  {taxFilingComplianceLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <TaxFillingComplianceChart sampleData={taxFilingComplianceData}/>
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            </div>
+            <div className='d-flex' style={{gap: '32px'}}>
+            <Card className='chart-cards-half'>
+                <CardBody>
+                  {taxDelayComplianceLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <TaxDelayComplianceChart taxDelayComplianceData={taxDelayComplianceData}/>
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+              <Card className='chart-cards-half'>
+                <CardBody>
+                  {profitLossComplianceLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <ProfitLossComplianceChart sampleData={profitLossComplianceData}/>
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            </div>
+            </div>
+            </div>
+        </div>
+        {/* <Container fluid>
           <div
             style={{ display: "flex", alignItems: "center", marginBottom: 24 }}
           >
@@ -98,17 +158,17 @@ const Compliance = () => {
           </div>
 
           <div className="row">
-            <div className="col-12 mb-2">
-              <TaxFillingComplianceChart sampleData={taxFilingComplianceData}/>
+            <div className="col-12 mb-2"> 
+             <TaxFillingComplianceChart sampleData={taxFilingComplianceData}/>
             </div>
             <div className="col-6 mb-2">
-              <TaxDelayComplianceChart sampleData={taxDelayComplianceData}/>
+              <TaxDelayComplianceChart taxDelayComplianceData={taxDelayComplianceData}/>
             </div>
             <div className="col-6 mb-2">
               <ProfitLossComplianceChart sampleData={profitLossComplianceData}/>
             </div>
           </div>
-        </Container>
+        </Container> */}
       </Layout>
     );
 
