@@ -412,6 +412,7 @@ function RiskProfiling() {
                       key={tinWithLabel[index].value}
                     >
                       {tinWithLabel[index].label}
+                      {/* //Search not working */}
                     </div>
                   )}
                 </List>
