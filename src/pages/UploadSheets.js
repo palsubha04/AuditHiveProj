@@ -726,7 +726,7 @@ function UploadSheets() {
                           setFormData({ ...formData, startDate: date })
                         }
                         dateFormat="dd/MM/yyyy"
-                        placeholderText="Start Date"
+                        placeholderText="dd/MM/yyyy"
                         maxDate={formData.endDate || new Date()}
                         className="form-control"
                         required
@@ -818,7 +818,7 @@ function UploadSheets() {
                           setFormData({ ...formData, endDate: date })
                         }
                         dateFormat="dd/MM/yyyy"
-                        placeholderText="End Date"
+                        placeholderText="dd/MM/yyyy"
                         minDate={formData.startDate}
                         maxDate={new Date()}
                         className="form-control"
