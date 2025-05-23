@@ -87,7 +87,7 @@ const GSTPayableVsRefundable = ({ startDate, endDate }) => {
       },
       legend: {
         position: 'bottom',
-        horizontalAlign: 'right',
+        horizontalAlign: 'center',
       },
       noData: {
         text: 'No Data Found',
@@ -182,20 +182,10 @@ const GSTPayableVsRefundable = ({ startDate, endDate }) => {
     <Card className="mb-4 box-background">
       <Card.Body>
         <Row className="mb-4">
-          <Col>
+          <Col md={4}>
             <span className="chart-headers">GST Payable vs Refundable</span>
           </Col>
-        </Row>
-        <div id="chart">
-          <ReactApexChart
-            options={chartData.options}
-            series={chartData.series}
-            type="bar"
-            height={350}
-          />
-        </div>
-        <Row className="mb-4">
-          <div>
+          <Col md={4}>
             <div className="d-flex align-items-center pb-2">
               <div
                 className="me-2"
@@ -214,6 +204,8 @@ const GSTPayableVsRefundable = ({ startDate, endDate }) => {
                 })}
               </span>
             </div>
+          </Col>
+          <Col md={4}>
             <div className="d-flex align-items-center">
               <div
                 className="me-2"
@@ -232,11 +224,16 @@ const GSTPayableVsRefundable = ({ startDate, endDate }) => {
                 })}
               </span>
             </div>
-          </div>
-          {/* <Col md={6}>
-            
-          </Col> */}
+          </Col>
         </Row>
+        <div id="chart">
+          <ReactApexChart
+            options={chartData.options}
+            series={chartData.series}
+            type="bar"
+            height={350}
+          />
+        </div>
       </Card.Body>
     </Card>
   );
