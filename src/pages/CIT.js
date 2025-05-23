@@ -14,7 +14,7 @@ import './Dashboard.css';
 function CIT() {
   const [dateRange, setDateRange] = useState({
     start_date: '',
-    end_date: ''
+    end_date: '',
   });
 
   const handleFilterChange = (range) => {
@@ -24,11 +24,9 @@ function CIT() {
   return (
     <Layout>
       <Container fluid>
-        <div className='top-filter-class'>
-          <TenureFilter
-            onFilterChange={handleFilterChange}
-          />
-          <div className='d-flex ps-2 gap-2 justify-center align-items-center'>
+        <div className="top-filter-class">
+          <TenureFilter onFilterChange={handleFilterChange} />
+          <div className="d-flex ps-2 gap-2 justify-center align-items-center">
             <span>{dateRange.start_date}</span>
             <span>to</span>
             <span>{dateRange.end_date}</span>
@@ -76,4 +74,4 @@ function CIT() {
   );
 }
 
-export default CIT; 
+export default CIT;
