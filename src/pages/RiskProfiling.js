@@ -40,6 +40,7 @@ function RiskProfiling() {
   const dropdownRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [tins, setTins] = useState([]);
+  const [tinWithLabel, setTinWithLabel] = useState([]);
 
   const { data, loading, error } = useSelector((state) => state?.datasets);
 
@@ -133,6 +134,14 @@ function RiskProfiling() {
       });
       setTins(tinList);
       setSelectedTIN(tinList[tinList.length - 1]);
+      const tinLabelList = [];
+      for (let i = 0; i < data.records.length; i++) {
+        tinLabelList.push({
+          label: data.records[i].tin + ' - ' + data.records[i].taxpayer_name,
+          value: data.records[i].tin,
+        });
+      }
+      setTinWithLabel(tinLabelList);
     }
   }, [data]);
 
@@ -274,7 +283,6 @@ function RiskProfiling() {
   }, [data, selectedTIN, dateRange, dispatch]);
 
   const handleSearch = () => {
-    debugger;
     dispatch(
       fetchGstBenchmarkCreditsProfiling({
         start_date: dateRange.start_date,
@@ -381,7 +389,7 @@ function RiskProfiling() {
                 />
                 <List
                   height={200} // Adjusted height for the list itself
-                  itemCount={filteredTins.length}
+                  itemCount={tinWithLabel.length}
                   itemSize={35}
                   width={'100%'} // Changed width to be responsive
                 >
@@ -391,19 +399,19 @@ function RiskProfiling() {
                         ...style,
                         padding: '8px 12px',
                         background:
-                          filteredTins[index] === selectedTIN
+                          tinWithLabel[index].value === selectedTIN
                             ? '#e0e7ef'
                             : '#fff',
                         cursor: 'pointer',
                       }}
                       onClick={() => {
-                        setSelectedTIN(filteredTins[index]);
+                        setSelectedTIN(tinWithLabel[index].value);
                         setIsDropdownOpen(false);
                         setSearchTerm(''); // Reset search term on selection
                       }}
-                      key={filteredTins[index]}
+                      key={tinWithLabel[index].value}
                     >
-                      {filteredTins[index]}
+                      {tinWithLabel[index].label}
                     </div>
                   )}
                 </List>

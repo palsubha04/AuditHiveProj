@@ -38,6 +38,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 500px
 }
 
 .tin-dropdown-list {
