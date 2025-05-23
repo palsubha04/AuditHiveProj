@@ -12,8 +12,9 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Header.css';
+import { CircleUserRound } from 'lucide-react';
 
-function Header() {
+function Header({ isOpen }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { logout, user } = useAuth();
@@ -87,7 +88,7 @@ function Header() {
   }
 
   return (
-    <Navbar className="header">
+    <Navbar className={`header ${isOpen ? 'sidenav-open' : 'sidenav-collapsed'}`}>
       <Container fluid>
         <div className="header-left">
           <div className="header-titles">
@@ -97,10 +98,10 @@ function Header() {
         </div>
         <div className="header-right">
           <button className="icon-button">
-            <FontAwesomeIcon icon={faSearch} />
+            <img src="/header-icons/search.svg" alt="Help"/>
           </button>
           <button className="icon-button">
-            <FontAwesomeIcon icon={faBell} />
+            <img src="/header-icons/bell.svg" alt="Help"/>
           </button>
           <Dropdown
             align="end"
@@ -108,7 +109,7 @@ function Header() {
             onToggle={(isOpen) => setIsDropdownOpen(isOpen)}
           >
             <Dropdown.Toggle className="user-dropdown">
-              <FontAwesomeIcon icon={faUser} className="avatar" />
+              <CircleUserRound/>
               <span>{getFullName()}</span>
               <FontAwesomeIcon
                 icon={isDropdownOpen ? faChevronUp : faChevronDown}

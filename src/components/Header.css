@@ -1,13 +1,19 @@
 .header {
   position: fixed;
   top: 0;
-  left: 20.357rem;
-  /* 285px */
   right: 0;
   background: #fff;
-  padding: 50px 50px 20px 50px;
-  /* 30px 40px */
+  padding: 50px 50px 19px 50px;
   z-index: 1000;
+  transition: left 0.3s ease;
+}
+
+.header.sidenav-open {
+  left: 20rem
+}
+
+.header.sidenav-collapsed {
+  left: 3.6rem; /* collapsed width (adjust if yours is different) */
 }
 
 /* Override Bootstrap's container-fluid padding */
@@ -61,7 +67,7 @@
   display: flex !important;
   align-items: center !important;
   gap: 0.5rem;
-  padding: 0.5rem !important;
+  padding: 0 !important;
   height: auto !important;
 }
 
@@ -81,4 +87,12 @@
   display: flex;
   align-items: center;
   color: var(--color-primary);
+}
+
+.toggle-sidenav-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 20px;
 }

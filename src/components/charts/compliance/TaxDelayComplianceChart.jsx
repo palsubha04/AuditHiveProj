@@ -86,6 +86,22 @@ const TaxDelayComplianceChart = ({ x }) => {
       type: "pie",
       toolbar: { show: true },
     },
+    // tooltip: {
+    //   custom: function ({ series, seriesIndex, w }) {
+    //     const value = series[seriesIndex];
+    //     const total = series.reduce((acc, val) => acc + val, 0);
+    //     const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
+    //     const label = w.globals.labels[seriesIndex];
+
+    //     return `
+    //       <div class="arrow_box" style="padding: 8px; line-height: 1.4">
+    //         <span> ${label}</span><br/>
+    //         <span><strong>Value:</strong> ${value.toLocaleString()}</span><br/>
+    //         <span><strong>Percentage:</strong> ${percentage}%</span>
+    //       </div>
+    //     `;
+    //   },
+    // },
     labels: ["Delayed", "Non Delayed"],
     responsive: [
       {
@@ -100,6 +116,18 @@ const TaxDelayComplianceChart = ({ x }) => {
         },
       },
     ],
+    noData: {
+      text: "No Data Found",
+      align: "center",
+      verticalAlign: "middle",
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: "#6c757d",
+        fontSize: "16px",
+        fontFamily: "inherit",
+      },
+    },
   };
 
   return (
