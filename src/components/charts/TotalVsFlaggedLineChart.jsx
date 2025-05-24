@@ -1,24 +1,90 @@
-import { useState, useEffect } from 'react';
-import { Tally1 } from 'lucide-react';
-import ReactApexChart from 'react-apexcharts';
-import './charts.css'
+import { useState, useEffect } from "react";
+import { Tally1 } from "lucide-react";
+import ReactApexChart from "react-apexcharts";
+import "./charts.css";
+import CSVExportButton from "../CSVExportButton";
 
-const entityTypes = ['large', 'medium', 'small', 'micro'];
+const entityTypes = ["large", "medium", "small", "micro"];
+
+const sampleData = {
+  total_taxpayers: 67706,
+  risk_flagged_taxpayers: 3025,
+  risk_flagged_percentage: 4.47,
+  records: [
+    {
+      tin: 500000232,
+      taxpayer_name: "KENTZ MEPC (MALAYSIA) SDN. BHD.",
+    },
+    {
+      tin: 500000232,
+      taxpayer_name: "KENTZ MEPC (MALAYSIA) SDN. BHD.",
+    },
+    {
+      tin: 500000232,
+      taxpayer_name: "KENTZ MEPC (MALAYSIA) SDN. BHD.",
+    },
+    {
+      tin: 500000250,
+      taxpayer_name: "POSCO INTERNATIONAL POWER (PNGPOM) LIMITED",
+    },
+    {
+      tin: 500000483,
+      taxpayer_name: "MOKI NO 10 LIMITED",
+    },
+    {
+      tin: 500000571,
+      taxpayer_name: "CONSOLIDATED CONTRACTORS (PNG) COMPANY LIMITED",
+    },
+    {
+      tin: 500000571,
+      taxpayer_name: "CONSOLIDATED CONTRACTORS (PNG) COMPANY LIMITED",
+    },
+    {
+      tin: 500000571,
+      taxpayer_name: "CONSOLIDATED CONTRACTORS (PNG) COMPANY LIMITED",
+    },
+    {
+      tin: 500000571,
+      taxpayer_name: "CONSOLIDATED CONTRACTORS (PNG) COMPANY LIMITED",
+    },
+    {
+      tin: 500000571,
+      taxpayer_name: "CONSOLIDATED CONTRACTORS (PNG) COMPANY LIMITED",
+    },
+  ],
+};
 
 const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
-  console.log('TotalVsFlaggedLineChart from chart', totalTaxPayerVsRiskFlagged);
-  const [selectedCategory, setSelectedCategory] = useState('gst');
+  console.log("TotalVsFlaggedLineChart from chart", totalTaxPayerVsRiskFlagged);
+  const [selectedCategory, setSelectedCategory] = useState("gst");
   const [chartSeries, setChartSeries] = useState([]);
   const [chartOptions, setChartOptions] = useState({});
+  const [records, setRecords] = useState([]);
 
   useEffect(() => {
-    if (!totalTaxPayerVsRiskFlagged || !totalTaxPayerVsRiskFlagged[selectedCategory]) {
+    if (
+      !totalTaxPayerVsRiskFlagged ||
+      !totalTaxPayerVsRiskFlagged[selectedCategory]
+    ) {
       setChartSeries([]);
       setChartOptions({});
       return;
     }
 
     const currentData = totalTaxPayerVsRiskFlagged[selectedCategory];
+    let temp = [];
+    const result = Object.entries(currentData).flatMap(([category, { records }]) =>
+      records.map(({ tin, taxpayer_name }) => ({
+        tin,
+        taxpayer_name,
+        segmentation : category,
+      }))
+    );
+    // for (let i in currentData) {
+    //   temp.push(...currentData[i].records);
+    //   temp = temp.map(item => {return {...item, category : i}})
+    // }
+    setRecords(result);
 
     const totalSeries = entityTypes.map(
       (type) => currentData[type]?.total_taxpayers ?? 0
@@ -31,31 +97,33 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
     );
 
     setChartSeries([
-      { name: 'Total Taxpayers', data: totalSeries },
-      { name: 'Risk-Flagged Taxpayers', data: flaggedSeries },
+      { name: "Total Taxpayers", data: totalSeries },
+      { name: "Risk-Flagged Taxpayers", data: flaggedSeries },
     ]);
 
     setChartOptions({
       chart: {
-        type: 'line',
+        type: "line",
         height: 350,
         toolbar: { show: true },
       },
       stroke: {
         width: 3,
-        curve: 'smooth',
+        curve: "smooth",
       },
       xaxis: {
-        categories: ['Large', 'Medium', 'Small', 'Micro'],
-        title: { text: 'Segmentation' },
-        labels: { style: { fontWeight: 500, color: '#334155', fontSize: '14px' } },
+        categories: ["Large", "Medium", "Small", "Micro"],
+        title: { text: "Segmentation" },
+        labels: {
+          style: { fontWeight: 500, color: "#334155", fontSize: "14px" },
+        },
       },
       yaxis: {
-        title: { text: 'Number of Taxpayers' },
-        labels: { style: { fontWeight: 500, color: '#334155' } },
+        title: { text: "Number of Taxpayers" },
+        labels: { style: { fontWeight: 500, color: "#334155" } },
       },
-      legend: { position: 'top', fontWeight: 600 },
-      colors: ['#2563eb', '#f97316'],
+      legend: { position: "top", fontWeight: 600 },
+      colors: ["#2563eb", "#f97316"],
       markers: { size: 5 },
       tooltip: {
         shared: true,
@@ -75,19 +143,19 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
             </div>
           `;
         },
-        style: { fontSize: '15px' },
+        style: { fontSize: "15px" },
       },
-      grid: { borderColor: '#e0e7ef', strokeDashArray: 4 },
+      grid: { borderColor: "#e0e7ef", strokeDashArray: 4 },
       noData: {
-        text: 'No Data Found',
-        align: 'center',
-        verticalAlign: 'middle',
+        text: "No Data Found",
+        align: "center",
+        verticalAlign: "middle",
         offsetX: 0,
         offsetY: 0,
         style: {
-          color: '#6c757d',
-          fontSize: '16px',
-          fontFamily: 'inherit',
+          color: "#6c757d",
+          fontSize: "16px",
+          fontFamily: "inherit",
         },
       },
     });
@@ -98,24 +166,26 @@ const TotalVsFlaggedLineChart = ({ totalTaxPayerVsRiskFlagged }) => {
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
-        <span className='chart-headers'>Total Taxpayers vs Risk-Flagged</span>
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className='chart-filter'
-        >
-          <option value="gst">GST</option>
-          <option value="swt">SWT</option>
-          <option value="cit">CIT</option>
-        </select>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: 16, justifyContent : "space-between" }}>
+        <div>
+          <span className="chart-headers">Total Taxpayers vs Risk-Flagged</span>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="chart-filter"
+          >
+            <option value="gst">GST</option>
+            <option value="swt">SWT</option>
+            <option value="cit">CIT</option>
+          </select>
+        </div>
+        <CSVExportButton
+          records={records}
+          filename="risk_taxpayers.csv"
+          buttonLabel="Download Risk Taxpayer List"
+        />
       </div>
-      <ReactApexChart
-        options={chartOptions}
-        series={chartSeries}
-        type="line"
-        
-      />
+      <ReactApexChart options={chartOptions} series={chartSeries} type="line" />
       {/* <EmployeeLineChart options={chartOptions} series={chartSeries} /> */}
       {/* {isDataAvailable ? (
         <EmployeeLineChart options={chartOptions} series={chartSeries} />
