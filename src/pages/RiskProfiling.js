@@ -29,6 +29,7 @@ import { fetchGstPayableVsRefundable } from '../slice/gstPayableVsRefundableSlic
 import { fetchswtSalariesComparison } from '../slice/swtSalariesComparisonSlice';
 import './RiskProfilling.css';
 import DelayedReturnFilingTable from '../components/charts/risk-profiling/DelayedReturnFilingTable';
+import { fetchDelayedFiling } from '../slice/risk-profiling/delayedFilingsSlice';
 
 function RiskProfiling() {
   const [dateRange, setDateRange] = useState({
@@ -89,6 +90,13 @@ function RiskProfiling() {
     swtBenchmarkEmployeesProfilingLoading,
     swtBenchmarkEmployeesProfilingError,
   } = useSelector((state) => state?.swtBenchmarkEmployeesProfiling);
+
+  const {
+    delayedFilingData,
+    delayedFilingLoading,
+    delayedFilingError,
+  } = useSelector((state) => state?.delayedFiling);
+
 
   // GST Sales Comparison
   const { monthlySalesData, monthlySalesLoading, monthlySalesError } =
@@ -179,6 +187,7 @@ function RiskProfiling() {
   );
 
   useEffect(() => {
+    if (selectedTIN) {
     if (!gstBenchmarkCreditsProfilingData) {
       dispatch(
         fetchGstBenchmarkCreditsProfiling({
@@ -281,6 +290,16 @@ function RiskProfiling() {
         })
       );
     }
+    if (!delayedFilingData) {
+      dispatch(
+        fetchDelayedFiling({
+          start_date: dateRange.start_date,
+          end_date: dateRange.end_date,
+          tin: selectedTIN,
+        })
+      );
+    }
+  }
   }, [data, selectedTIN, dateRange, dispatch]);
 
   const handleSearch = () => {
@@ -365,6 +384,13 @@ function RiskProfiling() {
         tin: selectedTIN,
       })
     );
+    dispatch(
+      fetchDelayedFiling({
+        start_date: dateRange.start_date,
+        end_date: dateRange.end_date,
+        tin: selectedTIN,
+      })
+    );
   };
 
   return (
@@ -422,8 +448,12 @@ function RiskProfiling() {
           </div>
           <TenureFilter
             onFilterChange={handleFilterChange}
-            tenureOptions={yearOptions}
           />
+           <div className="d-flex ps-2 gap-2 justify-center align-items-center">
+            <span>{dateRange.start_date}</span>
+            <span>to</span>
+            <span>{dateRange.end_date}</span>
+          </div>
           <div className='search-container'>
             <button onClick={handleSearch} className="search-button">
               Search
@@ -621,7 +651,7 @@ function RiskProfiling() {
             <div className='d-flex' style={{ gap: '32px' }}>
             <Card className='chart-cards-full'>
             <CardBody>
-                  {/* {riskBreakdownByCategoryProfilingLoading ? (
+                  {delayedFilingLoading ? (
                     <div className='spinner-div'>
                       <Spinner animation="border" role="status" variant="primary">
                         <span className="visually-hidden">Loading...</span>
@@ -629,16 +659,14 @@ function RiskProfiling() {
                     </div>
                   ) : (
                     <div className="p-0 w-100">
-                      <RiskBreakdownCategoryProfilingChart
-                        riskBreakdownByCategoryDataProfiling={
-                          riskBreakdownByCategoryProfilingData
+                      <DelayedReturnFilingTable
+                        delayedFilingData={
+                          delayedFilingData
                         }
                       />
                     </div>
-                  )} */}
-                   <div className="p-0 w-100">
-                      <DelayedReturnFilingTable />
-                    </div>
+                  )}
+                  
                 </CardBody>
               </Card>
               </div>

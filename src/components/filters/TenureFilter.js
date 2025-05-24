@@ -23,7 +23,8 @@ function TenureFilter({ onFilterChange, tenureOptions }) {
   if (
     location.pathname === "/compliance" ||
     location.pathname === "/cit" ||
-    location.pathname === "/risk-assessment"
+    location.pathname === "/risk-assessment" ||
+    location.pathname === "/risk-profiling"
   ) {
     DEFAULT_TENURE_OPTIONS.splice(0, 3);
   }

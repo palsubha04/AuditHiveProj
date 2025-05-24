@@ -83,7 +83,7 @@ function RiskAssessment() {
       return;
     }
 
-    if (!topFraudRulesProfilingData) {
+   // if (!topFraudRulesProfilingData) {
       dispatch(
         fetchTopFraudRulesProfiling({
           start_date: dateRange.start_date,
@@ -92,7 +92,7 @@ function RiskAssessment() {
           segmentation: 'large',
         })
       );
-    }
+   // }
 
     console.log('Dispatching for new range:', currentKey);
     fetchedRangeRef.current = currentKey;
