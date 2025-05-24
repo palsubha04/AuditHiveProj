@@ -67,11 +67,28 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
         setRecords(response?.records || [])
        //var chart_Data = response;
        var chartSeries = [response.superannuation_png, response.superannuation_foreign];
+       console.log("chartSeries", response);
+
+    //    const currentData = totalTaxPayerVsRiskFlagged[selectedCategory];
+    //     let temp = [];
+    // const result = Object.entries(currentData).flatMap(([category, { records }]) =>
+    //   records.map(({ tin, taxpayer_name }) => ({
+    //     tin,
+    //     taxpayer_name,
+    //     category,
+    //   }))
+    // );
+    // for (let i in currentData) {
+    //   temp.push(...currentData[i].records);
+    //   temp = temp.map(item => {return {...item, category : i}})
+    // }
+   // setRecords(result);
 
        setChartData((prevData) => ({
          ...prevData,
          series: chartSeries,
        }));
+
       } catch (err) {
         console.error("Error fetching Total Amount By Expense Type:", err);
         setError("Failed to load Total Amount By Expense Type data");
