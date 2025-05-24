@@ -3,12 +3,14 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import analyticsService from '../../services/analytics.service';
 import '../../pages/Dashboard.css';
-import './charts.css';
+import './charts.css'
+import CSVExportButton from '../CSVExportButton';
 
 const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [rawData, setRawData] = useState(null);
+  const [records, setRecords] = useState([]);
 
   const [chartData, setChartData] = useState({
     series: [],
@@ -164,6 +166,26 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
         }
 
         setRawData(response[taxType]);
+        // const currentData = response[taxType];
+        // let temp = [];
+        // for (let i in currentData) {
+        //   temp.push(...currentData[i].records);
+        // }
+        // setRecords(temp);
+            const currentData = response[taxType];
+        let temp = [];
+    const result = Object.entries(currentData).flatMap(([category, { records }]) =>
+      records.map(({ tin, taxpayer_name }) => ({
+        Tin: tin,
+        "Taxpayer Name" : taxpayer_name,
+        Segmentation: category,
+      }))
+    );
+    for (let i in currentData) {
+      temp.push(...currentData[i].records);
+      temp = temp.map(item => {return {...item, category : i}})
+    }
+   setRecords(result);
 
         const segments = ['micro', 'small', 'medium', 'large'];
         const series = [
@@ -280,6 +302,14 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
               Risk Flagged vs Non-Risk Flagged Taxpayers
             </span>
           </Col>
+          <Col className="text-end">
+          <CSVExportButton
+          records={records}
+          filename="risk_taxpayers.csv"
+          buttonLabel="Download Risk Taxpayers List"
+        />
+            </Col>
+         
         </Row>
         <ReactApexChart
           options={chartData.options}

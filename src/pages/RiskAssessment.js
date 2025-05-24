@@ -83,7 +83,7 @@ function RiskAssessment() {
       return;
     }
 
-    if (!topFraudRulesProfilingData) {
+   // if (!topFraudRulesProfilingData) {
       dispatch(
         fetchTopFraudRulesProfiling({
           start_date: dateRange.start_date,
@@ -92,7 +92,7 @@ function RiskAssessment() {
           segmentation: 'large',
         })
       );
-    }
+   // }
 
     console.log('Dispatching for new range:', currentKey);
     fetchedRangeRef.current = currentKey;
@@ -189,6 +189,7 @@ function RiskAssessment() {
                     <div className="p-0 w-100">
                       <RiskAnomalyFrequencyChart
                         riskAnomalyFrequencyData={riskAnomalyFrequencyData}
+                        source="Risk Assessment"
                       />
                     </div>
                   )}

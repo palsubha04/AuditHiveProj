@@ -164,25 +164,11 @@ const ProfitLossComplianceChart = ({ x }) => {
   const isDataAvailable = sampleData && sampleData[selectedCategory];
 
   return (
-    <Card className="mb-4 box-background">
-      <Card.Body>
-        <Row className="mb-4">
-          <Col>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: 16,
-              }}
-            >
-              <h4
-                className="mb-0 me-3 fw-bold"
-                style={{ color: "#6366F1", fontSize: "22px" }}
-              >
-                Profit vs Loss
-              </h4>
-              <Tally1 style={{ color: "#7c879d" }} />
-              <span
+    <>
+    <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+    <span className='chart-headers'> Profit vs Loss</span>
+    <Tally1 style={{ color: "#7c879d" }} />
+               <span
                 style={{
                   color: "#7c879d",
                   fontSize: "16px",
@@ -191,35 +177,79 @@ const ProfitLossComplianceChart = ({ x }) => {
               >
                 Filter By :{" "}
               </span>
-
-              <select
-                value={selectedCategory}
-                onChange={(e) => {
-                  const newCategory = e.target.value;
-                  setSelectedCategory(newCategory);
-                }}
-                style={{
-                  padding: "4px 8px",
-                  borderRadius: 4,
-                  border: "1px solid #ccc",
-                  marginRight: "5px",
-                }}
-              >
-                <option value="gst">GST</option>
-                <option value="swt">SWT</option>
-                <option value="cit">CIT</option>
-              </select>
-            </div>
-          </Col>
-        </Row>
-        <Chart
+    <select
+      value={selectedCategory}
+      onChange={(e) => setSelectedCategory(e.target.value)}
+      className='chart-filter'
+    >
+      <option value="gst">GST</option>
+      <option value="swt">SWT</option>
+      <option value="cit">CIT</option>
+    </select>
+  </div>
+  <Chart
           options={chartOptions}
           series={chartSeries}
           type="line"
           height={350}
         />
-      </Card.Body>
-    </Card>
+  </>
+    // <Card className="mb-4 box-background">
+    //   <Card.Body>
+    //     <Row className="mb-4">
+    //       <Col>
+    //         <div
+    //           style={{
+    //             display: "flex",
+    //             alignItems: "center",
+    //             marginBottom: 16,
+    //           }}
+    //         >
+    //           <h4
+    //             className="mb-0 me-3 fw-bold"
+    //             style={{ color: "#6366F1", fontSize: "22px" }}
+    //           >
+    //             Profit vs Loss
+    //           </h4>
+    //           <Tally1 style={{ color: "#7c879d" }} />
+    //           <span
+    //             style={{
+    //               color: "#7c879d",
+    //               fontSize: "16px",
+    //               marginRight: "10px",
+    //             }}
+    //           >
+    //             Filter By :{" "}
+    //           </span>
+
+    //           <select
+    //             value={selectedCategory}
+    //             onChange={(e) => {
+    //               const newCategory = e.target.value;
+    //               setSelectedCategory(newCategory);
+    //             }}
+    //             style={{
+    //               padding: "4px 8px",
+    //               borderRadius: 4,
+    //               border: "1px solid #ccc",
+    //               marginRight: "5px",
+    //             }}
+    //           >
+    //             <option value="gst">GST</option>
+    //             <option value="swt">SWT</option>
+    //             <option value="cit">CIT</option>
+    //           </select>
+    //         </div>
+    //       </Col>
+    //     </Row>
+    //     <Chart
+    //       options={chartOptions}
+    //       series={chartSeries}
+    //       type="line"
+    //       height={350}
+    //     />
+    //   </Card.Body>
+    // </Card>
   );
 };
 

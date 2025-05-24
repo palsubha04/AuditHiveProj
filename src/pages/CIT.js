@@ -7,9 +7,11 @@ import CITSegmentationDistributionChart from '../components/charts/CITSegmentati
 import CITNetProfitTaxPayers from '../components/tables/CITNetProfitTaxPayers';
 import CITNetLossTaxPayers from '../components/tables/CITNetLossTaxPayers';
 import CITCostSalesComparison from '../components/tables/CITCostSalesComparison';
-import InterestExpenseCitChart from "../components/charts/cit/InterestExpenseCitChart";
-import SuperneutionCitChart from '../components/charts/cit/SuperneutionCitChart';
+
 import './Dashboard.css';
+import InterestExpenseCitChart from '../components/charts/cit/InterestExpenseCitChart';
+import SuperneutionCitChart from '../components/charts/cit/SuperneutionCitChart';
+
 
 function CIT() {
   const [dateRange, setDateRange] = useState({

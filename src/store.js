@@ -20,6 +20,7 @@ import swtBenchmarkEmployeesProfilingReducer from "./slice/risk-profiling/swtBen
 import taxFilingComplianceReducer from './slice/compliance/taxFilingComplianceSlice'
 import taxDelayComplianceReducer from "./slice/compliance/taxDelayComplianceSlice";
 import profitLossComplianceReducer from "./slice/compliance/profitLossComplianceSlice";
+import delayedFilingReducer from "./slice/risk-profiling/delayedFilingsSlice";
 
 
 const store = configureStore({
@@ -44,7 +45,8 @@ const store = configureStore({
     swtBenchmarkEmployeesProfiling: swtBenchmarkEmployeesProfilingReducer,
     taxFilingCompliance: taxFilingComplianceReducer,
     taxDelayCompliance: taxDelayComplianceReducer,
-    profitLossCompliance: profitLossComplianceReducer
+    profitLossCompliance: profitLossComplianceReducer,
+    delayedFiling : delayedFilingReducer,
   },
 });
 

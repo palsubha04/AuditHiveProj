@@ -74,20 +74,21 @@ const sampleData = {
   },
 };
 
-const TaxFillingComplianceChart = ({ x }) => {
+const TaxFillingComplianceChart = ({ taxFilingComplianceData }) => {
+  console.log("taxFilingComplianceData", taxFilingComplianceData);
   const [filterData, setFilterData] = useState(
-    sampleData ? sampleData["gst"] ?? {} : {}
+    taxFilingComplianceData ? sampleData["gst"] ?? {} : {}
   );
 
   const defaultCategory = "gst";
   useEffect(() => {
-    if (sampleData?.[defaultCategory]) {
-      setFilterData(sampleData[defaultCategory]);
+    if (taxFilingComplianceData?.[defaultCategory]) {
+      setFilterData(taxFilingComplianceData[defaultCategory]);
     }
-  }, [sampleData]);
+  }, [taxFilingComplianceData]);
 
   const changeCategoryData = (category) => {
-    const selectedData = sampleData?.[category] ?? {};
+    const selectedData = taxFilingComplianceData?.[category] ?? {};
     setFilterData(selectedData);
   };
 
@@ -186,25 +187,11 @@ const TaxFillingComplianceChart = ({ x }) => {
   };
 
   return (
-    <Card className="mb-4 box-background">
-      <Card.Body>
-        <Row className="mb-4">
-          <Col>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: 16,
-              }}
-            >
-              <h4
-                className="mb-0 me-3 fw-bold"
-                style={{ color: "#6366F1", fontSize: "22px" }}
-              >
-                Tax Filing vs Non Filing
-              </h4>
-              <Tally1 style={{ color: "#7c879d" }} />
-              <span
+    <>
+    <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+    <span className='chart-headers'>Tax Filing vs Non Filing</span>
+    <Tally1 style={{ color: "#7c879d" }} />
+               <span
                 style={{
                   color: "#7c879d",
                   fontSize: "16px",
@@ -213,20 +200,16 @@ const TaxFillingComplianceChart = ({ x }) => {
               >
                 Filter By :{" "}
               </span>
-
-              <select
-                onChange={(e) => changeCategoryData(e.target.value)}
-                style={{
-                  padding: "4px 8px",
-                  borderRadius: 4,
-                  border: "1px solid #ccc",
-                }}
-              >
-                <option value="gst">GST</option>
-                <option value="swt">SWT</option>
-                <option value="cit">CIT</option>
-              </select>
-              <Button
+    <select
+      
+      onChange={(e) => changeCategoryData(e.target.value)}
+      className='chart-filter'
+    >
+      <option value="gst">GST</option>
+      <option value="swt">SWT</option>
+      <option value="cit">CIT</option>
+    </select>
+    <Button
                 onClick={handleDownload}
                 className="mx-2"
                 tooltip="Download Non-Filing CSV"
@@ -236,19 +219,72 @@ const TaxFillingComplianceChart = ({ x }) => {
               >
                 <Download />
               </Button>
-            </div>
-          </Col>
-        </Row>
-        <Chart options={options} series={series} type="bar" height={350} />
-        {/* <ReactApexChart
-          options={chartOptions}
-          series={chartData.series}
-          type="line"
-          height={350}
-        /> */}
-        chart
-      </Card.Body>
-    </Card>
+  </div>
+  <Chart options={options} series={series} type="bar" height={350} />
+  </>
+    // <Card className="mb-4 box-background">
+    //   <Card.Body>
+    //     <Row className="mb-4">
+    //       <Col>
+    //         <div
+    //           style={{
+    //             display: "flex",
+    //             alignItems: "center",
+    //             marginBottom: 16,
+    //           }}
+    //         >
+    //           <h4
+    //             className="mb-0 me-3 fw-bold"
+    //             style={{ color: "#6366F1", fontSize: "22px" }}
+    //           >
+    //             Tax Filing vs Non Filing
+    //           </h4>
+    //           <Tally1 style={{ color: "#7c879d" }} />
+    //           <span
+    //             style={{
+    //               color: "#7c879d",
+    //               fontSize: "16px",
+    //               marginRight: "10px",
+    //             }}
+    //           >
+    //             Filter By :{" "}
+    //           </span>
+
+    //           <select
+    //             onChange={(e) => changeCategoryData(e.target.value)}
+    //             style={{
+    //               padding: "4px 8px",
+    //               borderRadius: 4,
+    //               border: "1px solid #ccc",
+    //             }}
+    //           >
+    //             <option value="gst">GST</option>
+    //             <option value="swt">SWT</option>
+    //             <option value="cit">CIT</option>
+    //           </select>
+    //           <Button
+    //             onClick={handleDownload}
+    //             className="mx-2"
+    //             tooltip="Download Non-Filing CSV"
+    //             variant="outline-primary"
+    //             size="sm"
+    //             title="Download Non-Filing CSV"
+    //           >
+    //             <Download />
+    //           </Button>
+    //         </div>
+    //       </Col>
+    //     </Row>
+    //     <Chart options={options} series={series} type="bar" height={350} />
+    //     {/* <ReactApexChart
+    //       options={chartOptions}
+    //       series={chartData.series}
+    //       type="line"
+    //       height={350}
+    //     /> */}
+    //     chart
+    //   </Card.Body>
+    // </Card>
   );
 };
 

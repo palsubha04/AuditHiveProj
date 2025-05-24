@@ -1,18 +1,36 @@
-import { Tally1 } from 'lucide-react';
-import React, { useEffect, useState, useMemo } from 'react';
-import ReactApexChart from 'react-apexcharts';
-import './charts.css';
+import { Tally1 } from "lucide-react";
+import React, { useEffect, useState, useMemo } from "react";
+import ReactApexChart from "react-apexcharts";
+import "./charts.css";
+import CSVExportButton from "../CSVExportButton";
 
-const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
-  const [selectedCategory, setSelectedCategory] = useState('gst');
+const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData, source }) => {
+  const [selectedCategory, setSelectedCategory] = useState("gst");
   const [filteredData, setFilteredData] = useState([]);
-  const categories = ['gst', 'swt', 'cit'];
+  const categories = ["gst", "swt", "cit"];
+  const [records, setRecords] = useState([]);
 
+  console.log(
+    "data received in RiskAnomalyFrequencyChart",
+    riskAnomalyFrequencyData
+  );
   useEffect(() => {
     if (riskAnomalyFrequencyData && selectedCategory) {
       const rules =
         riskAnomalyFrequencyData[selectedCategory]?.fraud_rules || [];
       setFilteredData(rules);
+      if (source === "Risk Assessment") {
+        const result = rules.flatMap(({ rule, records }) =>
+          records.map(({ tin, taxpayer_name }) => ({
+            Tin: tin,
+            "Taxpayer Name" : taxpayer_name,
+            Rule : rule,
+          }))
+        );
+      
+        setRecords(result);
+      }
+      
     }
   }, [riskAnomalyFrequencyData, selectedCategory]);
 
@@ -31,12 +49,12 @@ const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
       toolbar: { show: true },
     },
     tooltip: {
-      custom: function({ series, seriesIndex, w }) {
+      custom: function ({ series, seriesIndex, w }) {
         const value = series[seriesIndex];
         const total = series.reduce((acc, val) => acc + val, 0);
         const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
         const label = w.globals.labels[seriesIndex];
-    
+
         return `
           <div class="arrow_box" style="padding: 8px; line-height: 1.4">
             <span> ${label}</span><br/>
@@ -44,9 +62,9 @@ const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
             <span><strong>Percentage:</strong> ${percentage}%</span>
           </div>
         `;
-      }
+      },
     },
-    
+
     labels: labels,
     noData: {
       text: "No Data Found",
@@ -71,7 +89,8 @@ const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
   return (
     <div>
       {/* Heading and dropdown */}
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: 16,  justifyContent: 'space-between', }}>
+      <div className='d-flex'>
         <span className="chart-headers">Frequency Of Risk Anomalies</span>
         <div>
           <select
@@ -86,16 +105,25 @@ const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData }) => {
             ))}
           </select>
         </div>
+        </div>
+        {source === "Risk Assessment" && (
+        <CSVExportButton
+          records={records}
+          filename="risk_taxpayers.csv"
+          buttonLabel="Download Risk Breakdown By Category Taxpayer List"
+        />
+      )}
       </div>
+    
 
       {/* Chart */}
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-          width: '100%',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          width: "100%",
         }}
       >
         <ReactApexChart

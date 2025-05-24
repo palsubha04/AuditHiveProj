@@ -9,7 +9,7 @@ export const fetchTaxFilingCompliance = createAsyncThunk(
     console.log("end_date", end_date);
     
     const response = await api.get(
-      `/analytics/compliance/benchmark/cit_payable_vs_cit_refundable/?start_date=${start_date}&end_date=${end_date}`
+      `/dashboard/tax-filing-vs-non-filing?start_date=${start_date}&end_date=${end_date}`
     );
     console.log("response", response);
     return response.data;
