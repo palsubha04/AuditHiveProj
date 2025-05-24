@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Spinner } from 'react-bootstrap';
-import Chart from "react-apexcharts";
+import Chart from 'react-apexcharts';
 import citService from '../../../services/cit.service';
+import CSVExportButton from '../../CSVExportButton';
 
 const sample = {
-    png: 450,
-    foreign: 50,
-  };
+  png: 450,
+  foreign: 50,
+};
 
 const SuperneutionCitChart = ({ startDate, endDate }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [records, setRecords] = useState([]);
   const chartOptions = {
     chart: {
       width: 380,
-      type: "pie",
+      type: 'pie',
       toolbar: { show: true },
     },
-    labels: ["PNG", "Foreign"],
+    labels: ['PNG', 'Foreign'],
     tooltip: {
       custom: function ({ series, seriesIndex, w }) {
         const value = series[seriesIndex];
@@ -42,7 +44,7 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
             width: 200,
           },
           legend: {
-            position: "bottom",
+            position: 'bottom',
           },
         },
       },
@@ -62,16 +64,20 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
           startDate,
           endDate
         );
-       //var chart_Data = response;
-       var chartSeries = [response.superannuation_png, response.superannuation_foreign];
+        setRecords(response?.records || []);
+        //var chart_Data = response;
+        var chartSeries = [
+          response.superannuation_png,
+          response.superannuation_foreign,
+        ];
 
-       setChartData((prevData) => ({
-         ...prevData,
-         series: chartSeries,
-       }));
+        setChartData((prevData) => ({
+          ...prevData,
+          series: chartSeries,
+        }));
       } catch (err) {
-        console.error("Error fetching Total Amount By Expense Type:", err);
-        setError("Failed to load Total Amount By Expense Type data");
+        console.error('Error fetching Total Amount By Expense Type:', err);
+        setError('Failed to load Total Amount By Expense Type data');
       } finally {
         setLoading(false);
       }
@@ -93,7 +99,7 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
       <Card className="mb-4 box-background">
         <Card.Body
           className="d-flex align-items-center justify-content-center"
-          style={{ height: "400px" }}
+          style={{ height: '400px' }}
         >
           <Spinner animation="border" role="status" variant="primary">
             <span className="visually-hidden">Loading...</span>
@@ -108,7 +114,7 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
       <Card className="mb-4 box-background">
         <Card.Body
           className="text-center text-danger"
-          style={{ height: "400px" }}
+          style={{ height: '400px' }}
         >
           {error}
         </Card.Body>
@@ -123,6 +129,13 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
           <Col>
             <span className="chart-headers">Superannuation PNG vs Foreign</span>
           </Col>
+          <Col>
+            <CSVExportButton
+              records={records}
+              filename="risk_taxpayers.csv"
+              buttonLabel="Download Risk Taxpayer List"
+            />
+          </Col>
         </Row>
         <Chart
           options={chartData.options}
@@ -135,4 +148,4 @@ const SuperneutionCitChart = ({ startDate, endDate }) => {
   );
 };
 
-export default SuperneutionCitChart
+export default SuperneutionCitChart;

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Card, Col, Row, Spinner } from "react-bootstrap";
-import Chart from "react-apexcharts";
-import citService from "../../../services/cit.service";
+import React, { useState, useEffect } from 'react';
+import { Card, Col, Row, Spinner } from 'react-bootstrap';
+import Chart from 'react-apexcharts';
+import citService from '../../../services/cit.service';
+import CSVExportButton from '../../CSVExportButton';
 
 const sample = {
   png: 450,
@@ -11,13 +12,15 @@ const sample = {
 const InterestExpenseCitChart = ({ startDate, endDate }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [records, setRecords] = useState([]);
+
   const chartOptions = {
     chart: {
       width: 380,
-      type: "pie",
+      type: 'pie',
       toolbar: { show: true },
     },
-    labels: ["PNG", "Foreign"],
+    labels: ['PNG', 'Foreign'],
     tooltip: {
       custom: function ({ series, seriesIndex, w }) {
         const value = series[seriesIndex];
@@ -42,7 +45,7 @@ const InterestExpenseCitChart = ({ startDate, endDate }) => {
             width: 200,
           },
           legend: {
-            position: "bottom",
+            position: 'bottom',
           },
         },
       },
@@ -62,6 +65,9 @@ const InterestExpenseCitChart = ({ startDate, endDate }) => {
           startDate,
           endDate
         );
+
+        setRecords(response?.records || []);
+
         //var chart_Data = response;
         var chartSeries = [
           response.interest_expense_png,
@@ -73,8 +79,8 @@ const InterestExpenseCitChart = ({ startDate, endDate }) => {
           series: chartSeries,
         }));
       } catch (err) {
-        console.error("Error fetching Total Amount By Expense Type:", err);
-        setError("Failed to load Total Amount By Expense Type data");
+        console.error('Error fetching Total Amount By Expense Type:', err);
+        setError('Failed to load Total Amount By Expense Type data');
       } finally {
         setLoading(false);
       }
@@ -96,7 +102,7 @@ const InterestExpenseCitChart = ({ startDate, endDate }) => {
       <Card className="mb-4 box-background">
         <Card.Body
           className="d-flex align-items-center justify-content-center"
-          style={{ height: "400px" }}
+          style={{ height: '400px' }}
         >
           <Spinner animation="border" role="status" variant="primary">
             <span className="visually-hidden">Loading...</span>
@@ -111,7 +117,7 @@ const InterestExpenseCitChart = ({ startDate, endDate }) => {
       <Card className="mb-4 box-background">
         <Card.Body
           className="text-center text-danger"
-          style={{ height: "400px" }}
+          style={{ height: '400px' }}
         >
           {error}
         </Card.Body>
@@ -127,6 +133,13 @@ const InterestExpenseCitChart = ({ startDate, endDate }) => {
             <span className="chart-headers">
               Interest Expense PNG vs Foreign
             </span>
+          </Col>
+          <Col>
+            <CSVExportButton
+              records={records}
+              filename="risk_taxpayers.csv"
+              buttonLabel="Download Risk Taxpayer List"
+            />
           </Col>
         </Row>
         <Chart
