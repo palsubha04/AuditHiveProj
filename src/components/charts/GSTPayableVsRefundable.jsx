@@ -3,19 +3,19 @@ import ReactApexChart from 'react-apexcharts';
 import { Card, Row, Col } from 'react-bootstrap';
 import gstService from '../../services/gst.service';
 import '../../pages/Dashboard.css';
-import './charts.css'
+import './charts.css';
 
 const GSTPayableVsRefundable = ({ startDate, endDate }) => {
   const [chartData, setChartData] = useState({
     series: [
       {
         name: 'GST Payable',
-        data: []
+        data: [],
       },
       {
         name: 'GST Refundable',
-        data: []
-      }
+        data: [],
+      },
     ],
     options: {
       chart: {
@@ -23,56 +23,71 @@ const GSTPayableVsRefundable = ({ startDate, endDate }) => {
         height: 350,
         stacked: true,
         toolbar: {
-          show: true
+          show: true,
         },
         zoom: {
-          enabled: true
-        }
+          enabled: true,
+        },
       },
       plotOptions: {
         bar: {
           horizontal: false,
           columnWidth: '55%',
-          endingShape: 'rounded'
+          endingShape: 'rounded',
+          borderRadius: 6,
+          //borderRadiusWhenStacked: 'last',
         },
       },
       dataLabels: {
-        enabled: false
+        enabled: false,
       },
       stroke: {
         show: true,
         width: 2,
-        colors: ['transparent']
+        colors: ['transparent'],
       },
       xaxis: {
         categories: [],
         title: {
-          text: 'Month'
-        }
+          text: 'Month',
+        },
       },
       yaxis: {
         title: {
-          text: 'Amount ($)'
+          text: 'Amount ($)',
         },
         labels: {
           formatter: function (value) {
-            return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          }
-        }
+            return (
+              '$' +
+              value.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            );
+          },
+        },
       },
       fill: {
         opacity: 1,
-        colors: ['#008FFB', '#00E396']
+        colors: ['#0095FF', '#00E096'],
       },
       tooltip: {
         y: {
           formatter: function (value) {
-            return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          }
-        }
+            return (
+              '$' +
+              value.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            );
+          },
+        },
       },
       legend: {
-        position: 'top'
+        position: 'bottom',
+        horizontalAlign: 'center',
       },
       noData: {
         text: 'No Data Found',
@@ -83,63 +98,75 @@ const GSTPayableVsRefundable = ({ startDate, endDate }) => {
         style: {
           color: '#6c757d',
           fontSize: '16px',
-          fontFamily: 'inherit'
-        }
-      }
-    }
+          fontFamily: 'inherit',
+        },
+      },
+    },
   });
 
   const [totals, setTotals] = useState({
     payable: 0,
-    refundable: 0
+    refundable: 0,
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await gstService.getPayableVsRefundable(startDate, endDate);
-        
+        const response = await gstService.getPayableVsRefundable(
+          startDate,
+          endDate
+        );
+
         // Process the response data
         const categories = [];
         const payableData = [];
         const refundableData = [];
 
-        response.records.forEach(record => {
-          record.monthly_summary.forEach(summary => {
+        response.records.forEach((record) => {
+          record.monthly_summary.forEach((summary) => {
             const date = new Date(record.year, summary.month - 1);
-            categories.push(date.toLocaleString('default', { month: 'short', year: 'numeric' }));
+            categories.push(
+              date.toLocaleString('default', {
+                month: 'short',
+                year: 'numeric',
+              })
+            );
             payableData.push(summary.gst_payable);
             refundableData.push(summary.gst_refundable);
           });
         });
 
         // Check if all values are zero
-        const allZero = payableData.every(val => val === 0) && refundableData.every(val => val === 0);
+        const allZero =
+          payableData.every((val) => val === 0) &&
+          refundableData.every((val) => val === 0);
 
-        setChartData(prevData => ({
+        setChartData((prevData) => ({
           ...prevData,
-          series: allZero ? [] : [
-            {
-              name: 'GST Payable',
-              data: payableData
-            },
-            {
-              name: 'GST Refundable',
-              data: refundableData
-            }
-          ],
+          series: allZero
+            ? []
+            : [
+                {
+                  name: 'GST Payable',
+                  data: payableData,
+                },
+                {
+                  name: 'GST Refundable',
+                  data: refundableData,
+                },
+              ],
           options: {
             ...prevData.options,
             xaxis: {
               ...prevData.options.xaxis,
-              categories: categories
-            }
-          }
+              categories: categories,
+            },
+          },
         }));
 
         setTotals({
           payable: response.total_gst_payable,
-          refundable: response.total_gst_refundable
+          refundable: response.total_gst_refundable,
         });
       } catch (error) {
         console.error('Error fetching GST data:', error);
@@ -155,8 +182,48 @@ const GSTPayableVsRefundable = ({ startDate, endDate }) => {
     <Card className="mb-4 box-background">
       <Card.Body>
         <Row className="mb-4">
-          <Col>
-            <span className='chart-headers'>GST Payable vs Refundable</span>
+          <Col md={4}>
+            <span className="chart-headers">GST Payable vs Refundable</span>
+          </Col>
+          <Col md={4}>
+            <div className="d-flex align-items-center pb-2">
+              <div
+                className="me-2"
+                style={{
+                  width: '12px',
+                  height: '12px',
+                  backgroundColor: '#008FFB',
+                  borderRadius: '50%',
+                }}
+              ></div>
+              <span>
+                Sum of GST Payable: $
+                {totals.payable.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>
+            </div>
+          </Col>
+          <Col md={4}>
+            <div className="d-flex align-items-center">
+              <div
+                className="me-2"
+                style={{
+                  width: '12px',
+                  height: '12px',
+                  backgroundColor: '#00E396',
+                  borderRadius: '50%',
+                }}
+              ></div>
+              <span>
+                Sum of GST Refundable: $
+                {totals.refundable.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>
+            </div>
           </Col>
         </Row>
         <div id="chart">
@@ -167,23 +234,9 @@ const GSTPayableVsRefundable = ({ startDate, endDate }) => {
             height={350}
           />
         </div>
-        <Row className="mb-4">
-          <Col md={6}>
-            <div className="d-flex align-items-center">
-              <div className="me-2" style={{ width: '12px', height: '12px', backgroundColor: '#008FFB', borderRadius: '50%' }}></div>
-              <span>Sum of GST Payable: ${totals.payable.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-            </div>
-          </Col>
-          <Col md={6}>
-            <div className="d-flex align-items-center">
-              <div className="me-2" style={{ width: '12px', height: '12px', backgroundColor: '#00E396', borderRadius: '50%' }}></div>
-              <span>Sum of GST Refundable: ${totals.refundable.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-            </div>
-          </Col>
-        </Row>
       </Card.Body>
     </Card>
   );
 };
 
-export default GSTPayableVsRefundable; 
+export default GSTPayableVsRefundable;

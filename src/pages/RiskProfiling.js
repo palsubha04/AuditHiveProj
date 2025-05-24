@@ -39,6 +39,8 @@ function RiskProfiling() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [tins, setTins] = useState([]);
+  const [tinWithLabel, setTinWithLabel] = useState([]);
 
   const { data, loading, error } = useSelector((state) => state?.datasets);
 
@@ -124,7 +126,25 @@ function RiskProfiling() {
       setDateRange(range);
     }
   };
-  const tins = data?.tins || [];
+
+  useEffect(() => {
+    if (data?.records && data.records.length > 0) {
+      const tinList = data.records.map((e, index) => {
+        return data.records[index].tin;
+      });
+      setTins(tinList);
+      setSelectedTIN(tinList[tinList.length - 1]);
+      const tinLabelList = [];
+      for (let i = 0; i < data.records.length; i++) {
+        tinLabelList.push({
+          label: data.records[i].tin + ' - ' + data.records[i].taxpayer_name,
+          value: data.records[i].tin,
+        });
+      }
+      setTinWithLabel(tinLabelList);
+    }
+  }, [data]);
+
   const yearOptions =
     data?.years?.map((year) => ({
       label: String(year),
@@ -141,12 +161,15 @@ function RiskProfiling() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    if (data?.tins && data.tins.length > 0 && !selectedTIN) {
-      // Ensure selectedTIN is set only once initially
-      setSelectedTIN(data.tins[data.tins.length - 1]);
-    }
-  }, [data?.tins, selectedTIN]);
+  // useEffect(() => {
+
+  //   if (data?.records && data.records.length > 0) {
+  //     const tinList = data.records.map((e, index) => {
+  //       return data.records[index].tin;
+  //     });
+  //     setSelectedTIN(tinList[tinList.length - 1]);
+  //   }
+  // }, [selectedTIN]);
 
   // Added selectedTIN to dependency array
 
@@ -257,7 +280,7 @@ function RiskProfiling() {
         })
       );
     }
-  }, []);
+  }, [data, selectedTIN, dateRange, dispatch]);
 
   const handleSearch = () => {
     dispatch(
@@ -366,7 +389,7 @@ function RiskProfiling() {
                 />
                 <List
                   height={200} // Adjusted height for the list itself
-                  itemCount={filteredTins.length}
+                  itemCount={tinWithLabel.length}
                   itemSize={35}
                   width={'100%'} // Changed width to be responsive
                 >
@@ -376,19 +399,20 @@ function RiskProfiling() {
                         ...style,
                         padding: '8px 12px',
                         background:
-                          filteredTins[index] === selectedTIN
+                          tinWithLabel[index].value === selectedTIN
                             ? '#e0e7ef'
                             : '#fff',
                         cursor: 'pointer',
                       }}
                       onClick={() => {
-                        setSelectedTIN(filteredTins[index]);
+                        setSelectedTIN(tinWithLabel[index].value);
                         setIsDropdownOpen(false);
                         setSearchTerm(''); // Reset search term on selection
                       }}
-                      key={filteredTins[index]}
+                      key={tinWithLabel[index].value}
                     >
-                      {filteredTins[index]}
+                      {tinWithLabel[index].label}
+                      {/* //Search not working */}
                     </div>
                   )}
                 </List>

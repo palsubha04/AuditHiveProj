@@ -3,7 +3,7 @@ import { Card, Row, Col, Form, Badge, Spinner } from 'react-bootstrap';
 import Table from '../Table';
 import citService from '../../services/cit.service';
 import debounce from 'lodash/debounce';
-import "../../pages/Dashboard.css";
+import '../../pages/Dashboard.css';
 import CSVExportButton from '../CSVExportButton';
 
 const CITNetLossTaxPayers = ({ startDate, endDate }) => {
@@ -17,62 +17,62 @@ const CITNetLossTaxPayers = ({ startDate, endDate }) => {
 
   const fetchRecords = async () => {
     // if (append && (loading || isLoadingMore)) return;
-    
+
     // if (page === 1) {
-       setLoading(true);
+    setLoading(true);
     // } else {
     //   setIsLoadingMore(true);
     // }
-    
+
     setError(null);
     try {
       let response;
-    //   if (tin) {
-    //     response = await citService.getNetLossTaxPayersByTIN(tin, startDate, endDate, page);
-    //     if (response.error) {
-    //       setError(response.error);
-    //       setRecords([]);
-    //     } else {
-    //       setRecords(Array.isArray(response.records) ? response.records : []);
-    //       setError(null);
-    //     }
-    //   } else {
-        response = await citService.getNetLossTaxPayers(startDate, endDate);
+      //   if (tin) {
+      //     response = await citService.getNetLossTaxPayersByTIN(tin, startDate, endDate, page);
+      //     if (response.error) {
+      //       setError(response.error);
+      //       setRecords([]);
+      //     } else {
+      //       setRecords(Array.isArray(response.records) ? response.records : []);
+      //       setError(null);
+      //     }
+      //   } else {
+      response = await citService.getNetLossTaxPayers(startDate, endDate);
       //  if (append) {
-       //   setRecords(prev => [...prev, ...response.records]);
+      //   setRecords(prev => [...prev, ...response.records]);
       //  } else {
-          setRecords(response);
-     //   }
-    //  }
+      setRecords(response);
+      //   }
+      //  }
       setTotalRecords(response.length);
     } catch (err) {
       setError('Failed to fetch tax records');
       console.error('Error fetching tax records:', err);
     } finally {
       setLoading(false);
-     // setIsLoadingMore(false);
+      // setIsLoadingMore(false);
     }
   };
 
   // Debounced search function
-//   const debouncedSearch = useCallback(
-//     debounce((value) => {
-//       setCurrentPage(1);
-//       if (value) {
-//         fetchRecords(value);
-//       } else {
-//         fetchRecords();
-//       }
-//     }, 500),
-//     [startDate, endDate]
-//   );
+  //   const debouncedSearch = useCallback(
+  //     debounce((value) => {
+  //       setCurrentPage(1);
+  //       if (value) {
+  //         fetchRecords(value);
+  //       } else {
+  //         fetchRecords();
+  //       }
+  //     }, 500),
+  //     [startDate, endDate]
+  //   );
 
   // Handle search input change
-//   const handleSearchChange = (e) => {
-//     const value = e.target.value;
-//     setSearchTin(value);
-//     debouncedSearch(value);
-//   };
+  //   const handleSearchChange = (e) => {
+  //     const value = e.target.value;
+  //     setSearchTin(value);
+  //     debouncedSearch(value);
+  //   };
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -81,13 +81,13 @@ const CITNetLossTaxPayers = ({ startDate, endDate }) => {
     }
   }, [startDate, endDate]);
 
-//   const handleLoadMore = useCallback(() => {
-//     if (records.length < totalRecords && !loading && !isLoadingMore) {
-//       const nextPage = currentPage + 1;
-//       setCurrentPage(nextPage);
-//       fetchRecords(searchTin, nextPage, true);
-//     }
-//   }, [records.length, totalRecords, loading, isLoadingMore, currentPage, searchTin]);
+  //   const handleLoadMore = useCallback(() => {
+  //     if (records.length < totalRecords && !loading && !isLoadingMore) {
+  //       const nextPage = currentPage + 1;
+  //       setCurrentPage(nextPage);
+  //       fetchRecords(searchTin, nextPage, true);
+  //     }
+  //   }, [records.length, totalRecords, loading, isLoadingMore, currentPage, searchTin]);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-PG', {
@@ -95,40 +95,39 @@ const CITNetLossTaxPayers = ({ startDate, endDate }) => {
       currency: 'PGK',
       currencyDisplay: 'symbol',
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(value);
   };
 
   const columns = [
     {
       accessorKey: 'tin',
-      header: 'TIN'
+      header: 'TIN',
     },
     {
       accessorKey: 'taxpayer_name',
       header: 'Taxpayer Name',
-      cell: ({ getValue }) => getValue() || 'N/A'
+      cell: ({ getValue }) => getValue() || 'N/A',
     },
     {
       accessorKey: 'segmentation',
-      header: 'Segmentation'
+      header: 'Segmentation',
     },
     {
       accessorKey: 'total_gross_income',
       header: 'Total Gross Income',
-      cell: ({ getValue }) => formatCurrency(getValue())
+      cell: ({ getValue }) => formatCurrency(getValue()),
     },
     {
       accessorKey: 'total_operating_expense',
       header: 'Total Operating Expenses',
-      cell: ({ getValue }) => formatCurrency(getValue())
+      cell: ({ getValue }) => formatCurrency(getValue()),
     },
     {
       accessorKey: 'current_year_profit_loss_710',
       header: 'Current Year Profit/Loss',
-      cell: ({ getValue }) => formatCurrency(getValue())
+      cell: ({ getValue }) => formatCurrency(getValue()),
     },
-   
   ];
 
   return (
@@ -138,10 +137,10 @@ const CITNetLossTaxPayers = ({ startDate, endDate }) => {
           <div
             className="text-center"
             style={{
-              height: "350px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              height: '400px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Spinner animation="border" role="status" variant="primary">
@@ -151,19 +150,32 @@ const CITNetLossTaxPayers = ({ startDate, endDate }) => {
         ) : error ? (
           <div className="text-center text-danger">{error}</div>
         ) : records.length === 0 ? (
-          <>
-            <Card.Title>Top 50 Net Loss TaxPayers</Card.Title>
-            <div className="text-center text-muted" style={{ padding: "2rem" }}>
+          <div
+            className="text-center"
+            style={{
+              height: '400px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <span className="chart-headers">Top 50 Net Loss TaxPayers</span>
+            <div className="text-center text-muted" style={{ padding: '2rem' }}>
               No Data Found
             </div>
-          </>
+          </div>
         ) : (
-          <>
+          <div
+            style={{
+              height: '400px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
             <div className="d-flex justify-content-between align-items-center mb-3">
               <div className="d-flex justify-content-between align-items-center w-100">
-                <span className="chart-headers">
-                  Top 50 Net Loss TaxPayers
-                </span>
+                <span className="chart-headers">Top 50 Net Loss TaxPayers</span>
                 <CSVExportButton
                   records={records}
                   filename="SalesVsCost.csv"
@@ -176,15 +188,12 @@ const CITNetLossTaxPayers = ({ startDate, endDate }) => {
               data={records}
               loading={loading}
               error={error}
-              //   hasMore={records.length < totalRecords}
-              //   onLoadMore={handleLoadMore}
-              //   loadingMore={isLoadingMore}
             />
-          </>
+          </div>
         )}
       </Card.Body>
     </Card>
   );
 };
 
-export default CITNetLossTaxPayers; 
+export default CITNetLossTaxPayers;
