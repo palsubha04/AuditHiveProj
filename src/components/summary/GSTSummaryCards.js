@@ -56,6 +56,7 @@ const GSTSummaryCards = ({ startDate, endDate }) => {
   return (
     <Card
       style={{
+        borderColor: '#e6edff',
         borderRadius: 16,
         boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
         padding: 24,
@@ -66,21 +67,21 @@ const GSTSummaryCards = ({ startDate, endDate }) => {
         className="justify-content-between"
         style={{ flexWrap: 'nowrap', overflowX: 'auto' }}
       >
-        <Col>
+        <Col className='border-end'>
           <MetricCard
             value={formatNumber(summary.total_tax_payers)}
             label="Total Tax payers"
             color="#31303B"
           />
         </Col>
-        <Col>
+        <Col className='border-end'>
           <MetricCard
             value={formatNumber(summary.total_sales_income)}
             label="Total Sales Income"
             color="#31303B"
           />
         </Col>
-        <Col>
+        <Col className='border-end'>
           <MetricCard
             value={formatNumber(summary.total_gst_payable)}
             label="Total GST Payable"
@@ -91,13 +92,6 @@ const GSTSummaryCards = ({ startDate, endDate }) => {
           <MetricCard
             value={formatNumber(summary.total_gst_refundable)}
             label="Total GST Refundable"
-            color="#31303B"
-          />
-        </Col>
-        <Col>
-          <MetricCard
-            value={formatNumber(238)}
-            label="Average Day Late"
             color="#31303B"
           />
         </Col>

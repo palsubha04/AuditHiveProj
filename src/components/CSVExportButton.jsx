@@ -11,11 +11,19 @@ const CSVExportButton = ({
     console.log("received records", records);
     if (!records || records.length === 0) return;
 
-    const headers = Object.keys(records[0]);
+    // Transform headers: remove underscores and capitalize each word
+    const originalHeaders = Object.keys(records[0]);
+    const formattedHeaders = originalHeaders.map((key) =>
+      key
+        .split("_")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+    );
+
     const csvRows = [
-      headers.join(","), // header row
+      formattedHeaders.join(","), // header row
       ...records.map((record) =>
-        headers
+        originalHeaders
           .map((header) => {
             const cell = record[header];
             if (cell == null) return ""; // handle null/undefined
@@ -33,12 +41,13 @@ const CSVExportButton = ({
 
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", filename);
+    link.setAttribute("download", filename || "data.csv");
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
+  
 
   return (
     <Button

@@ -137,21 +137,30 @@ function RiskAssessment() {
   return (
     <Layout>
       <div className="page-container">
-        <div className='top-filter-class'>
+        <div className="top-filter-class">
           <TenureFilter
             onFilterChange={handleFilterChange}
-            tenureOptions={yearOptions}
+            //tenureOptions={yearOptions}
           />
+          <div className="d-flex ps-2 gap-2 justify-center align-items-center">
+            <span>{dateRange.start_date}</span>
+            <span>to</span>
+            <span>{dateRange.end_date}</span>
+          </div>
         </div>
 
-        <div className='content'>
-          <div className='d-flex flex-column' style={{gap: '32px'}}>
-            <div className='d-flex' style={{gap: '32px'}}>
-              <Card className='chart-cards-half'>
+        <div className="content">
+          <div className="d-flex flex-column" style={{ gap: "32px" }}>
+            <div className="d-flex" style={{ gap: "32px" }}>
+              <Card className="chart-cards-half">
                 <CardBody>
                   {totalVsFlaggedTaxpayersLoading ? (
-                    <div className='spinner-div'>
-                      <Spinner animation="border" role="status" variant="primary">
+                    <div className="spinner-div">
+                      <Spinner
+                        animation="border"
+                        role="status"
+                        variant="primary"
+                      >
                         <span className="visually-hidden">Loading...</span>
                       </Spinner>
                     </div>
@@ -164,11 +173,15 @@ function RiskAssessment() {
                   )}
                 </CardBody>
               </Card>
-              <Card className='chart-cards-half'>
+              <Card className="chart-cards-half">
                 <CardBody>
                   {riskAnomalyFrequencyLoading ? (
-                    <div className='spinner-div'>
-                      <Spinner animation="border" role="status" variant="primary">
+                    <div className="spinner-div">
+                      <Spinner
+                        animation="border"
+                        role="status"
+                        variant="primary"
+                      >
                         <span className="visually-hidden">Loading...</span>
                       </Spinner>
                     </div>
@@ -183,48 +196,64 @@ function RiskAssessment() {
                 </CardBody>
               </Card>
             </div>
-            <div className='d-flex'>
-              <Card className='chart-cards-full'>
+            <div className="d-flex">
+              <Card className="chart-cards-full">
                 <CardBody>
                   {riskBreakdownByCategoryLoading ? (
-                    <div className='spinner-div'>
-                      <Spinner animation="border" role="status" variant="primary">
+                    <div className="spinner-div">
+                      <Spinner
+                        animation="border"
+                        role="status"
+                        variant="primary"
+                      >
                         <span className="visually-hidden">Loading...</span>
                       </Spinner>
                     </div>
                   ) : (
                     <div className="p-0 w-100">
                       <RiskBreakdownByCategoryChart
-                        riskBreakdownByCategoryData={riskBreakdownByCategoryData}
+                        riskBreakdownByCategoryData={
+                          riskBreakdownByCategoryData
+                        }
                       />
                     </div>
                   )}
                 </CardBody>
               </Card>
             </div>
-            <div className='d-flex'>
-              <Card className='chart-cards-full'>
+            <div className="d-flex">
+              <Card className="chart-cards-full">
                 <CardBody>
                   {riskAnalysisLoading ? (
-                    <div className='spinner-div'>
-                      <Spinner animation="border" role="status" variant="primary">
+                    <div className="spinner-div">
+                      <Spinner
+                        animation="border"
+                        role="status"
+                        variant="primary"
+                      >
                         <span className="visually-hidden">Loading...</span>
                       </Spinner>
                     </div>
                   ) : (
                     <div className="p-0 w-100">
-                      <RiskAnalysisByIndustryChart riskData={riskAnalysisData} />
+                      <RiskAnalysisByIndustryChart
+                        riskData={riskAnalysisData}
+                      />
                     </div>
                   )}
                 </CardBody>
               </Card>
             </div>
-            <div className='d-flex'>
-              <Card className='chart-cards-table'>
+            <div className="d-flex">
+              <Card className="chart-cards-table">
                 <CardBody>
                   {topFraudRulesProfilingLoading ? (
-                    <div className='spinner-div'>
-                      <Spinner animation="border" role="status" variant="primary">
+                    <div className="spinner-div">
+                      <Spinner
+                        animation="border"
+                        role="status"
+                        variant="primary"
+                      >
                         <span className="visually-hidden">Loading...</span>
                       </Spinner>
                     </div>
@@ -244,7 +273,7 @@ function RiskAssessment() {
           </div>
         </div>
       </div>
-    </Layout >
+    </Layout>
   );
 }
 

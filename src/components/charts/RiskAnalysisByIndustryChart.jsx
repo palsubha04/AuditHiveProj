@@ -113,16 +113,9 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
     },
     plotOptions: {
       heatmap: {
-        shadeIntensity: 0.8,
+        //shadeIntensity: 0.8,
         colorScale: {
           ranges: generateRiskRanges(),
-          // ranges: generateRiskRanges(
-          //   riskData &&
-          //     riskData[selectedCategory] &&
-          //     riskData[selectedCategory][selectedIndustry]
-          //     ? riskData[selectedCategory][selectedIndustry]
-          //     : []
-          // ),
         },
       },
     },

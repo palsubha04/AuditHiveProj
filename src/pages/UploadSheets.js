@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import { Form, Button, Alert, ProgressBar } from 'react-bootstrap';
+import { Form, Button, Alert, ProgressBar, Spinner } from 'react-bootstrap';
 import api from '../services/axios.config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -498,23 +498,29 @@ function UploadSheets() {
           <h2 className="upload-title">
             {showPreview
               ? `${formData.type.toUpperCase()} data for ${formatDate(
-                  formData.startDate
-                )} to ${formatDate(formData.endDate)}`
+                formData.startDate
+              )} to ${formatDate(formData.endDate)}`
               : 'Upload Document'}
           </h2>
 
           {error && <Alert variant="danger">{error}</Alert>}
           {success && jobStatus?.status !== 'finished' && (
-            <Alert variant="success">
-              {success}
-              {jobId && progress > 0 && progress < 100 && (
-                <ProgressBar
-                  now={progress}
-                  label={`${progress}%`}
-                  className="mt-2"
-                  variant="success"
-                />
-              )}
+            // <Alert variant="success">
+            //   {success}
+            //   {jobId && progress > 0 && progress < 100 && (
+            //     <ProgressBar
+            //       now={progress}
+            //       label={`${progress}%`}
+            //       className="mt-2"
+            //       variant="success"
+            //     />
+            //   )}
+            // </Alert>
+            <Alert variant="warning" className="d-flex justify-content-between align-items-center">
+              <span style={{fontSize: "16px"}}>Your data sync is in transit</span>
+              <Spinner animation="border" role="status" variant="primary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
             </Alert>
           )}
           {jobStatus?.status === 'finished' && (
@@ -552,7 +558,7 @@ function UploadSheets() {
                 <div className="preview-info-left">
                   {auditHistory ? (
                     auditHistory.message ===
-                    `No ${formData.type} data upload found.` ? (
+                      `No ${formData.type} data upload found.` ? (
                       <div className="no-data-message">
                         No {formData.type.toUpperCase()} data has been uploaded
                         yet.
@@ -570,7 +576,7 @@ function UploadSheets() {
                 <div className="preview-info-right">
                   {auditHistory &&
                     auditHistory.message !==
-                      `No ${formData.type} data upload found.` && (
+                    `No ${formData.type} data upload found.` && (
                       <span className="date-time">
                         <span>
                           Date:{' '}
