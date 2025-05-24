@@ -176,9 +176,9 @@ const RiskCategoriesChart = ({ startDate, endDate, taxType }) => {
         let temp = [];
     const result = Object.entries(currentData).flatMap(([category, { records }]) =>
       records.map(({ tin, taxpayer_name }) => ({
-        tin,
-        taxpayer_name,
-        segmentation: category,
+        Tin: tin,
+        "Taxpayer Name" : taxpayer_name,
+        Segmentation: category,
       }))
     );
     for (let i in currentData) {

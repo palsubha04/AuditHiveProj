@@ -22,9 +22,9 @@ const RiskAnomalyFrequencyChart = ({ riskAnomalyFrequencyData, source }) => {
       if (source === "Risk Assessment") {
         const result = rules.flatMap(({ rule, records }) =>
           records.map(({ tin, taxpayer_name }) => ({
-            tin,
-            taxpayer_name,
-            rule,
+            Tin: tin,
+            "Taxpayer Name" : taxpayer_name,
+            Rule : rule,
           }))
         );
       

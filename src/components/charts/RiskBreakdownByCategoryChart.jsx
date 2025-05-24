@@ -15,9 +15,9 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
       setFilterData(riskBreakdownByCategoryData[defaultCategory]);
       const result = Object.entries(riskBreakdownByCategoryData[defaultCategory]).flatMap(([category, { records }]) =>
       records.map(({ tin, taxpayer_name }) => ({
-        tin,
-        taxpayer_name,
-        category,
+        Tin: tin,
+        "Taxpayer Name": taxpayer_name,
+        Segmentation : category,
       }))
     );
    
@@ -94,7 +94,7 @@ const RiskBreakdownByCategoryChart = ({ riskBreakdownByCategoryData }) => {
       records.map(({ tin, taxpayer_name }) => ({
         tin,
         taxpayer_name,
-        segmentation: category,
+        Segmentation: category,
       }))
     );
    

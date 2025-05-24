@@ -28,6 +28,7 @@ import { fetchEmployeeOnPayroll } from '../slice/employeeOnPayrollSlice';
 import { fetchGstPayableVsRefundable } from '../slice/gstPayableVsRefundableSlice';
 import { fetchswtSalariesComparison } from '../slice/swtSalariesComparisonSlice';
 import './RiskProfilling.css';
+import DelayedReturnFilingTable from '../components/charts/risk-profiling/DelayedReturnFilingTable';
 
 function RiskProfiling() {
   const [dateRange, setDateRange] = useState({
@@ -593,6 +594,30 @@ function RiskProfiling() {
                 </CardBody>
               </Card>
             </div>
+            <div className='d-flex' style={{ gap: '32px' }}>
+            <Card className='chart-cards-full'>
+            <CardBody>
+                  {/* {riskBreakdownByCategoryProfilingLoading ? (
+                    <div className='spinner-div'>
+                      <Spinner animation="border" role="status" variant="primary">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  ) : (
+                    <div className="p-0 w-100">
+                      <RiskBreakdownCategoryProfilingChart
+                        riskBreakdownByCategoryDataProfiling={
+                          riskBreakdownByCategoryProfilingData
+                        }
+                      />
+                    </div>
+                  )} */}
+                   <div className="p-0 w-100">
+                      <DelayedReturnFilingTable />
+                    </div>
+                </CardBody>
+              </Card>
+              </div>
           </div>
         </div>
       </div>
