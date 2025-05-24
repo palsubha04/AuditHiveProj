@@ -34,7 +34,7 @@ const DownloadIcon = () => (
   </svg>
 );
 
-function Table({
+function UploadSheetTable({
   data = [],
   columns = [],
   onLoadMore,
@@ -86,40 +86,6 @@ function Table({
     }
   }, [jobId]);
 
-  const exportToCSV = () => {
-    console.log('received records', data);
-    if (!data || data.length === 0) return;
-
-    const records = data.filter((item) => item.is_fraud === true);
-    const headers = Object.keys(records[0]);
-    const csvRows = [
-      headers.join(','), // header row
-      ...records.map((record) =>
-        headers
-          .map((header) => {
-            const cell = record[header];
-            if (cell == null) return ''; // handle null/undefined
-            const escaped = String(cell).replace(/"/g, '""'); // escape quotes
-            return `"${escaped}"`;
-          })
-          .join(',')
-      ),
-    ];
-
-    const blob = new Blob([csvRows.join('\n')], {
-      type: 'text/csv;charset=utf-8;',
-    });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'Records');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   const handleFilterChange = useCallback((e, column) => {
     e.stopPropagation();
     const value = e.target.value;
@@ -143,16 +109,15 @@ function Table({
                       onClick={(e) => e.stopPropagation()}
                     >
                       <option value="all">All</option>
-                      <option value="true">Fraud</option>
-                      <option value="false">Valid</option>
+                      <option value="true">True</option>
+                      <option value="false">False</option>
                     </select>
                     {isFraudFilter === 'true' && (
                       <button
                         className="download-button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          //downloadFraudRecords();
-                          exportToCSV();
+                          downloadFraudRecords();
                         }}
                         disabled={!jobId}
                         title={
@@ -208,34 +173,28 @@ function Table({
     <div
       ref={tableContainerRef}
       className="table-container"
-      style={{ height: '600px', overflowY: 'auto' }}
       onScroll={(e) => fetchMoreOnBottomReached(e.target)}
     >
-      <table
-        style={{
-          width: '100%',
-          tableLayout: 'fixed',
-          borderCollapse: 'collapse',
-        }}
-      >
+      <table style={{ display: 'grid' }}>
         <thead
           style={{
+            display: 'grid',
             position: 'sticky',
             top: 0,
-            backgroundColor: 'white',
             zIndex: 1,
+            backgroundColor: 'white',
           }}
         >
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <tr key={headerGroup.id} style={{ display: 'flex', width: '100%' }}>
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
                   style={{
-                    padding: '12px 20px',
+                    display: 'inline-block',
+                    width: '100%',
+                    padding: '12px',
                     borderBottom: '2px solid #eee',
-                    textAlign: 'center',
-                    // width: '200px', // Ensure this line is removed or commented out
                   }}
                 >
                   {flexRender(
@@ -247,28 +206,37 @@ function Table({
             </tr>
           ))}
         </thead>
-        <tbody>
-          <tr
-            style={{
-              height: `${rowVirtualizer.getVirtualItems()[0]?.start ?? 0}px`,
-            }}
-          />
+        <tbody
+          style={{
+            display: 'grid',
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            position: 'relative',
+          }}
+        >
           {rowVirtualizer.getVirtualItems().map((virtualRow) => {
             const row = rows[virtualRow.index];
             return (
               <tr
                 key={row.id}
-                ref={rowVirtualizer.measureElement}
-                style={{ height: '54px' }} // You may adjust based on actual row height
+                data-index={virtualRow.index}
+                ref={(node) => rowVirtualizer.measureElement(node)}
+                style={{
+                  display: 'flex',
+                  position: 'absolute',
+                  transform: `translateY(${virtualRow.start}px)`,
+                  width: '100%',
+                  left: 0,
+                  right: 0,
+                }}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    title={cell.getValue()}
-                    className="table-td"
                     style={{
-                      padding: '0 30px',
-                      // width: '200px', // Ensure this line is removed or commented out
+                      display: 'inline-block',
+                      width: '100%',
+                      padding: '8px 12px',
+                      borderBottom: '1px solid #eee',
                     }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -277,15 +245,6 @@ function Table({
               </tr>
             );
           })}
-          <tr
-            style={{
-              height: `${
-                rowVirtualizer.getTotalSize() -
-                (rowVirtualizer.getVirtualItems()[0]?.start ?? 0) -
-                rowVirtualizer.getVirtualItems().length * 35
-              }px`,
-            }}
-          />
         </tbody>
       </table>
       {loadingMore && <div className="loading-more">Loading more data...</div>}
@@ -293,4 +252,4 @@ function Table({
   );
 }
 
-export default React.memo(Table);
+export default React.memo(UploadSheetTable);

@@ -3,7 +3,8 @@ import { Card, Row, Col, Form, Badge, Spinner } from 'react-bootstrap';
 import Table from '../Table';
 import citService from '../../services/cit.service';
 import debounce from 'lodash/debounce';
-import "../../pages/Dashboard.css";
+import '../../pages/Dashboard.css';
+import CSVExportButton from '../CSVExportButton';
 
 const CITNetProfitTaxPayers = ({ startDate, endDate }) => {
   const [records, setRecords] = useState([]);
@@ -43,7 +44,7 @@ const CITNetProfitTaxPayers = ({ startDate, endDate }) => {
       //   setRecords(response.records);
       // }
       // }
-      setRecords(response)
+      setRecords(response);
       setTotalRecords(response.total_data_count);
     } catch (err) {
       setError('Failed to fetch tax records');
@@ -95,47 +96,54 @@ const CITNetProfitTaxPayers = ({ startDate, endDate }) => {
       currency: 'PGK',
       currencyDisplay: 'symbol',
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(value);
   };
 
   const columns = [
     {
       accessorKey: 'tin',
-      header: 'TIN'
+      header: 'TIN',
     },
     {
       accessorKey: 'taxpayer_name',
       header: 'Taxpayer Name',
-      cell: ({ getValue }) => getValue() || 'N/A'
+      cell: ({ getValue }) => getValue() || 'N/A',
     },
     {
       accessorKey: 'segmentation',
-      header: 'Segmentation'
+      header: 'Segmentation',
     },
     {
       accessorKey: 'total_gross_income',
       header: 'Total Gross Income',
-      cell: ({ getValue }) => formatCurrency(getValue())
+      cell: ({ getValue }) => formatCurrency(getValue()),
     },
     {
       accessorKey: 'total_operating_expense',
       header: 'Total Operating Expense',
-      cell: ({ getValue }) => formatCurrency(getValue())
+      cell: ({ getValue }) => formatCurrency(getValue()),
     },
     {
       accessorKey: 'current_year_profit_loss_710',
       header: 'Current Year Profit/Loss',
-      cell: ({ getValue }) => formatCurrency(getValue())
-    }
-
+      cell: ({ getValue }) => formatCurrency(getValue()),
+    },
   ];
 
   return (
     <Card className="mb-4 box-background">
       <Card.Body>
         {loading ? (
-          <div className="text-center" style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            className="text-center"
+            style={{
+              height: '400px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             <Spinner animation="border" role="status" variant="primary">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
@@ -144,30 +152,47 @@ const CITNetProfitTaxPayers = ({ startDate, endDate }) => {
           <div className="text-center text-danger">{error}</div>
         ) : records.length === 0 ? (
           <>
-            <span className='chart-headers'>Top 50 Net profit TaxPayers</span>
-            <div className="text-center text-muted" style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span className="chart-headers">Top 50 Net profit TaxPayers</span>
+            <div
+              className="text-center text-muted"
+              style={{
+                height: '400px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               No Data Found
             </div>
           </>
         ) : (
-          <div style={{ height: '400px', display: 'flex', flexDirection:'column', justifyContent: 'center' }}>
-            <div className="d-flex mb-3" >
-              <span className='chart-headers'>Top 50 Net profit TaxPayers</span>
+          <>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <div className="d-flex justify-content-between align-items-center w-100">
+                <span className="chart-headers">
+                  Top 50 Net Profit TaxPayers
+                </span>
+                <CSVExportButton
+                  records={records}
+                  filename="SalesVsCost.csv"
+                  buttonLabel="Download Sales vs Cost List"
+                />
+              </div>
             </div>
             <Table
               columns={columns}
               data={records}
               loading={loading}
               error={error}
-            //   hasMore={records.length < totalRecords}
-            //   onLoadMore={handleLoadMore}
-            //   loadingMore={isLoadingMore}
+              //   hasMore={records.length < totalRecords}
+              //   onLoadMore={handleLoadMore}
+              //   loadingMore={isLoadingMore}
             />
-          </div>
+          </>
         )}
       </Card.Body>
     </Card>
   );
 };
 
-export default CITNetProfitTaxPayers; 
+export default CITNetProfitTaxPayers;

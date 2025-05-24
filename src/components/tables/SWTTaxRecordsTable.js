@@ -190,6 +190,7 @@ const SWTTaxRecordsTable = ({ startDate, endDate }) => {
               hasMore={records.length < totalRecords}
               onLoadMore={handleLoadMore}
               loadingMore={isLoadingMore}
+              jobId={"test"}
             />
           </>
         )}

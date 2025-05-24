@@ -112,6 +112,7 @@ const TopFraudRulesProfiling = ({
       <Table
         columns={columns}
         data={filteredData}
+        jobId={"test"}
         // loading={loading}
         // error={error}
         // hasMore={records.length < totalRecords}

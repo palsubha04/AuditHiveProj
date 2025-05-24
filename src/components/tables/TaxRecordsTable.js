@@ -14,6 +14,8 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
   const [totalRecords, setTotalRecords] = useState(0);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
+  const [fraudFilter, setFraudFilter] = useState('all'); // all | fraud | valid
+
   const fetchRecords = async (tin = '', page = 1, append = false) => {
     if (loading || isLoadingMore) return;
 
@@ -28,9 +30,11 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
       let response;
       if (tin) {
         response = await gstService.getTaxRecordsByTIN(tin);
+        console.log('received data', response);
         setRecords(response.records);
       } else {
         response = await gstService.getTaxRecords(startDate, endDate, page);
+        console.log('received data', response);
         if (append) {
           setRecords((prev) => [...prev, ...response.records]);
         } else {
@@ -210,6 +214,7 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
               hasMore={records.length < totalRecords}
               onLoadMore={handleLoadMore}
               loadingMore={isLoadingMore}
+              jobId={'test'}
             />
           </>
         )}
