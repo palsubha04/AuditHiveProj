@@ -67,21 +67,21 @@ const GSTSummaryCards = ({ startDate, endDate }) => {
         className="justify-content-between"
         style={{ flexWrap: 'nowrap', overflowX: 'auto' }}
       >
-        <Col>
+        <Col className='border-end'>
           <MetricCard
             value={formatNumber(summary.total_tax_payers)}
             label="Total Tax payers"
             color="#31303B"
           />
         </Col>
-        <Col>
+        <Col className='border-end'>
           <MetricCard
             value={formatNumber(summary.total_sales_income)}
             label="Total Sales Income"
             color="#31303B"
           />
         </Col>
-        <Col>
+        <Col className='border-end'>
           <MetricCard
             value={formatNumber(summary.total_gst_payable)}
             label="Total GST Payable"

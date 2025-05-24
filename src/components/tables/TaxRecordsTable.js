@@ -145,7 +145,7 @@ const TaxRecordsTable = ({ startDate, endDate }) => {
               borderRadius: '16px', // Adjust for more or less rounded corners
               //backgroundColor: isFraud ? '#FEE2E2' : '#D1FAE5', // Light red for Fraud, Light green for Valid
               //border: isFraud ? '1px solid #FECACA' : '1px solid #A7F3D0',
-              border: '1px solid #D1D5DB', // Light gray border for both Fraud and Valid
+              //border: '1px solid #D1D5DB', // Light gray border for both Fraud and Valid
             }}
           >
             <span
