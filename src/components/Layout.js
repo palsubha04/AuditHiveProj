@@ -12,15 +12,25 @@ function Layout({ children }) {
   };
 
   return (
-    <div className="layout">
-      <Sidenav isOpen={isSidenavOpen} toggleSidenav={toggleSidenav}/>
-      <div className="layout-content">
-        <Header isOpen={isSidenavOpen} />
-        <main className="main-content">
+    <div className="d-flex flex-column overflow-hidden" style={{ height: '100vh' }}>
+      <div className='header-main'>
+        <Header />
+      </div>
+      <div className='flex-1 d-flex flex-row overflow-hidden'>
+        <div className='h-100'>
+          <Sidenav isOpen={isSidenavOpen} toggleSidenav={toggleSidenav}/>
+        </div>
+        <div className='flex-1 p-4 overflow-auto'>
+          {children}
+        </div>
+      </div>
+      {/* <div className="">
+        <Sidenav isOpen={isSidenavOpen} toggleSidenav={toggleSidenav}/>
+        <main className="">
           {children}
         </main>
         <Footer />
-      </div>
+      </div> */}
     </div>
   );
 }

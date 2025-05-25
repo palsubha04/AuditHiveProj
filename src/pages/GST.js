@@ -22,57 +22,55 @@ function GST() {
 
   return (
     <Layout>
-      <Container fluid>
-        <div className="top-filter-class">
-          <TenureFilter onFilterChange={handleFilterChange} />
-          <div className="d-flex ps-2 gap-2 justify-center align-items-center">
-            <span>{dateRange.start_date}</span>
-            <span>to</span>
-            <span>{dateRange.end_date}</span>
-          </div>
+      <div className="top-filter-class">
+        <TenureFilter onFilterChange={handleFilterChange} />
+        <div className="d-flex ps-2 gap-2 justify-center align-items-center">
+          <span>{dateRange.start_date}</span>
+          <span>to</span>
+          <span>{dateRange.end_date}</span>
         </div>
+      </div>
 
-        <GSTSummaryCards
-          startDate={dateRange.start_date}
-          endDate={dateRange.end_date}
-        />
+      <GSTSummaryCards
+        startDate={dateRange.start_date}
+        endDate={dateRange.end_date}
+      />
 
-        <div className="row">
-          <div className="col-12 chart-columns-div">
-            <SalesComparison
+      <div className="row">
+        <div className="col-12 chart-columns-div">
+          <SalesComparison
+            startDate={dateRange.start_date}
+            endDate={dateRange.end_date}
+          />
+        </div>
+        <div className="col-12 chart-columns-div">
+          <GSTPayableVsRefundable
+            startDate={dateRange.start_date}
+            endDate={dateRange.end_date}
+          />
+        </div>
+        <div className="row chart-columns-div pe-0">
+          <div className="col-md-6">
+            <SegmentationDistributionChart
               startDate={dateRange.start_date}
               endDate={dateRange.end_date}
             />
           </div>
-          <div className="col-12 chart-columns-div">
-            <GSTPayableVsRefundable
+          <div className="col-md-6 pe-0">
+            <RiskCategoriesChart
               startDate={dateRange.start_date}
               endDate={dateRange.end_date}
-            />
-          </div>
-          <div className="row chart-columns-div pe-0">
-            <div className="col-md-6">
-              <SegmentationDistributionChart
-                startDate={dateRange.start_date}
-                endDate={dateRange.end_date}
-              />
-            </div>
-            <div className="col-md-6 pe-0">
-              <RiskCategoriesChart
-                startDate={dateRange.start_date}
-                endDate={dateRange.end_date}
-                taxType="gst"
-              />
-            </div>
-          </div>
-          <div className="col-12">
-            <TaxRecordsTable
-              startDate={dateRange.start_date}
-              endDate={dateRange.end_date}
+              taxType="gst"
             />
           </div>
         </div>
-      </Container>
+        <div className="col-12">
+          <TaxRecordsTable
+            startDate={dateRange.start_date}
+            endDate={dateRange.end_date}
+          />
+        </div>
+      </div>
     </Layout>
   );
 }
