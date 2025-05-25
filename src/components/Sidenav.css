@@ -1,11 +1,5 @@
 .sidenav {
   width: 20.357rem;
-  /* 285px */
-  background: white;
-  height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
   padding: 1.5rem;
   border-right: 1px solid #E6EDFF;
   z-index: 10000;
@@ -19,9 +13,7 @@
   padding-right: 0;
   padding-top: 1.5rem;
   transition: width 0.3s ease;
-
 }
-
 
 /* Optional: hide text but keep icons */
 .sidenav.collapsed .nav-item span {
@@ -40,10 +32,9 @@
 }
 
 .logo-container {
-  margin-bottom: 2rem;
   text-align: center;
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
 }
 
 .logo {
