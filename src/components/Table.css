@@ -227,3 +227,32 @@ tr:hover td {
   cursor: not-allowed;
   background-color: #FAFAFA;
 }
+
+
+/* new */
+.filter-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center inside the cell */
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.filter-controls select {
+  padding: 4px 8px;
+  font-size: 14px;
+  min-width: 80px;
+}
+
+.download-button {
+  padding: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.download-icon {
+  color: #007bff;
+  width: 18px;
+  height: 18px;
+}
