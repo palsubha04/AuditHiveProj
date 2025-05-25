@@ -34,12 +34,12 @@
 }
 
 .main-content {
-  padding: 9rem 2.857rem 2rem 2.857rem;
-  /* Increased top padding from 7rem to 8.25rem */
-  background: white;
   flex: 1;
-  position: relative;
-  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  gap: 0.8rem;
+  padding: 24px 60px 24px 60px
 }
 
 .main-content .container-fluid {
@@ -54,4 +54,13 @@
   padding-left: 60px;
   padding-right: 60px;
   color: white;
+}
+
+.header-title-page {
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 24px;
+  color: #1C1C1A;
+  top: -4px;
+  position: relative;
 }
