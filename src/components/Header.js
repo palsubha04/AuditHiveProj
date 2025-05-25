@@ -14,7 +14,7 @@ import { useAuth } from '../context/AuthContext';
 import './Header.css';
 import { CircleUserRound } from 'lucide-react';
 
-function Header({ isOpen }) {
+function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { logout, user } = useAuth();
@@ -88,44 +88,44 @@ function Header({ isOpen }) {
   }
 
   return (
-    <Navbar className={`header ${isOpen ? 'sidenav-open' : 'sidenav-collapsed'}`}>
-      <Container fluid>
-        <div className="header-left">
-          <div className="header-titles">
-            <h1>{headerTitle}</h1>
-            {headerSubtitle && <p>{headerSubtitle}</p>}
-          </div>
+    <>
+      <div className="header-left">
+        <div className="header-titles">
+          <img src="/header-icons/Logo.svg" alt="Logo" className="logo" />
+
+          {/* <h1>{headerTitle}</h1>
+          {headerSubtitle && <p>{headerSubtitle}</p>} */}
         </div>
-        <div className="header-right">
-          <button className="icon-button">
-            <img src="/header-icons/search.svg" alt="Help"/>
-          </button>
-          <button className="icon-button">
-            <img src="/header-icons/bell.svg" alt="Help"/>
-          </button>
-          <Dropdown
-            align="end"
-            show={isDropdownOpen}
-            onToggle={(isOpen) => setIsDropdownOpen(isOpen)}
-          >
-            <Dropdown.Toggle className="user-dropdown">
-              <CircleUserRound/>
-              <span>{getFullName()}</span>
-              <FontAwesomeIcon
-                icon={isDropdownOpen ? faChevronUp : faChevronDown}
-                className="dropdown-arrow"
-              />
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={handleLogout}>
-                <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
-                Logout
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      </Container>
-    </Navbar>
+      </div>
+      <div className="header-right">
+        <button className="icon-button">
+          <img src="/header-icons/bell.svg" alt="Help" />
+        </button>
+        <button className="icon-button">
+          <img src="/header-icons/search.svg" alt="Help" />
+        </button>
+        <Dropdown
+          align="end"
+          show={isDropdownOpen}
+          onToggle={(isOpen) => setIsDropdownOpen(isOpen)}
+        >
+          <Dropdown.Toggle className="user-dropdown">
+            <CircleUserRound />
+            <span style={{color:'#fff'}}>{getFullName()}</span>
+            <FontAwesomeIcon
+              icon={isDropdownOpen ? faChevronUp : faChevronDown}
+              className="dropdown-arrow"
+            />
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={handleLogout}>
+              <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+              Logout
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
+    </>
   );
 }
 

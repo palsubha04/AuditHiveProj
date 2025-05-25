@@ -68,17 +68,13 @@ function Sidenav({ isOpen, toggleSidenav }) {
   }, [isOpen]);
 
   return (
-    <div className={`sidenav ${isOpen ? 'open' : 'collapsed'}`}>
+    <div className={`h-100 sidenav ${isOpen ? 'open' : 'collapsed'}`}>
       <div className="logo-container">
-        <Link to="/gst">
-          <img src="/Logo.png" alt="Logo" className="logo" />
-        </Link>
         <button className='sidenav-toggle-btn' style={{ paddingLeft: '1rem' }} onClick={toggleSidenav}>
           {isOpen ?
             <PanelLeft className='sidenav-toggle-icon' style={{ color: '#65728c' }} /> :
             <PanelRight className='sidenav-toggle-icon' style={{ color: '#65728c' }} />
           }
-
         </button>
       </div>
       <Nav className="flex-column">
