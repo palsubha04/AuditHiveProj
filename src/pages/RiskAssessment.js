@@ -19,6 +19,7 @@ import { fetchRiskAnomaly } from '../slice/riskAnomalyFrequencySlice';
 import { Card, CardBody, CardHeader, Spinner } from 'react-bootstrap';
 import TopFraudRulesProfiling from '../components/charts/risk-profiling/TopFraudRulesProfiling';
 import './RiskAssessment.css'
+import RiskChartPage from '../components/charts/TestChart';
 //import { set } from "react-datepicker/dist/date_utils";
 
 // Added by Soham - Total Tax Payer vs Risk Flagged
@@ -241,6 +242,7 @@ function RiskAssessment() {
                       />
                     </div>
                   )}
+                  {/* <RiskChartPage/> */}
                 </CardBody>
               </Card>
             </div>
