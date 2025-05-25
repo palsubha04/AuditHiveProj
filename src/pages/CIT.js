@@ -9,8 +9,8 @@ import CITNetLossTaxPayers from '../components/tables/CITNetLossTaxPayers';
 import CITCostSalesComparison from '../components/tables/CITCostSalesComparison';
 
 import './Dashboard.css';
-import InterestExpenseCitChart from '../components/charts/cit/InterestExpenseCitChart';
-import SuperneutionCitChart from '../components/charts/cit/SuperneutionCitChart';
+import InterestExpenseCitChart from '../components/charts/CIT/InterestExpenseCitChart';
+import SuperneutionCitChart from '../components/charts/CIT/SuperneutionCitChart';
 
 
 function CIT() {

@@ -11,6 +11,15 @@ const riskLevels = [
   "Low Risk",
   "Very Low Risk",
 ];
+const colors = [
+  "#FF0000", // Critical Risk
+  "#FF7F00", // High Risk
+  "#FFD700", // Moderate Risk
+  "#FFFF00", // Elevated Risk
+  "#ADFF2F", // Low Risk
+  "#7CFC00", // Very Low Risk
+  "#00FF00", // Extra (if needed)
+];
 
 const RiskAnalysisByIndustryChart = ({ riskData }) => {
   console.log("riskData", riskData);
@@ -119,6 +128,7 @@ const RiskAnalysisByIndustryChart = ({ riskData }) => {
         },
       },
     },
+    
     noData: {
       text: "No Data Found",
       align: "center",
