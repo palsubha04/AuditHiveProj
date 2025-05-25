@@ -1,6 +1,6 @@
 .sidenav {
   width: 20.357rem;
-  padding: 1.5rem;
+  padding: 24px 24px 24px 60px;
   border-right: 1px solid #E6EDFF;
   z-index: 10000;
   transition: width 0.3s ease;
@@ -9,9 +9,7 @@
 .sidenav.collapsed {
   width: 60px;
   overflow: hidden;
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 1.5rem;
+  padding: 24px 18px 0px 0px;
   transition: width 0.3s ease;
 }
 
@@ -35,6 +33,7 @@
   text-align: center;
   display: flex;
   justify-content: end;
+  margin-bottom: 1rem;
 }
 
 .logo {
